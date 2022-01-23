@@ -1,0 +1,57 @@
+base:
+  project_dir: D:\Workspace\Personal Projects\Machine Learning\project-template
+  project_name: 'null'
+  random_state: 'null'
+  target_col: 'null'
+  test_size: 'null'
+schema_dir:
+  pred_schema_file: config\schema_prediction.json
+  train_schema_file: config\schema_training.json
+elbow_plot_fig: data\preprocessing_data\K-Means_Elbow.PNG
+data:
+  archived:
+    pred: data\pred\archived
+    train: data\train\archived
+  bad:
+    pred: data\pred\raw_valid\bad
+    train: data\train\raw_valid\bad
+  good:
+    pred: data\pred\raw_valid\good
+    train: data\train\raw_valid\good
+data_source:
+  pred_data_source: data_given\prediction_batch_files
+  train_data_source: data_given\training_batch_files
+database_dir:
+  pred_database: databases\Prediction_Database
+  train_database: databases\Training_Database
+db_file:
+  pred_db_file: databases\Prediction_FileFromDB\InputFile.csv
+  train_db_file: databases\Training_FileFromDB\InputFile.csv
+db_file_path:
+  pred_db_path: databases\Prediction_FileFromDB
+  train_db_path: databases\Training_FileFromDB
+kmeans_cluster:
+  init: 'null'
+  knee_locator:
+    curve: 'null'
+    direction: 'null'
+  max_clusters: 'null'
+model_dir:
+  prod_models_dir: models\prod
+  stag_model_folder: models\stag
+  trained_models_dir: models\trained
+mlflow_config:
+  artifacts_dir: 'null'
+  experiment_name: 'null'
+  remote_server_uri: 'null'
+  run_name: 'null'
+pred_output_file: output\Prediction_Output_File\Predictions.csv
+db_log:
+  db_pred_log: prediction_logs
+  db_train_log: training_logs
+templates:
+  dir: templates
+  index_html_file: templates\index.html
+export_csv_file_name: InputFile.csv
+null_values_csv_file: data\preprocessing_data\null_values.csv
+pred_output_file: output\Prediction_Output_File\Predictions.csv
