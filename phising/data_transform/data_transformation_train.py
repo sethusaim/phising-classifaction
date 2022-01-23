@@ -15,7 +15,7 @@ class data_transform_train:
     def __init__(self):
         self.config = read_params()
 
-        self.train_data_bucket = self.config["s3_bucket"]["scania_train_data_bucket"]
+        self.train_data_bucket = self.config["s3_bucket"]["phising_train_data_bucket"]
 
         self.s3_obj = S3_Operations()
 
@@ -67,13 +67,11 @@ class data_transform_train:
                         collection_name=self.train_data_transform_log,
                     )
 
-                    df["class"] = df["class"].apply(lambda x: "'" + str(x) + "'")
-
                     for column in df.columns:
-                        count = df[column][df[column] == "na"].count()
+                        count = df[column][df[column] == "?"].count()
 
                         if count != 0:
-                            df[column] = df[column].replace("na", "'na'")
+                            df[column] = df[column].replace("?", "'?'")
 
                     self.log_writer.log(
                         db_name=self.db_name,

@@ -1,7 +1,7 @@
-from utils.logger import App_Logger
-from utils.read_params import read_params
 from phising.mlflow_utils.mlflow_operations import Mlflow_Operations
 from phising.s3_bucket_operations.s3_operations import S3_Operations
+from utils.logger import App_Logger
+from utils.read_params import read_params
 
 
 class load_prod_model:

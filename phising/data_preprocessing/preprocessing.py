@@ -164,10 +164,10 @@ class Preprocessor:
             )
 
             for col in data.columns:
-                count = data[col][data[col] == "?"].count()
+                count = data[col][data[col] == "'?'"].count()
 
                 if count != 0:
-                    data[col] = data[col].replace("?", np.nan)
+                    data[col] = data[col].replace("'?'", np.nan)
 
             self.log_writer.start_log(
                 key="exit",
