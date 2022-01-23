@@ -1,9 +1,9 @@
 import re
 
+from phising.s3_bucket_operations.s3_operations import S3_Operations
 from utils.logger import App_Logger
 from utils.main_utils import convert_object_to_dataframe
 from utils.read_params import read_params
-from phising.s3_bucket_operations.s3_operations import S3_Operations
 
 
 class raw_train_data_validation:

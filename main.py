@@ -7,13 +7,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from fastapi.templating import Jinja2Templates
 
-from utils.read_params import read_params
-
 from phising.model.load_production_model import load_prod_model
-from phising.model.predictionFromModel import prediction
-from phising.model.trainingModel import train_model
+from phising.model.prediction_from_model import prediction
+from phising.model.training_model import train_model
 from phising.validation_insertion.prediction_validation_insertion import pred_validation
 from phising.validation_insertion.train_validation_insertion import train_validation
+from utils.read_params import read_params
 
 os.putenv("LANG", "en_US.UTF-8")
 os.putenv("LC_ALL", "en_US.UTF-8")
