@@ -1,5 +1,5 @@
 base:
-  random_state : 355
+  random_state : 42
   target_col : Output
   test_size : 0.33
 
@@ -120,8 +120,7 @@ train_db_log:
   name_validation : nameValidationLog
   train_main : Training_Main_Log
   values_from_schema : valuesfromSchemaValidationLog
-
-
+s
 pred_db_log:
   col_validation : columnValidationLog
   db_conn: databaseConnectionLog
