@@ -97,7 +97,7 @@ class MongoDB_Operation:
 
             raise Exception(exception_msg)
 
-    def convert_collection_to_dataframe(self, db_name, collection_name):
+    def convert_collection_to_dataframe(self):
         """
         Method Name :   convert_collection_to_dataframe
         Description :   This method is used for converting the selected collection to dataframe
@@ -126,7 +126,7 @@ class MongoDB_Operation:
 
             raise Exception(exception_msg)
 
-    def is_record_present(self, db_name, collection_name, record):
+    def is_record_present(self, record):
         """
         Method Name :   is_record_present
         Description :   This method is used for checking whether the record exists or not 
@@ -182,7 +182,7 @@ class MongoDB_Operation:
 
             raise Exception(exception_msg)
 
-    def insert_dataframe_as_record(self, data_frame, db_name, collection_name):
+    def insert_dataframe_as_record(self, data_frame):
         """
         Method Name :   insert_dataframe_as_record
         Description :   This method is used for inserting the dataframe in collection as record
@@ -208,7 +208,7 @@ class MongoDB_Operation:
 
             raise Exception(exception_msg)
 
-    def insert_one_record(self, db_name, collection_name, record):
+    def insert_one_record(self, record):
         """
         Method Name :   insert_one_record
         Description :   This method is used for inserting one record into a collection

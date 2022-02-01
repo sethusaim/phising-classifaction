@@ -1,11 +1,11 @@
-from phising.data_transform.data_transformation_pred import data_transform_pred
-from phising.data_type_valid.data_type_valid_pred import db_operation_pred
-from phising.raw_data_validation.pred_data_validation import raw_pred_data_validation
+from phising.data_transform.data_transformation_pred import Data_Transform_Pred
+from phising.data_type_valid.data_type_valid_pred import DB_Operation_Pred
+from phising.raw_data_validation.pred_data_validation import Raw_Pred_Data_Validation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class pred_validation:
+class Pred_Validation:
     """
     Description :   This class is used for validating all the prediction batch files
 
@@ -14,11 +14,11 @@ class pred_validation:
     """
 
     def __init__(self, bucket_name):
-        self.raw_data = raw_pred_data_validation(raw_data_bucket_name=bucket_name)
+        self.raw_data = Raw_Pred_Data_Validation(raw_data_bucket_name=bucket_name)
 
-        self.data_transform = data_transform_pred()
+        self.data_transform = Data_Transform_Pred()
 
-        self.db_operation = db_operation_pred()
+        self.db_operation = DB_Operation_Pred()
 
         self.config = read_params()
 
@@ -51,8 +51,7 @@ class pred_validation:
                 key="start",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.pred_main_log,
+                table_name=self.pred_main_log,
             )
 
             (
@@ -73,14 +72,12 @@ class pred_validation:
             self.raw_data.validate_missing_values_in_col()
 
             self.log_writer.log(
-                db_name=self.db_name,
-                collection_name=self.pred_main_log,
+                table_name=self.pred_main_log,
                 log_message="Raw Data Validation Completed !!",
             )
 
             self.log_writer.log(
-                db_name=self.db_name,
-                collection_name=self.pred_main_log,
+                table_name=self.pred_main_log,
                 log_message="Starting Data Transformation",
             )
 
@@ -89,33 +86,30 @@ class pred_validation:
             self.data_transform.replace_missing_with_null()
 
             self.log_writer.log(
-                db_name=self.db_name,
-                collection_name=self.pred_main_log,
+                table_name=self.pred_main_log,
                 log_message="Data Transformation completed !!",
             )
 
             self.db_operation.insert_good_data_as_record(
                 db_name=self.good_data_db_name,
-                collection_name=self.good_data_collection_name,
+                table_name=self.good_data_collection_name,
             )
 
             self.log_writer.log(
-                db_name=self.db_name,
-                collection_name=self.pred_main_log,
+                table_name=self.pred_main_log,
                 log_message="Data type validation Operation completed !!",
             )
 
             self.db_operation.export_collection_to_csv(
                 db_name=self.good_data_db_name,
-                collection_name=self.good_data_collection_name,
+                table_name=self.good_data_collection_name,
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.pred_main_log,
+                table_name=self.pred_main_log,
             )
 
         except Exception as e:
@@ -123,6 +117,5 @@ class pred_validation:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.pred_main_log,
+                table_name=self.pred_main_log,
             )

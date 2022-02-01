@@ -1,5 +1,5 @@
 from datetime import datetime
-from phising.mongo_db_operations.mongo_operations import MongoDB_Operation
+import boto3
 
 
 class App_Logger:
@@ -11,11 +11,11 @@ class App_Logger:
     """
 
     def __init__(self):
-        self.db_obj = MongoDB_Operation()
+        self.db_resource = boto3.resource("dynamodb")
 
         self.class_name = self.__class__.__name__
 
-    def log(self, db_name, collection_name, log_message):
+    def log(self, table_name, log_message):
         """
         Method Name :   log
         Description :   This method is used for log the info to MongoDB
@@ -26,6 +26,8 @@ class App_Logger:
         method_name = self.log.__name__
 
         try:
+            self.table = self.db_resource.Table(table_name)
+
             self.now = datetime.now()
 
             self.date = self.now.date()
@@ -33,21 +35,19 @@ class App_Logger:
             self.current_time = self.now.strftime("%H:%M:%S")
 
             log = {
-                "Log_updated_date": self.now,
-                "Log_updated_time": self.current_time,
+                "Log_updated_date": str(self.now),
+                "Log_updated_time": str(self.current_time),
                 "Log_message": log_message,
             }
 
-            self.db_obj.insert_one_record(
-                db_name=db_name, collection_name=collection_name, record=log
-            )
+            self.table.put_item(Item=log)
 
         except Exception as e:
             error_msg = f"Exception occured in Class : {self.class_name}, Method : {method_name}, Error : {str(e)}"
 
             raise Exception(error_msg)
 
-    def start_log(self, key, class_name, method_name, db_name, collection_name):
+    def start_log(self, key, class_name, method_name, table_name):
         """
         Method Name :   start_log
         Description :   This method is used for logging the entry or exit of method depending on key value
@@ -58,34 +58,21 @@ class App_Logger:
         start_method_name = self.start_log.__name__
 
         try:
-            if key == "start":
-                self.log(
-                    db_name=db_name,
-                    collection_name=collection_name,
-                    log_message=f" Entered {method_name} of class {class_name}",
-                )
+            func = lambda: "Entered" if key == "start" else "Exited"
 
-            elif key == "exit":
-                self.log(
-                    db_name=db_name,
-                    collection_name=collection_name,
-                    log_message=f" Exited {method_name} of class {class_name}",
-                )
+            log_msg = f"{func()} {method_name} method of class {class_name}"
 
-            else:
-                pass
+            self.log(table_name, log_message=log_msg)
 
         except Exception as e:
             error_msg = f"Exception occured in Class : {self.class_name}, Method : {start_method_name}, Error : {str(e)}"
 
             raise Exception(error_msg)
 
-    def raise_exception_log(
-        self, error, class_name, method_name, db_name, collection_name
-    ):
+    def raise_exception_log(self, error, class_name, method_name, table_name):
         """
         Method Name :   raise_exception_log
-        Description :   This method is used for logging exception 
+        Description :   This method is used for logging exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -95,14 +82,11 @@ class App_Logger:
             key="exit",
             class_name=class_name,
             method_name=method_name,
-            db_name=db_name,
-            collection_name=collection_name,
+            table_name=table_name,
         )
 
         exception_msg = f"Exception occured in Class : {class_name}, Method : {method_name}, Error : {str(error)}"
 
-        self.log(
-            db_name=db_name, collection_name=collection_name, log_message=exception_msg
-        )
+        self.log(table_name=table_name, log_message=exception_msg)
 
         raise Exception(exception_msg)

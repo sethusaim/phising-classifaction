@@ -4,7 +4,7 @@ from utils.main_utils import convert_object_to_dataframe
 from utils.read_params import read_params
 
 
-class data_transform_pred:
+class Data_Transform_Pred:
     """
     Description :  This class shall be used for transforming the prediction batch data before loading it in Database!!.
 
@@ -43,16 +43,14 @@ class data_transform_pred:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            db_name=self.db_name,
-            collection_name=self.pred_data_transform_log,
+            table_name=self.pred_data_transform_log,
         )
 
         try:
             csv_file_objs = self.s3_obj.get_file_objects_from_s3(
                 bucket=self.pred_data_bucket,
                 filename=self.good_pred_data_dir,
-                db_name=self.db_name,
-                collection_name=self.pred_data_transform_log,
+                table_name=self.pred_data_transform_log,
             )
 
             for f in csv_file_objs:
@@ -62,9 +60,7 @@ class data_transform_pred:
 
                 if file.endswith(".csv"):
                     df = convert_object_to_dataframe(
-                        obj=f,
-                        db_name=self.db_name,
-                        collection_name=self.pred_data_transform_log,
+                        obj=f, table_name=self.pred_data_transform_log,
                     )
 
                     for column in df.columns:
@@ -74,8 +70,7 @@ class data_transform_pred:
                             df[column] = df[column].replace("?", "'?'")
 
                     self.log_writer.log(
-                        db_name=self.db_name,
-                        collection_name=self.pred_data_transform_log,
+                        table_name=self.pred_data_transform_log,
                         log_message=f"Quotes added for the file {file}",
                     )
 
@@ -84,8 +79,7 @@ class data_transform_pred:
                         file_name=abs_f,
                         bucket=self.pred_data_bucket,
                         dest_file_name=file,
-                        db_name=self.db_name,
-                        collection_name=self.pred_data_transform_log,
+                        table_name=self.pred_data_transform_log,
                     )
 
                 else:
@@ -95,8 +89,7 @@ class data_transform_pred:
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.pred_data_transform_log,
+                table_name=self.pred_data_transform_log,
             )
 
         except Exception as e:
@@ -104,6 +97,5 @@ class data_transform_pred:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.pred_data_transform_log,
+                table_name=self.pred_data_transform_log,
             )

@@ -7,11 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from fastapi.templating import Jinja2Templates
 
-from phising.model.load_production_model import load_prod_model
-from phising.model.prediction_from_model import prediction
-from phising.model.training_model import train_model
-from phising.validation_insertion.prediction_validation_insertion import pred_validation
-from phising.validation_insertion.train_validation_insertion import train_validation
+from phising.model.load_production_model import Load_Prod_Model
+from phising.model.prediction_from_model import Prediction
+from phising.model.training_model import Train_Model
+from phising.validation_insertion.prediction_validation_insertion import Pred_Validation
+from phising.validation_insertion.train_validation_insertion import Train_Validation
 from utils.read_params import read_params
 
 os.putenv("LANG", "en_US.UTF-8")
@@ -46,15 +46,15 @@ async def trainRouteClient():
     try:
         raw_data_train_bucket_name = config["s3_bucket"]["phising_raw_data_bucket"]
 
-        train_valObj = train_validation(raw_data_train_bucket_name)
+        train_valObj = Train_Validation(raw_data_train_bucket_name)
 
         train_valObj.train_validation()
 
-        trainModelObj = train_model()
+        trainModelObj = Train_Model()
 
         num_clusters = trainModelObj.training_model()
 
-        loadProdModelObj = load_prod_model(num_clusters)
+        loadProdModelObj = Load_Prod_Model(num_clusters)
 
         loadProdModelObj.load_production_model()
 
@@ -69,11 +69,11 @@ async def predictRouteClient():
     try:
         raw_data_pred_bucket_name = config["s3_bucket"]["phising_raw_data_bucket"]
 
-        pred_val = pred_validation(raw_data_pred_bucket_name)
+        pred_val = Pred_Validation(raw_data_pred_bucket_name)
 
         pred_val.prediction_validation()
 
-        pred = prediction()
+        pred = Prediction()
 
         bucket, filename, json_predictions = pred.predict_from_model()
 

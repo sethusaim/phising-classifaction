@@ -5,7 +5,7 @@ from utils.main_utils import convert_object_to_dataframe
 from utils.read_params import read_params
 
 
-class db_operation_pred:
+class DB_Operation_Pred:
     """
     Description :    This class shall be used for handling all the db operations
 
@@ -16,15 +16,9 @@ class db_operation_pred:
     def __init__(self):
         self.config = read_params()
 
-        self.s3_obj = S3_Operations()
-
-        self.db_op = MongoDB_Operation()
-
-        self.log_writer = App_Logger()
-
         self.class_name = self.__class__.__name__
 
-        self.pred_data_bucket = self.config["s3_bucket"]["phising_pred_data_bucket"]
+        self.pred_data_bucket = self.config["s3_bucket"]["scania_pred_data_bucket"]
 
         self.pred_export_csv_file = self.config["export_pred_csv_file"]
 
@@ -32,13 +26,17 @@ class db_operation_pred:
 
         self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
 
-        self.db_name = self.config["db_log"]["db_pred_log"]
-
         self.pred_db_insert_log = self.config["pred_db_log"]["db_insert"]
 
         self.pred_export_csv_log = self.config["pred_db_log"]["export_csv"]
 
-    def insert_good_data_as_record(self, db_name, collection_name):
+        self.s3_obj = S3_Operations()
+
+        self.db_op = MongoDB_Operation()
+
+        self.log_writer = App_Logger()
+
+    def insert_good_data_as_record(self, good_data_db_name, good_data_collection_name):
         """
         Method Name :   insert_good_data_as_record
         Description :   This method inserts the good data in MongoDB as collection
@@ -52,16 +50,14 @@ class db_operation_pred:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            db_name=self.db_name,
-            collection_name=self.pred_db_insert_log,
+            table_name=self.pred_db_insert_log,
         )
 
         try:
             csv_files = self.s3_obj.get_file_objects_from_s3(
                 bucket=self.pred_data_bucket,
                 filename=self.good_data_pred_dir,
-                db_name=self.db_name,
-                collection_name=self.pred_db_insert_log,
+                table_name=self.pred_db_insert_log,
             )
 
             for f in csv_files:
@@ -69,21 +65,21 @@ class db_operation_pred:
 
                 if file.endswith(".csv"):
                     df = convert_object_to_dataframe(
-                        obj=f,
-                        db_name=self.db_name,
-                        collection_name=self.pred_db_insert_log,
+                        obj=f, table_name=self.pred_db_insert_log,
                     )
 
                     self.db_op.insert_dataframe_as_record(
-                        data_frame=df, db_name=db_name, collection_name=collection_name,
+                        data_frame=df,
+                        db_name=good_data_db_name,
+                        collection_name=good_data_collection_name,
+                        table_name=self.pred_db_insert_log,
                     )
 
                 else:
                     pass
 
                 self.log_writer.log(
-                    db_name=self.db_name,
-                    collection_name=self.pred_db_insert_log,
+                    table_name=self.pred_db_insert_log,
                     log_message="Inserted dataframe as collection record in mongodb",
                 )
 
@@ -91,8 +87,7 @@ class db_operation_pred:
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.pred_db_insert_log,
+                table_name=self.pred_db_insert_log,
             )
 
         except Exception as e:
@@ -100,11 +95,10 @@ class db_operation_pred:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.pred_db_insert_log,
+                table_name=self.pred_db_insert_log,
             )
 
-    def export_collection_to_csv(self, db_name, collection_name):
+    def export_collection_to_csv(self, good_data_db_name, good_data_collection_name):
         """
         Method Name :   export_collection_to_csv
 
@@ -118,13 +112,14 @@ class db_operation_pred:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            db_name=self.db_name,
-            collection_name=self.pred_export_csv_log,
+            table_name=self.pred_export_csv_log,
         )
 
         try:
             df = self.db_op.convert_collection_to_dataframe(
-                db_name=db_name, collection_name=collection_name
+                db_name=good_data_db_name,
+                collection_name=good_data_collection_name,
+                table_name=self.pred_export_csv_log,
             )
 
             self.s3_obj.upload_df_as_csv_to_s3(
@@ -132,16 +127,14 @@ class db_operation_pred:
                 file_name=self.pred_export_csv_file,
                 bucket=self.input_files_bucket,
                 dest_file_name=self.pred_export_csv_file,
-                db_name=self.db_name,
-                collection_name=self.pred_export_csv_log,
+                table_name=self.pred_export_csv_log,
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.pred_export_csv_log,
+                table_name=self.pred_export_csv_log,
             )
 
         except Exception as e:
@@ -149,6 +142,5 @@ class db_operation_pred:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=db_name,
-                collection_name=collection_name,
+                table_name=self.pred_export_csv_log,
             )

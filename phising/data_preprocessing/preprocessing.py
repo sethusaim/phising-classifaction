@@ -1,7 +1,10 @@
 import numpy as np
 import pandas as pd
 from phising.s3_bucket_operations.s3_operations import S3_Operations
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 from utils.logger import App_Logger
+from utils.model_utils import get_model_name
 from utils.read_params import read_params
 
 
@@ -12,16 +15,14 @@ class Preprocessor:
     Revisions   :   moved setup to cloud
     """
 
-    def __init__(self, db_name, collection_name):
+    def __init__(self, table_name):
         self.log_writer = App_Logger()
 
         self.config = read_params()
 
         self.class_name = self.__class__.__name__
 
-        self.db_name = db_name
-
-        self.collection_name = collection_name
+        self.table_name = table_name
 
         self.null_values_file = self.config["null_values_csv_file"]
 
@@ -46,19 +47,18 @@ class Preprocessor:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            db_name=self.db_name,
-            collection_name=self.collection_name,
+            table_name=self.table_name,
         )
 
         self.data = data
 
         self.columns = columns
+
         try:
             self.useful_data = self.data.drop(labels=self.columns, axis=1)
 
             self.log_writer.log(
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
                 log_message=f"Dropped {columns} from {data}",
             )
 
@@ -66,8 +66,7 @@ class Preprocessor:
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
             return self.useful_data
@@ -77,8 +76,7 @@ class Preprocessor:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
     def separate_label_feature(self, data, label_column_name):
@@ -96,8 +94,7 @@ class Preprocessor:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            db_name=self.db_name,
-            collection_name=self.collection_name,
+            table_name=self.table_name,
         )
 
         try:
@@ -106,8 +103,7 @@ class Preprocessor:
             self.Y = data[label_column_name]
 
             self.log_writer.log(
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
                 log_message=f"Separated {label_column_name} from {data}",
             )
 
@@ -115,8 +111,7 @@ class Preprocessor:
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
             return self.X, self.Y
@@ -126,24 +121,8 @@ class Preprocessor:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
-
-    def drop_unnecessary_cols(self, data, cols_list):
-        """
-        Method Name :   drop_unnecessary_cols
-        Description :   This method replaces drops unnecessary cols from the given data
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        try:
-            data = data.drop(cols_list, axis=1)
-
-            return data
-
-        except Exception as e:
-            raise e
 
     def replace_invalid_values(self, data):
         """
@@ -159,22 +138,20 @@ class Preprocessor:
                 key="start",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
-            for col in data.columns:
-                count = data[col][data[col] == "'?'"].count()
+            data.replace(to_replace="'na'", value=np.nan, inplace=True)
 
-                if count != 0:
-                    data[col] = data[col].replace("'?'", np.nan)
+            self.log_writer.log(
+                table_name=self.table_name, log_message="Replaced " "na" " with np.nan"
+            )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
             return data
@@ -184,8 +161,7 @@ class Preprocessor:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
     def is_null_present(self, data):
@@ -204,8 +180,7 @@ class Preprocessor:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            db_name=self.db_name,
-            collection_name=self.collection_name,
+            table_name=self.table_name,
         )
 
         null_present = False
@@ -218,8 +193,7 @@ class Preprocessor:
             self.null_counts = data.isna().sum()
 
             self.log_writer.log(
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
                 log_message=f"Null values count is : {self.null_counts}",
             )
 
@@ -230,15 +204,13 @@ class Preprocessor:
                     cols_with_missing_values.append(cols[i])
 
             self.log_writer.log(
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
                 log_message="created cols with missing values",
             )
 
             if null_present:
                 self.log_writer.log(
-                    db_name=self.db_name,
-                    collection_name=self.collection_name,
+                    table_name=self.table_name,
                     log_message="null values were found the columns...preparing dataframe with null values",
                 )
 
@@ -251,8 +223,7 @@ class Preprocessor:
                 )
 
                 self.log_writer.log(
-                    db_name=self.db_name,
-                    collection_name=self.collection_name,
+                    table_name=self.table_name,
                     log_message="Created dataframe with null values",
                 )
 
@@ -261,14 +232,12 @@ class Preprocessor:
                     file_name=self.null_values_file,
                     bucket=self.input_files_bucket,
                     dest_file_name=self.null_values_file,
-                    db_name=self.db_name,
-                    collection_name=self.collection_name,
+                    table_name=self.table_name,
                 )
 
             else:
                 self.log_writer.log(
-                    db_name=self.db_name,
-                    collection_name=self.collection_name,
+                    table_name=self.table_name,
                     log_message="No null values are present in cols. Skipped the creation of dataframe",
                 )
 
@@ -276,8 +245,7 @@ class Preprocessor:
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
             return null_present
@@ -287,8 +255,7 @@ class Preprocessor:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
     def encode_target_cols(self, data):
@@ -307,18 +274,13 @@ class Preprocessor:
                 key="start",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
-            data["class"] = data["class"].map({"'p'": 1, "'e'": 2})
-
-            for col in data.drop(["class"], axis=1).columns:
-                data = pd.get_dummies(data, columns=[col])
+            data["class"] = data["class"].map({"'neg'": 0, "'pos'": 1})
 
             self.log_writer.log(
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
                 log_message="Encoded target cols in dataframe",
             )
 
@@ -326,8 +288,7 @@ class Preprocessor:
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
             return data
@@ -337,13 +298,12 @@ class Preprocessor:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
     def impute_missing_values(self, data):
         """
-        Method Name : i mpute_missing_values
+        Method Name :   impute_missing_values
         Description :   This method replaces all the missing values in the Dataframe using mean values of the column.
         Output      :   A Dataframe which has all the missing values imputed.
         On Failure  :   Raise Exception
@@ -358,8 +318,7 @@ class Preprocessor:
                 key="start",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
             data = data[data.columns[data.isnull().mean() < 0.6]]
@@ -367,14 +326,13 @@ class Preprocessor:
             data = data.apply(pd.to_numeric)
 
             for col in data.columns:
-                data[col] = data[col].replace(np.nan, data[col].mean())
+                data[col] = data[col].replace(np.NaN, data[col].mean())
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
             return data
@@ -384,8 +342,129 @@ class Preprocessor:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
+            )
+
+    def apply_pca_transform(self, X_scaled_data):
+        """
+        Method Name : apply_pca_transform
+        Description : This method applies the PCA transformation the features cols
+        Output      : A dataframe with scaled values
+        On Failure  : Raise Exception
+
+        Version     : 1.2
+        Revisions   : moved setup to cloud
+        """
+        method_name = self.apply_pca_transform.__name__
+
+        try:
+            self.log_writer.start_log(
+                key="start",
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=self.table_name,
+            )
+
+            pca = PCA(n_components=self.n_components)
+
+            pca_model_name = get_model_name(model=pca, table_name=self.table_name)
+
+            self.log_writer.log(
+                table_name=self.table_name,
+                log_message=f"Initialized {pca_model_name} model with n_components to {self.n_components}",
+            )
+
+            new_data = pca.fit_transform(X_scaled_data)
+
+            self.log_writer.log(
+                table_name=self.table_name,
+                log_message=f"Transformed the data using {pca_model_name} model",
+            )
+
+            principal_x = pd.DataFrame(new_data, index=self.data.index)
+
+            self.log_writer.log(
+                table_name=self.table_name,
+                log_message="Created a dataframe for the transformed data",
+            )
+
+            self.log_writer.start_log(
+                key="exit",
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=self.table_name,
+            )
+
+            return principal_x
+
+        except Exception as e:
+            self.log_writer.raise_exception_log(
+                error=e,
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=self.table_name,
+            )
+
+    def scale_numerical_columns(self, data):
+        """
+        Method Name : scale_numerical_columns
+        Description : This method scales the numerical values using the Standard scaler.
+        Output      : A dataframe with scaled values
+        On Failure  : Raise Exception
+
+        Version     : 1.2
+        Revisions   : moved setup to cloud
+        """
+        method_name = self.scale_numerical_columns.__name__
+
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=self.table_name,
+        )
+
+        self.data = data
+
+        try:
+            self.scaler = StandardScaler()
+
+            self.log_writer.log(
+                table_name=self.table_name,
+                log_message=f"Initialized {self.scaler.__class__.__name__}",
+            )
+
+            self.scaled_data = self.scaler.fit_transform(self.data)
+
+            self.log_writer.log(
+                table_name=self.table_name,
+                log_message=f"Transformed data using {self.scaler.__class__.__name__}",
+            )
+
+            self.scaled_num_df = pd.DataFrame(
+                data=self.scaled_data, columns=self.data.columns, index=self.data.index
+            )
+
+            self.log_writer.log(
+                table_name=self.table_name,
+                log_message="Converted transformed data to dataframe",
+            )
+
+            self.log_writer.start_log(
+                key="exit",
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=self.table_name,
+            )
+
+            return self.scaled_num_df
+
+        except Exception as e:
+            self.log_writer.raise_exception_log(
+                error=e,
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=self.table_name,
             )
 
     def get_columns_with_zero_std_deviation(self, data):
@@ -404,8 +483,7 @@ class Preprocessor:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            db_name=self.db_name,
-            collection_name=self.collection_name,
+            table_name=self.table_name,
         )
 
         try:
@@ -414,8 +492,7 @@ class Preprocessor:
             cols_to_drop = [x for x in data.columns if data_n[x]["std"] == 0]
 
             self.log_writer.log(
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
                 log_message="Got cols with zero standard deviation",
             )
 
@@ -423,8 +500,7 @@ class Preprocessor:
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
 
             return cols_to_drop
@@ -434,6 +510,5 @@ class Preprocessor:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                db_name=self.db_name,
-                collection_name=self.collection_name,
+                table_name=self.table_name,
             )
