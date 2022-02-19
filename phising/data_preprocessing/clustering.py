@@ -1,12 +1,12 @@
 from kneed import KneeLocator
 from matplotlib import pyplot as plt
-from phising.s3_bucket_operations.s3_operations import S3_Operations
+from phising.s3_bucket_operations.s3_operations import s3_operations
 from sklearn.cluster import KMeans
-from utils.logger import App_Logger
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class KMeansClustering:
+class kmeans_clustering:
     """
     Description :   This class shall  be used to divide the data into clusters before training.
     Version     :   1.2
@@ -34,11 +34,11 @@ class KMeansClustering:
             "direction"
         ]
 
-        self.s3_obj = S3_Operations()
+        self.s3 = s3_operations()
 
         self.elbow_plot_file = self.config["elbow_plot_fig"]
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.class_name = self.__class__.__name__
 
@@ -87,7 +87,7 @@ class KMeansClustering:
                 log_message="Saved elbow_plot fig and local copy is created",
             )
 
-            self.s3_obj.upload_to_s3(
+            self.s3.upload_file(
                 src_file=self.elbow_plot_file,
                 bucket=self.input_files_bucket,
                 dest_file=self.elbow_plot_file,
@@ -116,7 +116,7 @@ class KMeansClustering:
             return self.kn.knee
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -152,7 +152,7 @@ class KMeansClustering:
 
             self.y_kmeans = self.kmeans.fit_predict(data)
 
-            self.s3_obj.save_model_to_s3(
+            self.s3.save_model(
                 idx=None,
                 model=self.kmeans,
                 model_bucket=self.model_bucket,
@@ -176,7 +176,7 @@ class KMeansClustering:
             return self.data, self.kmeans
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

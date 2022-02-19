@@ -1,17 +1,17 @@
 import mlflow
-from phising.data_ingestion.data_loader_train import Data_Getter_Train
-from phising.data_preprocessing.clustering import KMeansClustering
-from phising.data_preprocessing.preprocessing import Preprocessor
-from phising.mlflow_utils.mlflow_operations import Mlflow_Operations
-from phising.model_finder.tuner import Model_Finder
-from phising.s3_bucket_operations.s3_operations import S3_Operations
+from phising.data_ingestion.data_loader_train import data_getter_train
+from phising.data_preprocessing.clustering import kmeans_clustering
+from phising.data_preprocessing.preprocessing import preprocessor
+from phising.mlflow_utils.mlflow_operations import mlflow_operations
+from phising.model_finder.tuner import model_finder
+from phising.s3_bucket_operations.s3_operations import s3_operations
 from sklearn.model_selection import train_test_split
-from utils.logger import App_Logger
+from utils.logger import app_logger
 from utils.model_utils import get_model_name
 from utils.read_params import read_params
 
 
-class Train_Model:
+class train_model:
     """
     Description :   This method is used for getting the data and applying
                     some preprocessing steps and then train the models and register them in mlflow
@@ -21,7 +21,7 @@ class Train_Model:
     """
 
     def __init__(self):
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.config = read_params()
 
@@ -41,17 +41,17 @@ class Train_Model:
 
         self.class_name = self.__class__.__name__
 
-        self.mlflow_op = Mlflow_Operations(table_name=self.model_train_log)
+        self.mlflow_op = mlflow_operations(table_name=self.model_train_log)
 
-        self.data_getter_train_obj = Data_Getter_Train(table_name=self.model_train_log)
+        self.data_getter_train_obj = data_getter_train(table_name=self.model_train_log)
 
-        self.preprocessor_obj = Preprocessor(table_name=self.model_train_log)
+        self.preprocessor_obj = preprocessor(table_name=self.model_train_log)
 
-        self.kmeans_obj = KMeansClustering(table_name=self.model_train_log)
+        self.kmeans_obj = kmeans_clustering(table_name=self.model_train_log)
 
-        self.model_finder_obj = Model_Finder(table_name=self.model_train_log)
+        self.model_finder_obj = model_finder(table_name=self.model_train_log)
 
-        self.s3_obj = S3_Operations()
+        self.s3 = s3_operations()
 
     def training_model(self):
         """
@@ -145,14 +145,14 @@ class Train_Model:
                     train_x=x_train, train_y=y_train, test_x=x_test, test_y=y_test
                 )
 
-                self.s3_obj.save_model_to_s3(
+                self.s3.save_model_to_s3(
                     idx=i,
                     model=ada_model,
                     model_bucket=self.model_bucket,
                     table_name=self.model_train_log,
                 )
 
-                self.s3_obj.save_model_to_s3(
+                self.s3.save_model_to_s3(
                     idx=i,
                     model=rf_model,
                     model_bucket=self.model_bucket,
@@ -195,7 +195,7 @@ class Train_Model:
                         log_message="Mlflow logging of params,metrics and models failed",
                     )
 
-                    self.log_writer.raise_exception_log(
+                    self.log_writer.exception_log(
                         error=e,
                         class_name=self.class_name,
                         method_name=method_name,
@@ -222,7 +222,7 @@ class Train_Model:
                 log_message="Unsuccessful End of Training",
             )
 
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

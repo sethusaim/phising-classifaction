@@ -2,9 +2,9 @@ from datetime import datetime
 import boto3
 
 
-class App_Logger:
+class app_logger:
     """
-    Description :   This class is used for logging the info to MongoDB
+    Description :   This class is used for logging the info to DynamoDB
 
     Version     :   1.2
     Revisions   :   moved to setup to cloud
@@ -18,7 +18,7 @@ class App_Logger:
     def log(self, table_name, log_message):
         """
         Method Name :   log
-        Description :   This method is used for log the info to MongoDB
+        Description :   This method is used for log the info to DynamoDB
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -69,9 +69,9 @@ class App_Logger:
 
             raise Exception(error_msg)
 
-    def raise_exception_log(self, error, class_name, method_name, table_name):
+    def exception_log(self, error, class_name, method_name, table_name):
         """
-        Method Name :   raise_exception_log
+        Method Name :   exception_log
         Description :   This method is used for logging exception
 
         Version     :   1.2

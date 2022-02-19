@@ -1,12 +1,11 @@
 import re
 
-from phising.s3_bucket_operations.s3_operations import S3_Operations
-from utils.logger import App_Logger
-from utils.main_utils import convert_object_to_dataframe
+from phising.s3_bucket_operations.s3_operations import s3_operations
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class Raw_Pred_Data_Validation:
+class raw_pred_data_validation:
     """
     Description :   This method is used for validating the raw prediction data
 
@@ -19,11 +18,11 @@ class Raw_Pred_Data_Validation:
 
         self.raw_data_bucket_name = raw_data_bucket_name
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.class_name = self.__class__.__name__
 
-        self.s3_obj = S3_Operations()
+        self.s3 = s3_operations()
 
         self.pred_data_bucket = self.config["s3_bucket"]["phising_pred_data_bucket"]
 
@@ -69,7 +68,7 @@ class Raw_Pred_Data_Validation:
                 table_name=self.pred_schema_log,
             )
 
-            dic = self.s3_obj.get_schema_from_s3(
+            dic = self.s3.get_schema_from_s3(
                 bucket=self.input_files_bucket,
                 filename=self.pred_schema_file,
                 table_name=self.pred_schema_log,
@@ -104,7 +103,7 @@ class Raw_Pred_Data_Validation:
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -152,7 +151,7 @@ class Raw_Pred_Data_Validation:
             return regex
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -179,14 +178,12 @@ class Raw_Pred_Data_Validation:
                 table_name=self.pred_name_valid_log,
             )
 
-            self.s3_obj.create_dirs_for_good_bad_data(
-                table_name=self.pred_name_valid_log
-            )
+            self.s3.create_dirs_for_good_bad_data(table_name=self.pred_name_valid_log)
 
-            onlyfiles = self.s3_obj.get_files_from_s3(
+            onlyfiles = self.s3.get_files(
                 bucket=self.raw_data_bucket_name,
                 folder_name=self.raw_pred_data_dir,
-                table_name=self.pred_name_valid_log,
+                table_name=self.pred_col_valid_log,
             )
 
             pred_batch_files = [f.split("/")[1] for f in onlyfiles]
@@ -205,7 +202,7 @@ class Raw_Pred_Data_Validation:
 
                     if len(splitAtDot[1]) == LengthOfDateStampInFile:
                         if len(splitAtDot[2]) == LengthOfTimeStampInFile:
-                            self.s3_obj.copy_data_to_other_bucket(
+                            self.s3.copy_data(
                                 src_bucket=self.raw_data_bucket_name,
                                 src_file=raw_data_pred_filename,
                                 dest_bucket=self.pred_data_bucket,
@@ -214,7 +211,7 @@ class Raw_Pred_Data_Validation:
                             )
 
                         else:
-                            self.s3_obj.copy_data_to_other_bucket(
+                            self.s3.copy_data(
                                 src_bucket=self.raw_data_bucket_name,
                                 src_file=raw_data_pred_filename,
                                 dest_bucket=self.pred_data_bucket,
@@ -223,7 +220,7 @@ class Raw_Pred_Data_Validation:
                             )
 
                     else:
-                        self.s3_obj.copy_data_to_other_bucket(
+                        self.s3.copy_data(
                             src_bucket=self.raw_data_bucket_name,
                             src_file=raw_data_pred_filename,
                             dest_bucket=self.pred_data_bucket,
@@ -232,7 +229,7 @@ class Raw_Pred_Data_Validation:
                         )
 
                 else:
-                    self.s3_obj.copy_data_to_other_bucket(
+                    self.s3.copy_data(
                         src_bucket=self.raw_data_bucket_name,
                         src_file=raw_data_pred_filename,
                         dest_bucket=self.pred_data_bucket,
@@ -248,7 +245,7 @@ class Raw_Pred_Data_Validation:
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -273,29 +270,28 @@ class Raw_Pred_Data_Validation:
                 table_name=self.pred_col_valid_log,
             )
 
-            csv_file_objs = self.s3_obj.get_file_objects_from_s3(
+            lst = self.s3.read_csv(
                 bucket=self.pred_data_bucket,
-                filename=self.good_pred_data_dir,
+                file_name=self.good_pred_data_dir,
+                folder=True,
                 table_name=self.pred_col_valid_log,
             )
 
-            for f in csv_file_objs:
-                file = f.key
+            for idx, f in enumerate(lst):
+                df = lst[idx][0]
 
-                abs_f = file.split("/")[-1]
+                file = lst[idx][1]
+
+                abs_f = lst[idx][2]
 
                 if file.endswith(".csv"):
-                    csv = convert_object_to_dataframe(
-                        f, table_name=self.pred_col_valid_log,
-                    )
-
-                    if csv.shape[1] == NumberofColumns:
+                    if df.shape[1] == NumberofColumns:
                         pass
 
                     else:
                         dest_f = self.bad_pred_data_dir + "/" + abs_f
 
-                        self.s3_obj.move_data_to_other_bucket(
+                        self.s3.move_data(
                             src_bucket=self.pred_data_bucket,
                             src_file=file,
                             dest_bucket=self.pred_data_bucket,
@@ -314,7 +310,7 @@ class Raw_Pred_Data_Validation:
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -339,31 +335,30 @@ class Raw_Pred_Data_Validation:
                 table_name=self.pred_missing_value_log,
             )
 
-            csv_file_objs = self.s3_obj.get_file_objects_from_s3(
+            lst = self.s3.read_csv(
                 bucket=self.pred_data_bucket,
-                filename=self.good_pred_data_dir,
+                file_name=self.good_pred_data_dir,
+                folder=True,
                 table_name=self.pred_missing_value_log,
             )
 
-            for f in csv_file_objs:
-                file = f.key
+            for idx, f in enumerate(lst):
+                df = f[idx][0]
 
-                abs_f = file.split("/")[-1]
+                file = f[idx][1]
+
+                abs_f = f[idx][2]
 
                 if abs_f.endswith(".csv"):
-                    csv = convert_object_to_dataframe(
-                        f, table_name=self.pred_missing_value_log,
-                    )
-
                     count = 0
 
-                    for cols in csv:
-                        if (len(csv[cols]) - csv[cols].count()) == len(csv[cols]):
+                    for cols in df:
+                        if (len(df[cols]) - df[cols].count()) == len(df[cols]):
                             count += 1
 
                             dest_f = self.bad_pred_data_dir + "/" + abs_f
 
-                            self.s3_obj.move_data_to_other_bucket(
+                            self.s3.move_data(
                                 src_bucket=self.pred_data_bucket,
                                 src_file=file,
                                 dest_bucket=self.pred_data_bucket,
@@ -376,8 +371,8 @@ class Raw_Pred_Data_Validation:
                     if count == 0:
                         dest_f = self.good_pred_data_dir + "/" + abs_f
 
-                        self.s3_obj.upload_df_as_csv_to_s3(
-                            data_frame=csv,
+                        self.s3.upload_df_as_csv(
+                            data_frame=df,
                             file_name=abs_f,
                             bucket=self.pred_data_bucket,
                             dest_file_name=dest_f,
@@ -395,7 +390,7 @@ class Raw_Pred_Data_Validation:
                 )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

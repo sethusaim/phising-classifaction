@@ -1,10 +1,10 @@
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV
 
-from utils.logger import App_Logger
+from utils.logger import app_logger
 from utils.read_params import read_params
 
-log_writer = App_Logger()
+log_writer = app_logger()
 
 config = read_params()
 
@@ -43,7 +43,7 @@ def get_model_name(model, table_name):
         return model_name
 
     except Exception as e:
-        log_writer.raise_exception_log(
+        log_writer.exception_log(
             error=e,
             class_name=__file__,
             method_name=method_name,
@@ -93,7 +93,7 @@ def get_model_param_grid(model_key_name, table_name):
         return model_grid
 
     except Exception as e:
-        log_writer.raise_exception_log(
+        log_writer.exception_log(
             error=e,
             class_name=__file__,
             method_name=method_name,
@@ -154,7 +154,7 @@ def get_model_score(model, test_x, test_y, table_name):
         return model_score
 
     except Exception as e:
-        log_writer.raise_exception_log(
+        log_writer.exception_log(
             error=e,
             class_name=__file__,
             method_name=method_name,
@@ -222,7 +222,7 @@ def get_model_params(model, model_key_name, x_train, y_train, table_name):
         return model_grid.best_params_
 
     except Exception as e:
-        log_writer.raise_exception_log(
+        log_writer.exception_log(
             error=e,
             class_name=__file__,
             method_name=method_name,

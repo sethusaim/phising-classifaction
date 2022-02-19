@@ -109,30 +109,28 @@ db_log:
   db_pred_log : phising_prediction_logs
 
 train_db_log:
-  model_training : modelTrainingLog
-  col_validation : columnValidationLog
-  data_transform : dataTransform
-  export_csv : ExportToCsvLog
-  general : GeneralLog
-  db_insert: dbInsertLog
-  load_prod_model : loadProdModelLog
-  missing_values_in_col : missingValuesInColumn
-  name_validation : nameValidationLog
-  train_main : Training_Main_Log
-  values_from_schema : valuesfromSchemaValidationLog
-s
+  model_training : model_training_log
+  col_validation : train_col_validation_log
+  data_transform : train_data_transform_log
+  export_csv : train_export_to_csv_log
+  general : train_general_log
+  db_insert: train_db_insert_log
+  load_prod_model : load_prod_model_log
+  missing_values_in_col : train_missing_values_in_column
+  name_validation : train_name_validation_log
+  train_main : training_main_log
+  values_from_schema : train_values_from_schema_log
+
 pred_db_log:
-  col_validation : columnValidationLog
-  db_conn: databaseConnectionLog
-  data_transform : dataTransform
-  db_insert : dbInsertLog
-  db_create : dbTableCreateLog
-  export_csv : ExportToCsvLog
-  general : GeneralLog
-  missing_values_in_col : missingValuesInColumn
-  name_validation : nameValidationLog
+  col_validation : pred_col_validation_log
+  data_transform : pred_data_transform_log
+  db_insert : pred_db_insert_log
+  export_csv : pred_export_to_csv_log
+  general : pred_general_log
+  missing_values_in_col : pred_missing_values_in_column
+  name_validation : pred_name_validation_log
   pred_main : prediction_main_log
-  values_from_schema : valuesfromSchemaValidationLog
+  values_from_schema : pred_values_from_schema_log
 
 schema_file:
   train_schema_file : schema_training.json
@@ -144,9 +142,9 @@ null_values_csv_file : null_values.csv
 
 pred_output_file : predictions.csv
 
-export_train_csv_file : train_input_file.csv
-
-export_pred_csv_file : pred_input_file.csv
+export_csv_file:
+  train : train_input_file.csv
+  pred : pred_input_file.csv
 
 templates:
   dir : templates

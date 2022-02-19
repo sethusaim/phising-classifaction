@@ -1,12 +1,12 @@
 import pandas as pd
-from phising.data_ingestion.data_loader_prediction import Data_Getter_Pred
-from phising.data_preprocessing.preprocessing import Preprocessor
-from phising.s3_bucket_operations.s3_operations import S3_Operations
-from utils.logger import App_Logger
+from phising.data_ingestion.data_loader_prediction import data_getter_pred
+from phising.data_preprocessing.preprocessing import preprocessor
+from phising.s3_bucket_operations.s3_operations import s3_operations
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class Prediction:
+class prediction:
     """
     Description :   This class shall be used for loading the production model
 
@@ -19,7 +19,7 @@ class Prediction:
 
         self.pred_log = self.config["pred_db_log"]["pred_main"]
 
-        self.model_bucket = self.config["s3_bucket"]["scania_model_bucket"]
+        self.model_bucket = self.config["s3_bucket"]["phising_model_bucket"]
 
         self.input_files_bucket = self.config["s3_bucket"]["inputs_files_bucket"]
 
@@ -27,13 +27,13 @@ class Prediction:
 
         self.pred_output_file = self.config["pred_output_file"]
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
-        self.s3_obj = S3_Operations()
+        self.s3 = s3_operations()
 
-        self.data_getter_pred = Data_Getter_Pred(table_name=self.pred_log)
+        self.data_getter_pred = data_getter_pred(table_name=self.pred_log)
 
-        self.preprocessor = Preprocessor(table_name=self.pred_log)
+        self.preprocessor = preprocessor(table_name=self.pred_log)
 
         self.class_name = self.__class__.__name__
 
@@ -55,7 +55,7 @@ class Prediction:
         )
 
         try:
-            self.s3_obj.delete_pred_file(table_name=self.pred_log)
+            self.s3.delete_pred_file(table_name=self.pred_log)
 
             data = self.data_getter_pred.get_data()
 
@@ -78,7 +78,7 @@ class Prediction:
 
             kmeans_model_name = self.prod_model_dir + "/" + "KMeans"
 
-            kmeans_model = self.s3_obj.load_model_from_s3(
+            kmeans_model = self.s3.load_model(
                 bucket=self.model_bucket,
                 model_name=kmeans_model_name,
                 table_name=self.pred_log,
@@ -95,7 +95,7 @@ class Prediction:
 
                 cluster_data = cluster_data.drop(["clusters"], axis=1)
 
-                model_name = self.s3_obj.find_correct_model_file(
+                model_name = self.s3.find_correct_model_file(
                     cluster_number=i,
                     bucket_name=self.model_bucket,
                     table_name=self.pred_log,
@@ -103,7 +103,7 @@ class Prediction:
 
                 prod_model_name = self.prod_model_dir + "/" + model_name
 
-                model = self.s3_obj.load_model_from_s3(
+                model = self.s3.load_model(
                     bucket=self.model_bucket,
                     model_name=prod_model_name,
                     table_name=self.pred_log,
@@ -111,11 +111,11 @@ class Prediction:
 
                 result = list(model.predict(cluster_data))
 
-                result = pd.DataFrame(result, columns=["Predictions"])
+                result = pd.DataFrame(result, columns=["predictions"])
 
-                result["Predictions"] = result["Predictions"].map({0: "neg", 1: "pos"})
+                result["predictions"] = result["predictions"].map({0: "neg", 1: "pos"})
 
-                self.s3_obj.upload_df_as_csv_to_s3(
+                self.s3.upload_df_as_csv(
                     data_frame=result,
                     file_name=self.pred_output_file,
                     bucket=self.input_files_bucket,
@@ -124,7 +124,7 @@ class Prediction:
                 )
 
             self.log_writer.log(
-                table_name=self.pred_log, log_message="End of Prediction"
+                table_name=self.pred_log, log_message="End of prediction"
             )
 
             self.log_writer.start_log(
@@ -141,7 +141,7 @@ class Prediction:
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

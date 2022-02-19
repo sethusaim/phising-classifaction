@@ -1,11 +1,10 @@
-from phising.mongo_db_operations.mongo_operations import MongoDB_Operation
-from phising.s3_bucket_operations.s3_operations import S3_Operations
-from utils.logger import App_Logger
-from utils.main_utils import convert_object_to_dataframe
+from phising.mongo_db_operations.mongo_operations import mongodb_operation
+from phising.s3_bucket_operations.s3_operations import s3_operations
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class DB_Operation_Train:
+class db_operation_train:
     """
     Description :    This class shall be used for handling all the db operations
 
@@ -30,11 +29,11 @@ class DB_Operation_Train:
 
         self.train_export_csv_log = self.config["train_db_log"]["export_csv"]
 
-        self.s3_obj = S3_Operations()
+        self.s3 = s3_operations()
 
-        self.db_op = MongoDB_Operation()
+        self.db_op = mongodb_operation()
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
     def insert_good_data_as_record(self, good_data_db_name, good_data_collection_name):
         """
@@ -54,20 +53,19 @@ class DB_Operation_Train:
         )
 
         try:
-            csv_files = self.s3_obj.get_file_objects_from_s3(
+            lst = self.s3.read_csv(
                 bucket=self.train_data_bucket,
-                filename=self.good_data_train_dir,
+                file_name=self.good_data_train_dir,
+                folder=True,
                 table_name=self.train_db_insert_log,
             )
 
-            for f in csv_files:
+            for idx, f in enumerate(lst):
+                df = f[idx][0]
+
                 file = f.key
 
                 if file.endswith(".csv"):
-                    df = convert_object_to_dataframe(
-                        obj=f, table_name=self.train_db_insert_log,
-                    )
-
                     self.db_op.insert_dataframe_as_record(
                         data_frame=df,
                         db_name=good_data_db_name,
@@ -91,7 +89,7 @@ class DB_Operation_Train:
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -116,13 +114,13 @@ class DB_Operation_Train:
         )
 
         try:
-            df = self.db_op.convert_collection_to_dataframe(
+            df = self.db_op.get_collection_as_dataframe(
                 db_name=good_data_db_name,
                 collection_name=good_data_collection_name,
                 table_name=self.train_export_csv_log,
             )
 
-            self.s3_obj.upload_df_as_csv_to_s3(
+            self.s3.upload_df_as_csv(
                 data_frame=df,
                 file_name=self.train_export_csv_file,
                 bucket=self.input_files_bucket,
@@ -138,7 +136,7 @@ class DB_Operation_Train:
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

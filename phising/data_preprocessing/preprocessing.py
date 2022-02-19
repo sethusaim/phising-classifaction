@@ -1,14 +1,14 @@
 import numpy as np
 import pandas as pd
-from phising.s3_bucket_operations.s3_operations import S3_Operations
+from phising.s3_bucket_operations.s3_operations import s3_operations
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
-from utils.logger import App_Logger
+from utils.logger import app_logger
 from utils.model_utils import get_model_name
 from utils.read_params import read_params
 
 
-class Preprocessor:
+class preprocessor:
     """
     Description :   This class shall  be used to clean and transform the data before training.
     Version     :   1.2
@@ -16,7 +16,7 @@ class Preprocessor:
     """
 
     def __init__(self, table_name):
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.config = read_params()
 
@@ -30,7 +30,7 @@ class Preprocessor:
 
         self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
 
-        self.s3_obj = S3_Operations()
+        self.s3 = s3_operations()
 
     def remove_columns(self, data, columns):
         """
@@ -72,7 +72,7 @@ class Preprocessor:
             return self.useful_data
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -117,7 +117,7 @@ class Preprocessor:
             return self.X, self.Y
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -157,7 +157,7 @@ class Preprocessor:
             return data
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -227,7 +227,7 @@ class Preprocessor:
                     log_message="Created dataframe with null values",
                 )
 
-                self.s3_obj.upload_df_as_csv_to_s3(
+                self.s3.upload_df_as_csv(
                     data_frame=self.dataframe_with_null,
                     file_name=self.null_values_file,
                     bucket=self.input_files_bucket,
@@ -251,7 +251,7 @@ class Preprocessor:
             return null_present
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -294,7 +294,7 @@ class Preprocessor:
             return data
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -338,7 +338,7 @@ class Preprocessor:
             return data
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -398,7 +398,7 @@ class Preprocessor:
             return principal_x
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -460,7 +460,7 @@ class Preprocessor:
             return self.scaled_num_df
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -506,7 +506,7 @@ class Preprocessor:
             return cols_to_drop
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

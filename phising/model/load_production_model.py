@@ -1,10 +1,9 @@
-from phising.mlflow_utils.mlflow_operations import Mlflow_Operations
-from phising.s3_bucket_operations.s3_operations import S3_Operations
-from utils.logger import App_Logger
+from phising.mlflow_utils.mlflow_operations import mlflow_operations
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class Load_Prod_Model:
+class load_prod_model:
     """
     Description :   This class shall be used for loading the production model
     Written by  :   iNeuron Intelligence
@@ -13,7 +12,7 @@ class Load_Prod_Model:
     """
 
     def __init__(self, num_clusters):
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.config = read_params()
 
@@ -27,9 +26,7 @@ class Load_Prod_Model:
 
         self.exp_name = self.config["mlflow_config"]["experiment_name"]
 
-        self.s3_obj = S3_Operations()
-
-        self.mlflow_op = Mlflow_Operations(table_name=self.load_prod_model_log)
+        self.mlflow_op = mlflow_operations(table_name=self.load_prod_model_log)
 
     def load_production_model(self):
         """
@@ -197,7 +194,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
             )
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,

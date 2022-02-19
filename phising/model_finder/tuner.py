@@ -1,11 +1,11 @@
 from sklearn.ensemble import RandomForestClassifier
-from utils.logger import App_Logger
-from utils.model_utils import get_model_params, get_model_score
+from utils.logger import app_logger
+from utils.model_utils import get_model_params, get_model_score, get_model_name
 from utils.read_params import read_params
 from xgboost import XGBClassifier
 
 
-class Model_Finder:
+class model_finder:
     """
     This class shall  be used to find the model with best accuracy and AUC score.
     Written By: iNeuron Intelligence
@@ -24,7 +24,7 @@ class Model_Finder:
 
         self.verbose = self.config["model_utils"]["verbose"]
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.rf_model = RandomForestClassifier()
 
@@ -52,6 +52,10 @@ class Model_Finder:
         )
 
         try:
+            self.rf_model_name = get_model_name(
+                model=self.rf_model, table_name=self.table_name
+            )
+
             self.rf_best_params = get_model_params(
                 model=self.rf_model,
                 model_key_name="rf_model",
@@ -70,7 +74,7 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"{self.rf_model.__class__.__name__} model best params are {self.rf_best_params}",
+                log_message=f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
             rf_model = RandomForestClassifier(
@@ -82,14 +86,14 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Initialized {rf_model.__class__.__name__} with {self.rf_best_params} as params",
+                log_message=f"Initialized {self.rf_model_name} with {self.rf_best_params} as params",
             )
 
             rf_model.fit(train_x, train_y)
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Created {rf_model.__class__.__name__} based on the {self.rf_best_params} as params",
+                log_message=f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
             )
 
             self.log_writer.start_log(
@@ -102,7 +106,7 @@ class Model_Finder:
             return rf_model
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
@@ -131,6 +135,9 @@ class Model_Finder:
         )
 
         try:
+            self.xgb_model_name = get_model_name(
+                model=self.xgb_model, table_name=self.table_name
+            )
 
             self.xgb_best_params = get_model_params(
                 model=self.xgb_model,
@@ -148,7 +155,7 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"{self.rf_model.__class__.__name__} model best params are {self.rf_best_params}",
+                log_message=f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
             xgb_model = XGBClassifier(
@@ -159,14 +166,14 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Initialized {self.xgb_model.__class__.__name__} model with best params as {self.xgb_best_params}",
+                log_message=f"Initialized {self.xgb_model_name} model with best params as {self.xgb_best_params}",
             )
 
             xgb_model.fit(train_x, train_y)
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Created {self.xgb_model.__class__.__name__} model with best params as {self.xgb_best_params}",
+                log_message=f"Created {self.xgb_model_name} model with best params as {self.xgb_best_params}",
             )
 
             self.log_writer.start_log(
@@ -235,6 +242,6 @@ class Model_Finder:
             return xgb_model, xgb_model_score, rf_model, rf_model_score
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e, class_name=self.class_name, method_name=method_name,
             )

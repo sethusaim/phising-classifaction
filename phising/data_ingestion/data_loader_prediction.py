@@ -1,10 +1,9 @@
-from phising.s3_bucket_operations.s3_operations import S3_Operations
-from utils.logger import App_Logger
-from utils.main_utils import convert_object_to_dataframe
+from phising.s3_bucket_operations.s3_operations import s3_operations
+from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class Data_Getter_Pred:
+class data_getter_pred:
     """
     Description :   This class shall be used for obtaining the df from the source for prediction
     Version     :   1.2
@@ -20,9 +19,9 @@ class Data_Getter_Pred:
 
         self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
 
-        self.s3_obj = S3_Operations()
+        self.s3 = s3_operations()
 
-        self.log_writer = App_Logger()
+        self.log_writer = app_logger()
 
         self.class_name = self.__class__.__name__
 
@@ -46,13 +45,11 @@ class Data_Getter_Pred:
         )
 
         try:
-            csv_obj = self.s3_obj.get_file_objects_from_s3(
+            df = self.s3.read_csv(
                 bucket=self.input_files_bucket,
-                filename=self.prediction_file,
+                file_name=self.prediction_file,
                 table_name=self.table_name,
             )
-
-            df = convert_object_to_dataframe(obj=csv_obj, table_name=self.table_name)
 
             self.log_writer.start_log(
                 key="exit",
@@ -64,7 +61,7 @@ class Data_Getter_Pred:
             return df
 
         except Exception as e:
-            self.log_writer.raise_exception_log(
+            self.log_writer.exception_log(
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
