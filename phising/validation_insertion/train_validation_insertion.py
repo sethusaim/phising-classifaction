@@ -1,8 +1,6 @@
-from phising.data_transform.data_transformation_train import \
-    data_transform_train
+from phising.data_transform.data_transformation_train import data_transform_train
 from phising.data_type_valid.data_type_valid_train import db_operation_train
-from phising.raw_data_validation.train_data_validation import \
-    raw_train_data_validation
+from phising.raw_data_validation.train_data_validation import raw_train_data_validation
 from utils.logger import app_logger
 from utils.read_params import read_params
 
