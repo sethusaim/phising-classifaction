@@ -46,7 +46,7 @@ async def index(request: Request):
 @app.get("/train")
 async def trainRouteClient():
     try:
-        raw_data_train_bucket_name = config["s3_bucket"]["scania_raw_data_bucket"]
+        raw_data_train_bucket_name = config["s3_bucket"]["phising_raw_data_bucket"]
 
         table_obj = create_log_table()
 
@@ -75,7 +75,7 @@ async def trainRouteClient():
 @app.get("/predict")
 async def predictRouteClient():
     try:
-        raw_data_pred_bucket_name = config["s3_bucket"]["scania_raw_data_bucket"]
+        raw_data_pred_bucket_name = config["s3_bucket"]["phising_raw_data_bucket"]
 
         table_obj = create_log_table()
 

@@ -85,6 +85,7 @@ class preprocessor:
         Description :   This method separates the features and a Label Coulmns.
         Output      :   Returns two separate Dataframes, one containing features and the other containing Labels .
         On Failure  :   Raise Exception
+
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
@@ -128,6 +129,7 @@ class preprocessor:
         """
         Method Name :   replace_invalid_values
         Description :   This method replaces invalid values i.e. 'na' with np.nan
+        
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """

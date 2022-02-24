@@ -1,6 +1,7 @@
 from phising.data_transform.data_transformation_pred import data_transform_pred
 from phising.data_type_valid.data_type_valid_pred import db_operation_pred
-from phising.raw_data_validation.pred_data_validation import raw_pred_data_validation
+from phising.raw_data_validation.pred_data_validation import \
+    raw_pred_data_validation
 from utils.logger import app_logger
 from utils.read_params import read_params
 
@@ -38,7 +39,7 @@ class pred_validation:
 
     def prediction_validation(self):
         """
-        Method Name :   load_s3_obj
+        Method Name :   load_s3
         Description :   This method is used for validating the prediction btach files
 
         Version     :   1.2
@@ -92,7 +93,7 @@ class pred_validation:
 
             self.db_operation.insert_good_data_as_record(
                 db_name=self.good_data_db_name,
-                table_name=self.good_data_collection_name,
+                collection_name=self.good_data_collection_name,
             )
 
             self.log_writer.log(
@@ -102,7 +103,7 @@ class pred_validation:
 
             self.db_operation.export_collection_to_csv(
                 db_name=self.good_data_db_name,
-                table_name=self.good_data_collection_name,
+                collection_name=self.good_data_collection_name,
             )
 
             self.log_writer.start_log(

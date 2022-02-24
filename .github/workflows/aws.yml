@@ -29,7 +29,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: aws-scania-repo
+        ECR_REPOSITORY: aws-phising-repo
         IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build --build-arg AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
@@ -48,13 +48,13 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: aws-task-definition.json
-        container-name: aws-scania-repo
+        container-name: aws-phising-repo
         image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: scania-service
-        cluster: scania-cluster
+        service: phising-service
+        cluster: phising-cluster
         wait-for-service-stability: true

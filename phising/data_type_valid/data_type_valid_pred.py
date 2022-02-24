@@ -17,9 +17,9 @@ class db_operation_pred:
 
         self.class_name = self.__class__.__name__
 
-        self.pred_data_bucket = self.config["s3_bucket"]["scania_pred_data_bucket"]
+        self.pred_data_bucket = self.config["s3_bucket"]["phising_pred_data_bucket"]
 
-        self.pred_export_csv_file = self.config["export_pred_csv_file"]
+        self.pred_export_csv_file = self.config["export_csv_file"]["pred"]
 
         self.good_data_pred_dir = self.config["data"]["pred"]["good_data_dir"]
 

@@ -39,8 +39,8 @@ class model_finder:
         On Failure  :   Raise Exception
 
         Written By  :   iNeuron Intelligence
-        Version     :   1.0
-        Revisions   :   None
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
         """
         method_name = self.get_best_params_for_random_forest.__name__
 
@@ -122,8 +122,8 @@ class model_finder:
         On Failure  :   Raise Exception
 
         Written By  :   iNeuron Intelligence
-        Version     :   1.0
-        Revisions   :   None
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
         """
         method_name = self.get_best_params_for_xgboost.__name__
 
@@ -201,8 +201,8 @@ class model_finder:
         On Failure  :   Raise Exception
 
         Written By  :   iNeuron Intelligence
-        Version     :   1.0
-        Revisions   :   None
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
         """
         method_name = self.get_trained_models.__name__
 

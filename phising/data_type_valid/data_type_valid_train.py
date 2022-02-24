@@ -17,9 +17,9 @@ class db_operation_train:
 
         self.class_name = self.__class__.__name__
 
-        self.train_data_bucket = self.config["s3_bucket"]["scania_train_data_bucket"]
+        self.train_data_bucket = self.config["s3_bucket"]["phising_train_data_bucket"]
 
-        self.train_export_csv_file = self.config["export_train_csv_file"]
+        self.train_export_csv_file = self.config["export_csv_file"]["train"]
 
         self.good_data_train_dir = self.config["data"]["train"]["good_data_dir"]
 
@@ -63,7 +63,7 @@ class db_operation_train:
             for idx, f in enumerate(lst):
                 df = f[idx][0]
 
-                file = f.key
+                file = f[idx][1]
 
                 if file.endswith(".csv"):
                     self.db_op.insert_dataframe_as_record(

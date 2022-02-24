@@ -7,7 +7,7 @@ from utils.logger import app_logger
 from utils.read_params import read_params
 
 
-class mongodb_operation:
+class mongo_db_operation:
     """
     Description :   This method is used for all mongodb operations
 
@@ -220,7 +220,7 @@ class mongodb_operation:
                 df = df.drop(columns=["_id"], axis=1)
 
             self.log_writer.log(
-                table_name=table_name, log_message=f"Converted collection to dataframe",
+                table_name=table_name, log_message="Converted collection to dataframe",
             )
 
             self.log_writer.start_log(

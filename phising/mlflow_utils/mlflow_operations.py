@@ -90,7 +90,7 @@ class mlflow_operations:
         method_name = self.get_runs_from_mlflow.__name__
 
         self.log_writer.start_log(
-            key="exit",
+            key="start",
             class_name=self.class_name,
             method_name=method_name,
             table_name=self.table_name,
@@ -440,11 +440,13 @@ class mlflow_operations:
         )
 
         try:
-            mlflow.log_metric(key=model_name + "-best_score", value=metric)
+            model_score_name = f"{model_name}-best_score"
+
+            mlflow.log_metric(key=model_score_name, value=metric)
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=model_name + "-best score logged in mlflow",
+                log_message=f"{model_score_name} logged in mlflow",
             )
 
             self.log_writer.start_log(
@@ -480,12 +482,13 @@ class mlflow_operations:
         )
 
         try:
-            name = model_name + str(idx) + f"-{param}"
+            model_param_name = model_name + str(idx) + f"-{param}"
 
-            mlflow.log_param(key=name, value=model.__dict__[param])
+            mlflow.log_param(key=model_param_name, value=model.__dict__[param])
 
             self.log_writer.log(
-                table_name=self.table_name, log_message=f"{name} logged in mlflow"
+                table_name=self.table_name,
+                log_message=f"{model_param_name} logged in mlflow",
             )
 
             self.log_writer.start_log(
@@ -523,37 +526,41 @@ class mlflow_operations:
 
             base_model_name = get_model_name(model=model, table_name=self.table_name)
 
-            model_name = base_model_name + str(idx)
+            if base_model_name is "KMeans":
+                self.log_model(model=model, model_name=base_model_name)
 
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message=f"Got the model name as {model_name}",
-            )
+            else:
+                model_name = base_model_name + str(idx)
 
-            model_params_list = list(
-                self.config["model_params"][model_param_name].keys()
-            )
-
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message=f"Created a list of params based on {model_param_name}",
-            )
-
-            for param in model_params_list:
-                self.log_param(
-                    idx=idx, model=model, model_name=model_name, param=param,
+                self.log_writer.log(
+                    table_name=self.table_name,
+                    log_message=f"Got the model name as {model_name}",
                 )
 
-            self.log_model(model=model, model_name=model_name)
+                model_params_list = list(
+                    self.config["model_params"][model_param_name].keys()
+                )
 
-            self.log_metric(model_name=model_name, metric=float(model_score))
+                self.log_writer.log(
+                    table_name=self.table_name,
+                    log_message=f"Created a list of params based on {model_param_name}",
+                )
 
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
+                for param in model_params_list:
+                    self.log_param(
+                        idx=idx, model=model, model_name=model_name, param=param,
+                    )
+
+                self.log_model(model=model, model_name=model_name)
+
+                self.log_metric(model_name=model_name, metric=float(model_score))
+
+                self.log_writer.start_log(
+                    key="exit",
+                    class_name=self.class_name,
+                    method_name=method_name,
+                    table_name=self.table_name,
+                )
 
         except Exception as e:
             self.log_writer.exception_log(

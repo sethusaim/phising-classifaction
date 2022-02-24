@@ -14,8 +14,8 @@ def get_model_name(model, table_name):
     Method Name :   get_model_name
     Description :   This method is used for getting the actual model name
 
-    Version     :   1.0
-    Revisions   :   None
+    Version     :   1.2
+    Revisions   :   moved setup to cloud
     """
     method_name = get_model_name.__name__
 

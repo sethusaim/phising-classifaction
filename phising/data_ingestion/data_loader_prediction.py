@@ -7,7 +7,7 @@ class data_getter_pred:
     """
     Description :   This class shall be used for obtaining the df from the source for prediction
     Version     :   1.2
-    Revisions   :   Moved to setup to cloud run setup
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self, table_name):
@@ -15,7 +15,7 @@ class data_getter_pred:
 
         self.table_name = table_name
 
-        self.prediction_file = self.config["export_pred_csv_file"]
+        self.prediction_file = self.config["export_csv_file"]["pred"]
 
         self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
 
@@ -32,8 +32,9 @@ class data_getter_pred:
         Output      :   A pandas dataframe
         On failure  :   Raise Exception
         Written by  :   iNeuron Intelligence
-        Version     :   1.1
-        Revisions   :   modified code based on params.yaml file
+        
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
         """
         method_name = self.get_data.__name__
 

@@ -1,8 +1,8 @@
 import re
 
-from phising.s3_bucket_operations.s3_operations import s3_operations
 from utils.logger import app_logger
 from utils.read_params import read_params
+from phising.s3_bucket_operations.s3_operations import s3_operations
 
 
 class raw_pred_data_validation:
@@ -30,9 +30,9 @@ class raw_pred_data_validation:
 
         self.raw_pred_data_dir = self.config["data"]["raw_data"]["pred_batch"]
 
-        self.db_name = self.config["db_log"]["db_pred_log"]
-
         self.pred_schema_file = self.config["schema_file"]["pred_schema_file"]
+
+        self.regex_file = self.config["regex_file"]
 
         self.pred_schema_log = self.config["pred_db_log"]["values_from_schema"]
 
@@ -68,7 +68,7 @@ class raw_pred_data_validation:
                 table_name=self.pred_schema_log,
             )
 
-            dic = self.s3.get_schema_from_s3(
+            dic = self.s3.read_json(
                 bucket=self.input_files_bucket,
                 filename=self.pred_schema_file,
                 table_name=self.pred_schema_log,
@@ -135,7 +135,11 @@ class raw_pred_data_validation:
                 table_name=self.pred_gen_log,
             )
 
-            regex = "['phising']+['\_'']+[\d_]+[\d]+\.csv"
+            regex = self.s3.read_text(
+                file_name=self.regex_file,
+                bucket_name=self.input_files_bucket,
+                table_name=self.pred_gen_log,
+            )
 
             self.log_writer.log(
                 table_name=self.pred_gen_log, log_message=f"Got {regex} pattern",
@@ -158,6 +162,51 @@ class raw_pred_data_validation:
                 table_name=self.pred_gen_log,
             )
 
+    def create_dirs_for_good_bad_data(self, table_name):
+        """
+        Method Name :   create_dirs_for_good_bad_data
+        Description :   This method is used for creating directory for good and bad data in s3 bucket
+
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
+        method_name = self.create_dirs_for_good_bad_data.__name__
+
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=table_name,
+        )
+
+        try:
+            self.s3.create_folder(
+                bucket_name=self.pred_data_bucket,
+                folder_name=self.good_pred_data_dir,
+                table_name=table_name,
+            )
+
+            self.s3.create_folder(
+                bucket_name=self.pred_data_bucket,
+                folder_name=self.bad_pred_data_dir,
+                table_name=table_name,
+            )
+
+            self.log_writer.start_log(
+                key="exit",
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=table_name,
+            )
+
+        except Exception as e:
+            self.log_writer.exception_log(
+                error=e,
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=table_name,
+            )
+
     def validate_raw_file_name(
         self, regex, LengthOfDateStampInFile, LengthOfTimeStampInFile
     ):
@@ -170,23 +219,28 @@ class raw_pred_data_validation:
         """
         method_name = self.validate_raw_file_name.__name__
 
-        try:
-            self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.pred_name_valid_log,
-            )
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=self.pred_name_valid_log,
+        )
 
-            self.s3.create_dirs_for_good_bad_data(table_name=self.pred_name_valid_log)
+        try:
+            self.create_dirs_for_good_bad_data(table_name=self.pred_name_valid_log)
 
             onlyfiles = self.s3.get_files(
                 bucket=self.raw_data_bucket_name,
                 folder_name=self.raw_pred_data_dir,
-                table_name=self.pred_col_valid_log,
+                table_name=self.pred_name_valid_log,
             )
 
             pred_batch_files = [f.split("/")[1] for f in onlyfiles]
+
+            self.log_writer.log(
+                table_name=self.pred_name_valid_log,
+                log_message="Got prediction files with exact name",
+            )
 
             for filename in pred_batch_files:
                 raw_data_pred_filename = self.raw_pred_data_dir + "/" + filename
@@ -194,6 +248,11 @@ class raw_pred_data_validation:
                 good_data_pred_filename = self.good_pred_data_dir + "/" + filename
 
                 bad_data_pred_filename = self.bad_pred_data_dir + "/" + filename
+
+                self.log_writer.log(
+                    table_name=self.pred_name_valid_log,
+                    log_message="Created raw,good and bad data filenames",
+                )
 
                 if re.match(regex, filename):
                     splitAtDot = re.split(".csv", filename)
@@ -262,27 +321,27 @@ class raw_pred_data_validation:
         """
         method_name = self.validate_col_length.__name__
 
-        try:
-            self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.pred_col_valid_log,
-            )
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=self.pred_col_valid_log,
+        )
 
+        try:
             lst = self.s3.read_csv(
                 bucket=self.pred_data_bucket,
                 file_name=self.good_pred_data_dir,
-                folder=True,
                 table_name=self.pred_col_valid_log,
+                folder=True,
             )
 
             for idx, f in enumerate(lst):
-                df = lst[idx][0]
+                df = f[idx][0]
 
-                file = lst[idx][1]
+                file = f[idx][1]
 
-                abs_f = lst[idx][2]
+                abs_f = f[idx][2]
 
                 if file.endswith(".csv"):
                     if df.shape[1] == NumberofColumns:
@@ -327,22 +386,22 @@ class raw_pred_data_validation:
         """
         method_name = self.validate_missing_values_in_col.__name__
 
-        try:
-            self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.pred_missing_value_log,
-            )
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=self.pred_missing_value_log,
+        )
 
+        try:
             lst = self.s3.read_csv(
                 bucket=self.pred_data_bucket,
                 file_name=self.good_pred_data_dir,
-                folder=True,
                 table_name=self.pred_missing_value_log,
+                folder=True,
             )
 
-            for idx, f in enumerate(lst):
+            for idx, f in lst:
                 df = f[idx][0]
 
                 file = f[idx][1]

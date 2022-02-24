@@ -20,7 +20,7 @@ class kmeans_clustering:
 
         self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
 
-        self.model_bucket = self.config["s3_bucket"]["scania_model_bucket"]
+        self.model_bucket = self.config["s3_bucket"]["phising_model_bucket"]
 
         self.random_state = self.config["base"]["random_state"]
 
@@ -28,11 +28,9 @@ class kmeans_clustering:
 
         self.max_clusters = self.config["kmeans_cluster"]["max_clusters"]
 
-        self.kmeans_curve = self.config["kmeans_cluster"]["knee_locator"]["curve"]
+        self.kmeans_curve = self.config["kmeans_cluster"]["knee"]["curve"]
 
-        self.kmeans_direction = self.config["kmeans_cluster"]["knee_locator"][
-            "direction"
-        ]
+        self.kmeans_direction = self.config["kmeans_cluster"]["knee"]["direction"]
 
         self.s3 = s3_operations()
 
@@ -48,8 +46,8 @@ class kmeans_clustering:
         Description :   This method saves the plot to s3 bucket and decides the optimum number of clusters to the file.
         Output      :   A picture saved to the s3_bucket
         On Failure  :   Raise Exception
-        Version     :   1.0
-        Revisions   :   None
+        Version     :   1.2
+        Revisions   :   Moved to setup to cloud 
         """
         method_name = self.elbow_plot.__name__
 
@@ -129,8 +127,8 @@ class kmeans_clustering:
         Description :   Create a new dataframe consisting of the cluster information.
         Output      :   A datframe with cluster column
         On Failure  :   Raise Exception
-        Version     :   1.0
-        Revisions   :   None
+        Version     :   1.2
+        Revisions   :   Moved to setup to cloud 
         """
         method_name = self.create_clusters.__name__
 

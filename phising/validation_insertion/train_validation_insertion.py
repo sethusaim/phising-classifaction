@@ -1,6 +1,8 @@
-from phising.data_transform.data_transformation_train import data_transform_train
+from phising.data_transform.data_transformation_train import \
+    data_transform_train
 from phising.data_type_valid.data_type_valid_train import db_operation_train
-from phising.raw_data_validation.train_data_validation import raw_train_data_validation
+from phising.raw_data_validation.train_data_validation import \
+    raw_train_data_validation
 from utils.logger import app_logger
 from utils.read_params import read_params
 
@@ -38,7 +40,7 @@ class train_validation:
 
     def training_validation(self):
         """
-        Method Name :   train_validation
+        Method Name :   training_validation
         Description :   This method is used for validating the training batch files
 
         Version     :   1.2
@@ -51,7 +53,7 @@ class train_validation:
                 key="start",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.train_main_log,
+                collection_name=self.train_main_log,
             )
 
             (
@@ -81,7 +83,9 @@ class train_validation:
                 log_message="Starting Data Transformation",
             )
 
-            self.data_transform.add_quotes_to_string()
+            self.data_transform.rename_target_column()
+
+            self.data_transform.replace_missing_with_null()
 
             self.log_writer.log(
                 table_name=self.train_main_log,
@@ -90,7 +94,7 @@ class train_validation:
 
             self.db_operation.insert_good_data_as_record(
                 db_name=self.good_data_db_name,
-                table_name=self.good_data_collection_name,
+                collection_name=self.good_data_collection_name,
             )
 
             self.log_writer.log(
@@ -100,14 +104,14 @@ class train_validation:
 
             self.db_operation.export_collection_to_csv(
                 db_name=self.good_data_db_name,
-                table_name=self.good_data_collection_name,
+                collection_name=self.good_data_collection_name,
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.train_main_log,
+                collection_name=self.train_main_log,
             )
 
         except Exception as e:
@@ -115,5 +119,5 @@ class train_validation:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.train_main_log,
+                collection_name=self.train_main_log,
             )
