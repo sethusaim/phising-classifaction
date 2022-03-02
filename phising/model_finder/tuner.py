@@ -1,11 +1,11 @@
 from sklearn.ensemble import RandomForestClassifier
 from utils.logger import App_Logger
-from utils.model_utils import get_model_params, get_model_score, get_model_name
+from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 from xgboost import XGBClassifier
 
 
-class model_finder:
+class Model_Finder:
     """
     This class shall  be used to find the model with best accuracy and AUC score.
     Written By: iNeuron Intelligence
@@ -23,6 +23,8 @@ class model_finder:
         self.cv = self.config["model_utils"]["cv"]
 
         self.verbose = self.config["model_utils"]["verbose"]
+
+        self.model_utils = Model_Utils()
 
         self.log_writer = App_Logger()
 
@@ -52,11 +54,11 @@ class model_finder:
         )
 
         try:
-            self.rf_model_name = get_model_name(
+            self.rf_model_name = self.model_utils.get_model_name(
                 model=self.rf_model, table_name=self.table_name
             )
 
-            self.rf_best_params = get_model_params(
+            self.rf_best_params = self.model_utils.get_model_params(
                 model=self.rf_model,
                 model_key_name="rf_model",
                 x_train=train_x,
@@ -135,11 +137,11 @@ class model_finder:
         )
 
         try:
-            self.xgb_model_name = get_model_name(
+            self.xgb_model_name = self.model_utils.get_model_name(
                 model=self.xgb_model, table_name=self.table_name
             )
 
-            self.xgb_best_params = get_model_params(
+            self.xgb_best_params = self.model_utils.get_model_params(
                 model=self.xgb_model,
                 model_key_name="xgb_model",
                 x_train=train_x,
@@ -216,7 +218,7 @@ class model_finder:
         try:
             xgb_model = self.get_best_params_for_xgboost(train_x, train_y)
 
-            xgb_model_score = get_model_score(
+            xgb_model_score = self.model_utils.get_model_score(
                 model=xgb_model,
                 test_x=test_x,
                 test_y=test_y,
@@ -225,7 +227,7 @@ class model_finder:
 
             rf_model = self.get_best_params_for_random_forest(train_x, train_y)
 
-            rf_model_score = get_model_score(
+            rf_model_score = self.model_utils.get_model_score(
                 model=rf_model,
                 test_x=test_x,
                 test_y=test_y,

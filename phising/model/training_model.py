@@ -3,7 +3,7 @@ from phising.data_ingestion.data_loader_train import Data_Getter_Train
 from phising.data_preprocessing.clustering import KMeans_Clustering
 from phising.data_preprocessing.preprocessing import Preprocessor
 from phising.mlflow_utils.mlflow_operations import MLFlow_Operation
-from phising.model_finder.tuner import model_finder
+from phising.model_finder.tuner import Model_Finder
 from phising.s3_bucket_operations.s3_operations import S3_Operation
 from sklearn.model_selection import train_test_split
 from utils.logger import App_Logger
@@ -52,7 +52,7 @@ class train_model:
 
         self.kmeans_op = KMeans_Clustering(table_name=self.model_train_log)
 
-        self.model_finder = model_finder(table_name=self.model_train_log)
+        self.model_finder = Model_Finder(table_name=self.model_train_log)
 
         self.s3 = S3_Operation()
 
@@ -131,7 +131,7 @@ class train_model:
                     xgb_model_score,
                     rf_model,
                     rf_model_score,
-                ) = self.model_finder.get_trained_models(
+                ) = self.Model_Finder.get_trained_models(
                     x_train, y_train, x_test, y_test
                 )
 
