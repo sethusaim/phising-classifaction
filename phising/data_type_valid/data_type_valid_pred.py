@@ -1,5 +1,5 @@
 from phising.mongo_db_operations.mongo_operations import mongodb_operation
-from phising.s3_bucket_operations.s3_operations import s3_operations
+from phising.s3_bucket_operations.S3_Operation import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
@@ -29,7 +29,7 @@ class db_operation_pred:
 
         self.pred_export_csv_log = self.config["pred_db_log"]["export_csv"]
 
-        self.s3 = s3_operations()
+        self.s3 = S3_Operation()
 
         self.db_op = mongodb_operation()
 

@@ -2,7 +2,7 @@ import os
 
 import mlflow
 from mlflow.tracking import MlflowClient
-from phising.s3_bucket_operations.s3_operations import s3_operations
+from phising.s3_bucket_operations.S3_Operation import S3_Operation
 from utils.logger import App_Logger
 from utils.model_utils import get_model_name
 from utils.read_params import read_params
@@ -23,7 +23,7 @@ class mlflow_operations:
 
         self.log_writer = App_Logger()
 
-        self.s3 = s3_operations()
+        self.s3 = S3_Operation()
 
         self.table_name = table_name
 
@@ -629,10 +629,10 @@ class mlflow_operations:
                 )
 
                 self.s3.copy_data(
-                    src_bucket=bucket,
-                    src_file=trained_model_file,
-                    dest_bucket=bucket,
-                    dest_file=prod_model_file,
+                    from_bucket=bucket,
+                    from_file=trained_model_file,
+                    to_bucket=bucket,
+                    to_file=prod_model_file,
                     table_name=self.table_name,
                 )
 
@@ -652,10 +652,10 @@ class mlflow_operations:
                 )
 
                 self.s3.copy_data(
-                    src_bucket=bucket,
-                    src_file=trained_model_file,
-                    dest_bucket=bucket,
-                    dest_file=stag_model_file,
+                    from_bucket=bucket,
+                    from_file=trained_model_file,
+                    to_bucket=bucket,
+                    to_file=stag_model_file,
                     table_name=self.table_name,
                 )
 

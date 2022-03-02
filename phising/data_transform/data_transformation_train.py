@@ -1,4 +1,4 @@
-from phising.s3_bucket_operations.s3_operations import s3_operations
+from phising.s3_bucket_operations.S3_Operation import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
@@ -16,7 +16,7 @@ class data_transform_train:
 
         self.train_data_bucket = self.config["s3_bucket"]["phising_train_data_bucket"]
 
-        self.s3 = s3_operations()
+        self.s3 = S3_Operation()
 
         self.log_writer = App_Logger()
 

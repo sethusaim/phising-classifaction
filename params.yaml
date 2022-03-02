@@ -39,12 +39,12 @@ kmeans_cluster:
     direction : decreasing
 
 s3_bucket:
-  input_files_bucket: input-files-for-train-and-pred
-  phising_model_bucket: phising-model
-  phising-mlflow_bucket: phising-mlflow
-  phising_pred_data_bucket: phising-pred-data
-  phising_train_data_bucket: phising-train-data
-  phising_raw_data_bucket: phising-raw-data
+  input_files: input-files-for-train-and-pred
+  phising_model: phising-model
+  phising-mlflow: phising-mlflow
+  phising_pred_data: phising-pred-data
+  phising_train_data: phising-train-data
+  phising_raw_data: phising-raw-data
 
 models_dir:
   trained : trained/
@@ -133,8 +133,8 @@ pred_db_log:
   values_from_schema : pred_values_from_schema_log
 
 schema_file:
-  train_schema_file : schema_training.json
-  pred_schema_file : schema_prediction.json
+  train : schema_training.json
+  pred : schema_prediction.json
   
 elbow_plot_fig : K-Means_Elbow.PNG
 
@@ -150,4 +150,4 @@ export_csv_file:
 
 templates:
   dir : templates
-  index_html_file : index.html
+  index : index.html

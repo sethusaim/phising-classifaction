@@ -4,7 +4,7 @@ from phising.data_preprocessing.clustering import kmeans_clustering
 from phising.data_preprocessing.preprocessing import preprocessor
 from phising.mlflow_utils.mlflow_operations import mlflow_operations
 from phising.model_finder.tuner import model_finder
-from phising.s3_bucket_operations.s3_operations import s3_operations
+from phising.s3_bucket_operations.S3_Operation import S3_Operation
 from sklearn.model_selection import train_test_split
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -54,7 +54,7 @@ class train_model:
 
         self.model_finder_obj = model_finder(table_name=self.model_train_log)
 
-        self.s3 = s3_operations()
+        self.s3 = S3_Operation()
 
     def training_model(self):
         """

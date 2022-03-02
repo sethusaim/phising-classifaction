@@ -1,8 +1,8 @@
 import pandas as pd
 from botocore.exceptions import ClientError
-from phising.data_ingestion.data_loader_prediction import data_getter_pred
+from phising.data_ingestion.data_loader_prediction import Data_Getter_Pred
 from phising.data_preprocessing.preprocessing import preprocessor
-from phising.s3_bucket_operations.s3_operations import s3_operations
+from phising.s3_bucket_operations.S3_Operation import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
@@ -30,9 +30,9 @@ class prediction:
 
         self.log_writer = App_Logger()
 
-        self.s3 = s3_operations()
+        self.s3 = S3_Operation()
 
-        self.data_getter_pred = data_getter_pred(table_name=self.pred_log)
+        self.Data_Getter_Pred = Data_Getter_Pred(table_name=self.pred_log)
 
         self.preprocessor = preprocessor(table_name=self.pred_log)
 
@@ -166,7 +166,7 @@ class prediction:
         try:
             self.delete_pred_file(table_name=self.pred_log)
 
-            data = self.data_getter_pred.get_data()
+            data = self.Data_Getter_Pred.get_data()
 
             is_null_present = self.preprocessor.is_null_present(data)
 

@@ -1,5 +1,5 @@
 from phising.mlflow_utils.mlflow_operations import mlflow_operations
-from phising.s3_bucket_operations.s3_operations import s3_operations
+from phising.s3_bucket_operations.S3_Operation import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
@@ -31,7 +31,7 @@ class load_prod_model:
 
         self.exp_name = self.config["mlflow_config"]["experiment_name"]
 
-        self.s3 = s3_operations()
+        self.s3 = S3_Operation()
 
         self.mlflow_op = mlflow_operations(table_name=self.load_prod_model_log)
 

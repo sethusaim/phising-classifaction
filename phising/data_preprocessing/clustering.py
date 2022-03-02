@@ -1,6 +1,6 @@
 from kneed import KneeLocator
 from matplotlib import pyplot as plt
-from phising.s3_bucket_operations.s3_operations import s3_operations
+from phising.s3_bucket_operations.S3_Operation import S3_Operation
 from sklearn.cluster import KMeans
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -32,7 +32,7 @@ class kmeans_clustering:
 
         self.kmeans_direction = self.config["kmeans_cluster"]["knee"]["direction"]
 
-        self.s3 = s3_operations()
+        self.s3 = S3_Operation()
 
         self.elbow_plot_file = self.config["elbow_plot_fig"]
 
@@ -86,9 +86,9 @@ class kmeans_clustering:
             )
 
             self.s3.upload_file(
-                src_file=self.elbow_plot_file,
+                from_file=self.elbow_plot_file,
                 bucket=self.input_files_bucket,
-                dest_file=self.elbow_plot_file,
+                to_file=self.elbow_plot_file,
                 table_name=self.table_name,
             )
 
