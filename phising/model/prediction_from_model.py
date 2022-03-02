@@ -1,7 +1,7 @@
 import pandas as pd
 from botocore.exceptions import ClientError
 from phising.data_ingestion.data_loader_prediction import Data_Getter_Pred
-from phising.data_preprocessing.preprocessing import preprocessor
+from phising.data_preprocessing.preprocessing import Preprocessor
 from phising.bucket_operations.S3_Operation import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -34,7 +34,7 @@ class prediction:
 
         self.Data_Getter_Pred = Data_Getter_Pred(table_name=self.pred_log)
 
-        self.preprocessor = preprocessor(table_name=self.pred_log)
+        self.Preprocessor = Preprocessor(table_name=self.pred_log)
 
         self.class_name = self.__class__.__name__
 
@@ -168,14 +168,14 @@ class prediction:
 
             data = self.Data_Getter_Pred.get_data()
 
-            is_null_present = self.preprocessor.is_null_present(data)
+            is_null_present = self.Preprocessor.is_null_present(data)
 
             if is_null_present:
-                data = self.preprocessor.impute_missing_values(data)
+                data = self.Preprocessor.impute_missing_values(data)
 
-            cols_to_drop = self.preprocessor.get_columns_with_zero_std_deviation(data)
+            cols_to_drop = self.Preprocessor.get_columns_with_zero_std_deviation(data)
 
-            data = self.preprocessor.remove_columns(data, cols_to_drop)
+            data = self.Preprocessor.remove_columns(data, cols_to_drop)
 
             kmeans = self.s3.load_model(
                 bucket=self.model_bucket, model_name="KMeans", table_name=self.pred_log

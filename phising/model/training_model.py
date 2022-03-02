@@ -1,7 +1,7 @@
 import mlflow
 from phising.data_ingestion.data_loader_train import Data_Getter_Train
-from phising.data_preprocessing.clustering import kmeans_clustering
-from phising.data_preprocessing.preprocessing import preprocessor
+from phising.data_preprocessing.clustering import KMeans_Clustering
+from phising.data_preprocessing.preprocessing import Preprocessor
 from phising.mlflow_utils.mlflow_operations import mlflow_operations
 from phising.model_finder.tuner import model_finder
 from phising.bucket_operations.S3_Operation import S3_Operation
@@ -48,9 +48,9 @@ class train_model:
 
         self.data_getter_train_obj = Data_Getter_Train(table_name=self.model_train_log)
 
-        self.preprocessor_obj = preprocessor(table_name=self.model_train_log)
+        self.preprocessor_obj = Preprocessor(table_name=self.model_train_log)
 
-        self.kmeans_obj = kmeans_clustering(table_name=self.model_train_log)
+        self.kmeans_obj = KMeans_Clustering(table_name=self.model_train_log)
 
         self.model_finder_obj = model_finder(table_name=self.model_train_log)
 

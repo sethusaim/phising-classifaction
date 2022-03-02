@@ -1,14 +1,14 @@
 import numpy as np
 import pandas as pd
-from phising.s3_bucket_operations.S3_Operation import S3_Operation
+from phising.s3_bucket_operations.s3_operations import S3_Operation
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from utils.logger import App_Logger
-from utils.model_utils import get_model_name
+from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 
 
-class preprocessor:
+class Preprocessor:
     """
     Description :   This class shall  be used to clean and transform the data before training.
     Version     :   1.2
@@ -23,6 +23,8 @@ class preprocessor:
         self.class_name = self.__class__.__name__
 
         self.table_name = table_name
+
+        self.model_utils = Model_Utils()
 
         self.null_values_file = self.config["null_values_csv_file"]
 
@@ -50,11 +52,11 @@ class preprocessor:
             table_name=self.table_name,
         )
 
-        self.data = data
-
-        self.columns = columns
-
         try:
+            self.data = data
+
+            self.columns = columns
+
             self.useful_data = self.data.drop(labels=self.columns, axis=1)
 
             self.log_writer.log(
@@ -135,14 +137,14 @@ class preprocessor:
         """
         method_name = self.replace_invalid_values.__name__
 
-        try:
-            self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=self.table_name,
+        )
 
+        try:
             data.replace(to_replace="'na'", value=np.nan, inplace=True)
 
             self.log_writer.log(
@@ -185,13 +187,13 @@ class preprocessor:
             table_name=self.table_name,
         )
 
-        null_present = False
-
-        cols_with_missing_values = []
-
-        cols = data.columns
-
         try:
+            null_present = False
+
+            cols_with_missing_values = []
+
+            cols = data.columns
+
             self.null_counts = data.isna().sum()
 
             self.log_writer.log(
@@ -210,19 +212,17 @@ class preprocessor:
                 log_message="created cols with missing values",
             )
 
-            if null_present:
+            if null_present is True:
                 self.log_writer.log(
                     table_name=self.table_name,
                     log_message="null values were found the columns...preparing dataframe with null values",
                 )
 
-                self.dataframe_with_null = pd.DataFrame()
+                self.null_df = pd.DataFrame()
 
-                self.dataframe_with_null["columns"] = data.columns
+                self.null_df["columns"] = data.columns
 
-                self.dataframe_with_null["missing values count"] = np.asarray(
-                    data.isna().sum()
-                )
+                self.null_df["missing values count"] = np.asarray(data.isna().sum())
 
                 self.log_writer.log(
                     table_name=self.table_name,
@@ -230,10 +230,10 @@ class preprocessor:
                 )
 
                 self.s3.upload_df_as_csv(
-                    data_frame=self.dataframe_with_null,
-                    file_name=self.null_values_file,
-                    bucket=self.input_files_bucket,
-                    dest_file_name=self.null_values_file,
+                    data_frame=self.null_df,
+                    local_file_name=self.null_values_file,
+                    bucket_file_name=self.null_values_file,
+                    bucket_name=self.input_files_bucket,
                     table_name=self.table_name,
                 )
 
@@ -271,14 +271,14 @@ class preprocessor:
         """
         method_name = self.encode_target_cols.__name__
 
-        try:
-            self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=self.table_name,
+        )
 
+        try:
             data["class"] = data["class"].map({"'neg'": 0, "'pos'": 1})
 
             self.log_writer.log(
@@ -315,14 +315,14 @@ class preprocessor:
         """
         method_name = self.impute_missing_values.__name__
 
-        try:
-            self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=self.table_name,
+        )
 
+        try:
             data = data[data.columns[data.isnull().mean() < 0.6]]
 
             data = data.apply(pd.to_numeric)
@@ -359,17 +359,19 @@ class preprocessor:
         """
         method_name = self.apply_pca_transform.__name__
 
-        try:
-            self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=self.table_name,
+        )
 
+        try:
             pca = PCA(n_components=self.n_components)
 
-            pca_model_name = get_model_name(model=pca, table_name=self.table_name)
+            pca_model_name = self.model_utils.get_model_name(
+                model=pca, table_name=self.table_name
+            )
 
             self.log_writer.log(
                 table_name=self.table_name,
@@ -426,9 +428,9 @@ class preprocessor:
             table_name=self.table_name,
         )
 
-        self.data = data
-
         try:
+            self.data = data
+
             self.scaler = StandardScaler()
 
             self.log_writer.log(

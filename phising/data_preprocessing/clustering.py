@@ -6,7 +6,7 @@ from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class kmeans_clustering:
+class KMeans_Clustering:
     """
     Description :   This class shall  be used to divide the data into clusters before training.
     Version     :   1.2
@@ -31,6 +31,8 @@ class kmeans_clustering:
         self.kmeans_curve = self.config["kmeans_cluster"]["knee"]["curve"]
 
         self.kmeans_direction = self.config["kmeans_cluster"]["knee"]["direction"]
+
+        self.trained_model_dir = self.config["model_dir"]["trained"]
 
         self.s3 = S3_Operation()
 
@@ -87,8 +89,8 @@ class kmeans_clustering:
 
             self.s3.upload_file(
                 from_file=self.elbow_plot_file,
-                bucket=self.input_files_bucket,
                 to_file=self.elbow_plot_file,
+                bucket_name=self.input_files_bucket,
                 table_name=self.table_name,
             )
 
@@ -151,8 +153,8 @@ class kmeans_clustering:
             self.y_kmeans = self.kmeans.fit_predict(data)
 
             self.s3.save_model(
-                idx=None,
                 model=self.kmeans,
+                model_dir=self.trained_model_dir,
                 model_bucket=self.model_bucket,
                 table_name=self.table_name,
             )

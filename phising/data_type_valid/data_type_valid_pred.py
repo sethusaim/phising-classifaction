@@ -1,5 +1,5 @@
 from phising.mongo_db_operations.mongo_operations import mongodb_operation
-from phising.s3_bucket_operations.S3_Operation import S3_Operation
+from phising.s3_bucket_operations.s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 

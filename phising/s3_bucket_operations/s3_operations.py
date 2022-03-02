@@ -916,7 +916,7 @@ class S3_Operation:
                 table_name=table_name,
             )
 
-    def save_model(self, model, idx, model_dir, model_bucket, table_name):
+    def save_model(self, model, model_dir, model_bucket, table_name, idx=None):
         """
         Method Name :   save_model
         Description :   This method is used for saving a model to s3 bucket_name
