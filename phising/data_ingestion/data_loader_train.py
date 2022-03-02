@@ -1,4 +1,4 @@
-from phising.s3_bucket_operations.S3_Operation import S3_Operation
+from phising.s3_bucket_operations.s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
@@ -17,7 +17,7 @@ class data_getter_train:
 
         self.train_csv_file = self.config["export_csv_file"]["train"]
 
-        self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
+        self.input_files_bucket = self.config["s3_bucket"]["input_files"]
 
         self.s3 = S3_Operation()
 
@@ -46,8 +46,8 @@ class data_getter_train:
 
         try:
             df = self.s3.read_csv(
-                bucket=self.input_files_bucket,
                 file_name=self.train_csv_file,
+                bucket_name=self.input_files_bucket,
                 table_name=self.table_name,
             )
 

@@ -47,8 +47,8 @@ class Data_Getter_Pred:
 
         try:
             df = self.s3.read_csv(
-                bucket=self.input_files_bucket,
                 file_name=self.prediction_file,
+                bucket_name=self.input_files_bucket,
                 table_name=self.table_name,
             )
 
