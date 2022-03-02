@@ -1,10 +1,10 @@
-from phising.mongo_db_operations.mongo_operations import mongodb_operation
-from phising.bucket_operations.S3_Operation import S3_Operation
+from phising.mongo_db_operations.mongo_operations import MongoDB_Operation
+from phising.s3_bucket_operations.s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class db_operation_train:
+class DB_Operation_train:
     """
     Description :    This class shall be used for handling all the db operations
 
@@ -17,13 +17,13 @@ class db_operation_train:
 
         self.class_name = self.__class__.__name__
 
-        self.train_data_bucket = self.config["bucket"]["phising_train_data_bucket"]
+        self.train_data_bucket = self.config["bucket"]["phising_train_data"]
 
         self.train_export_csv_file = self.config["export_csv_file"]["train"]
 
         self.good_data_train_dir = self.config["data"]["train"]["good_data_dir"]
 
-        self.input_files_bucket = self.config["bucket"]["input_files_bucket"]
+        self.input_files_bucket = self.config["bucket"]["input_files"]
 
         self.train_db_insert_log = self.config["train_db_log"]["db_insert"]
 
@@ -31,7 +31,7 @@ class db_operation_train:
 
         self.s3 = S3_Operation()
 
-        self.db_op = mongodb_operation()
+        self.mongo = MongoDB_Operation()
 
         self.log_writer = App_Logger()
 
@@ -53,11 +53,10 @@ class db_operation_train:
         )
 
         try:
-            lst = self.s3.read_csv(
-                bucket=self.train_data_bucket,
-                file_name=self.good_data_train_dir,
-                folder=True,
-                table_name=self.train_db_insert_log,
+            lst = self.s3.read_csv_from_folder(
+                folder_name=self.good_data_train_dir,
+                bucket_name=self.train_data_bucket,
+                table_name=self.train_db_insert_log
             )
 
             for idx, f in enumerate(lst):
@@ -66,7 +65,7 @@ class db_operation_train:
                 file = f[idx][1]
 
                 if file.endswith(".csv"):
-                    self.db_op.insert_dataframe_as_record(
+                    self.mongo.insert_dataframe_as_record(
                         data_frame=df,
                         db_name=good_data_db_name,
                         collection_name=good_data_collection_name,
@@ -114,7 +113,7 @@ class db_operation_train:
         )
 
         try:
-            df = self.db_op.get_collection_as_dataframe(
+            df = self.mongo.get_collection_as_dataframe(
                 db_name=good_data_db_name,
                 collection_name=good_data_collection_name,
                 table_name=self.train_export_csv_log,
@@ -122,10 +121,10 @@ class db_operation_train:
 
             self.s3.upload_df_as_csv(
                 data_frame=df,
-                file_name=self.train_export_csv_file,
-                bucket=self.input_files_bucket,
-                dest_file_name=self.train_export_csv_file,
-                table_name=self.train_export_csv_log,
+                local_file_name=self.train_export_csv_file,
+                bucket_file_name=self.train_export_csv_file,
+                bucket_name=self.input_files_bucket,
+                table_name=self.input_files_bucket
             )
 
             self.log_writer.start_log(

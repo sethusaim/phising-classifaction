@@ -1,5 +1,5 @@
 from phising.data_transform.data_transformation_pred import Data_Transform_Pred
-from phising.data_type_valid.data_type_valid_pred import db_operation_pred
+from phising.data_type_valid.data_type_valid_pred import DB_Operation_Pred
 from phising.raw_data_validation.pred_data_validation import raw_pred_data_validation
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -18,7 +18,7 @@ class pred_validation:
 
         self.data_transform = Data_Transform_Pred()
 
-        self.db_operation = db_operation_pred()
+        self.db_operation = DB_Operation_Pred()
 
         self.config = read_params()
 

@@ -7,7 +7,7 @@ from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class mongo_db_operation:
+class MongoDB_Operation:
     """
     Description :   This method is used for all mongodb operations
 
