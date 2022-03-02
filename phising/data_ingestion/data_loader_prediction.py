@@ -5,7 +5,7 @@ from utils.read_params import read_params
 
 class Data_Getter_Pred:
     """
-    Description :   This class shall be used for obtaining the df from the source for prediction
+    Description :   This class shall be used for obtaining the df from the source for Prediction
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """

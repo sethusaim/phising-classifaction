@@ -1,10 +1,11 @@
-from phising.mlflow_utils.MLFlow_Operation import MLFlow_Operation
-from phising.bucket_operations.S3_Operation import S3_Operation
+from statistics import mode
+from phising.mlflow_utils.mlflow_operations import MLFlow_Operation
+from phising.s3_bucket_operations.s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class load_prod_model:
+class Load_Prod_Model:
     """
     Description :   This class shall be used for loading the production model
     Written by  :   iNeuron Intelligence
@@ -21,9 +22,9 @@ class load_prod_model:
 
         self.num_clusters = num_clusters
 
-        self.model_bucket = self.config["bucket"]["phising_model_bucket"]
+        self.model_bucket = self.config["bucket"]["phising_model"]
 
-        self.load_prod_model_log = self.config["train_db_log"]["load_prod_model"]
+        self.load_prod_model_log = self.config["train_db_log"]["Load_Prod_Model"]
 
         self.prod_model_dir = self.config["models_dir"]["prod"]
 
@@ -54,14 +55,14 @@ class load_prod_model:
 
         try:
             self.s3.create_folder(
-                bucket_name=bucket_name,
                 folder_name=self.prod_model_dir,
+                bucket_name=bucket_name,
                 table_name=table_name,
             )
 
             self.s3.create_folder(
-                bucket_name=bucket_name,
                 folder_name=self.stag_model_dir,
+                bucket_name=bucket_name,
                 table_name=table_name,
             )
 
@@ -215,10 +216,11 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                             model_version=mv.version,
                             stage="Production",
                             model_name=mv.name,
-                            bucket=self.model_bucket,
+                            from_bucket_name=self.model_bucket,
+                            to_bucket_name=self.model_bucket,
                         )
 
-                    ## In the registered models, even kmeans model is present, so during prediction,
+                    ## In the registered models, even kmeans model is present, so during Prediction,
                     ## this model also needs to be in present in production, the code logic is present below
 
                     elif mv.name == "KMeans":
@@ -226,7 +228,8 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                             model_version=mv.version,
                             stage="Production",
                             model_name=mv.name,
-                            bucket=self.model_bucket,
+                            from_bucket_name=self.model_bucket,
+                            to_bucket_name=self.model_bucket,
                         )
 
                     else:
@@ -234,7 +237,8 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                             model_version=mv.version,
                             stage="Staging",
                             model_name=mv.name,
-                            bucket=self.model_bucket,
+                            from_bucket_name=self.model_bucket,
+                            to_bucket_name=self.model_bucket,
                         )
 
             self.log_writer.log(

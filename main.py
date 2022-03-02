@@ -8,8 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from fastapi.templating import Jinja2Templates
 
-from phising.model.load_production_model import load_prod_model
-from phising.model.prediction_from_model import prediction
+from phising.model.load_production_model import Load_Prod_Model
+from phising.model.prediction_from_model import Prediction
 from phising.model.training_model import train_model
 from phising.validation_insertion.prediction_validation_insertion import pred_validation
 from phising.validation_insertion.train_validation_insertion import train_validation
@@ -62,7 +62,7 @@ async def trainRouteClient():
 
         num_clusters = train_model_obj.training_model()
 
-        load_prod_model_obj = load_prod_model(num_clusters=num_clusters)
+        load_prod_model_obj = Load_Prod_Model(num_clusters=num_clusters)
 
         load_prod_model_obj.load_production_model()
 
@@ -85,12 +85,12 @@ async def predictRouteClient():
 
         pred_val.prediction_validation()
 
-        pred = prediction()
+        pred = Prediction()
 
         bucket, file_name, json_predictions = pred.predict_from_model()
 
         return Response(
-            f"prediction file created in {bucket} bucket with file_name as {file_name}, and few of the predictions are {str(json.loads(json_predictions))}"
+            f"Prediction file created in {bucket} bucket with file_name as {file_name}, and few of the predictions are {str(json.loads(json_predictions))}"
         )
 
     except Exception as e:

@@ -7,7 +7,7 @@ from utils.read_params import read_params
 
 class pred_validation:
     """
-    Description :   This class is used for validating all the prediction batch files
+    Description :   This class is used for validating all the Prediction batch files
 
     Version     :   1.2
     Revisions   :   moved to setup to cloud
@@ -39,7 +39,7 @@ class pred_validation:
     def prediction_validation(self):
         """
         Method Name :   load_s3
-        Description :   This method is used for validating the prediction btach files
+        Description :   This method is used for validating the Prediction btach files
 
         Version     :   1.2
         Revisions   :   moved setup to cloud

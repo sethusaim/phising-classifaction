@@ -7,7 +7,7 @@ from phising.bucket_operations.S3_Operation import S3_Operation
 
 class raw_pred_data_validation:
     """
-    Description :   This method is used for validating the raw prediction data
+    Description :   This method is used for validating the raw Prediction data
 
     Version     :   1.2
     Revisions   :   moved to setup to cloud
@@ -239,7 +239,7 @@ class raw_pred_data_validation:
 
             self.log_writer.log(
                 table_name=self.pred_name_valid_log,
-                log_message="Got prediction files with exact name",
+                log_message="Got Prediction files with exact name",
             )
 
             for file_name in pred_batch_files:
