@@ -56,7 +56,7 @@ class DB_Operation_Pred:
             lst = self.s3.read_csv_from_folder(
                 folder_name=self.good_data_pred_dir,
                 bucket_name=self.pred_data_bucket,
-                table_name=self.pred_db_insert_log
+                table_name=self.pred_db_insert_log,
             )
 
             for idx, f in enumerate(lst):
@@ -124,7 +124,7 @@ class DB_Operation_Pred:
                 local_file_name=self.pred_export_csv_file,
                 bucket_file_name=self.pred_export_csv_file,
                 bucket_name=self.input_files_bucket,
-                table_name=self.input_files_bucket
+                table_name=self.input_files_bucket,
             )
 
             self.log_writer.start_log(

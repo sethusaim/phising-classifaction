@@ -2,13 +2,13 @@ import os
 
 import mlflow
 from mlflow.tracking import MlflowClient
-from phising.bucket_operations.S3_Operation import S3_Operation
+from phising.s3_bucket_operations.s3_operations import S3_Operation
 from utils.logger import App_Logger
-from utils.model_utils import get_model_name
+from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 
 
-class mlflow_operations:
+class MLFlow_Operation:
     """
     Description :    This class shall be used for handling all the mlflow operations
 
@@ -22,6 +22,8 @@ class mlflow_operations:
         self.class_name = self.__class__.__name__
 
         self.log_writer = App_Logger()
+
+        self.model_utils = Model_Utils()
 
         self.s3 = S3_Operation()
 
@@ -59,7 +61,7 @@ class mlflow_operations:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Got {exp_name} experiment from mlflow",
+                log_info=f"Got {exp_name} experiment from mlflow",
             )
 
             self.log_writer.start_log(
@@ -101,7 +103,7 @@ class mlflow_operations:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Completed searchiing for runs in mlflow with experiment ids as {exp_id}",
+                log_info=f"Completed searchiing for runs in mlflow with experiment ids as {exp_id}",
             )
 
             self.log_writer.start_log(
@@ -143,7 +145,7 @@ class mlflow_operations:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Set mlflow experiment with name as {experiment_name}",
+                log_info=f"Set mlflow experiment with name as {experiment_name}",
             )
 
             self.log_writer.start_log(
@@ -183,7 +185,7 @@ class mlflow_operations:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Got mlflow client with tracking uri",
+                log_info="Got mlflow client with tracking uri",
             )
 
             self.log_writer.start_log(
@@ -224,7 +226,7 @@ class mlflow_operations:
             remote_server_uri = os.environ["MLFLOW_TRACKING_URI"]
 
             self.log_writer.log(
-                table_name=self.table_name, log_message="Got mlflow tracking uri"
+                table_name=self.table_name, log_info="Got mlflow tracking uri",
             )
 
             self.log_writer.start_log(
@@ -267,8 +269,7 @@ class mlflow_operations:
             mlflow.set_tracking_uri(server_uri)
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_message=f"Set mlflow tracking uri to {server_uri}",
+                table_name=self.table_name, log_info="Set mlflow tracking uri",
             )
 
             self.log_writer.start_log(
@@ -311,8 +312,7 @@ class mlflow_operations:
             reg_model_names = [rm.name for rm in client.list_registered_models()]
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_message="Got registered model from mlflow",
+                table_name=self.table_name, log_info="Got registered model from mlflow",
             )
 
             self.log_writer.start_log(
@@ -358,7 +358,7 @@ class mlflow_operations:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Got registered models in mlflow in {order} order",
+                log_info=f"Got registered models in mlflow in {order} order",
             )
 
             self.log_writer.start_log(
@@ -404,7 +404,8 @@ class mlflow_operations:
             )
 
             self.log_writer.log(
-                table_name=self.table_name, log_message=f"Logged {model_name} in mlflow"
+                table_name=self.table_name,
+                log_info=f"Logged {model_name} model in mlflow",
             )
 
             self.log_writer.start_log(
@@ -446,7 +447,7 @@ class mlflow_operations:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"{model_score_name} logged in mlflow",
+                log_info=f"{model_score_name} logged in mlflow",
             )
 
             self.log_writer.start_log(
@@ -488,7 +489,7 @@ class mlflow_operations:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"{model_param_name} logged in mlflow",
+                log_info=f"{model_param_name} logged in mlflow",
             )
 
             self.log_writer.start_log(
@@ -524,7 +525,9 @@ class mlflow_operations:
                 table_name=self.table_name,
             )
 
-            base_model_name = get_model_name(model=model, table_name=self.table_name)
+            base_model_name = self.model_utils.get_model_name(
+                model=model, table_name=self.table_name
+            )
 
             if base_model_name is "KMeans":
                 self.log_model(model=model, model_name=base_model_name)
@@ -534,7 +537,7 @@ class mlflow_operations:
 
                 self.log_writer.log(
                     table_name=self.table_name,
-                    log_message=f"Got the model name as {model_name}",
+                    log_info=f"Got the model name as {model_name}",
                 )
 
                 model_params_list = list(
@@ -543,7 +546,7 @@ class mlflow_operations:
 
                 self.log_writer.log(
                     table_name=self.table_name,
-                    log_message=f"Created a list of params based on {model_param_name}",
+                    log_info=f"Created a list of params based on {model_param_name}",
                 )
 
                 for param in model_params_list:
@@ -555,12 +558,12 @@ class mlflow_operations:
 
                 self.log_metric(model_name=model_name, metric=float(model_score))
 
-                self.log_writer.start_log(
-                    key="exit",
-                    class_name=self.class_name,
-                    method_name=method_name,
-                    table_name=self.table_name,
-                )
+            self.log_writer.start_log(
+                key="exit",
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=self.table_name,
+            )
 
         except Exception as e:
             self.log_writer.exception_log(
@@ -570,7 +573,9 @@ class mlflow_operations:
                 table_name=self.table_name,
             )
 
-    def transition_mlflow_model(self, model_version, stage, model_name, bucket):
+    def transition_mlflow_model(
+        self, model_version, stage, model_name, from_bucket_name, to_bucket_name
+    ):
         """
         Method Name :   transition_mlflow_model
         Description :   This method transitions the models in mlflow and as well as in s3 bucket based on
@@ -595,28 +600,32 @@ class mlflow_operations:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Got {current_version} as the current model version",
+                log_info=f"Got {current_version} as the current model version",
             )
 
             client = self.get_mlflow_client(server_uri=remote_server_uri)
 
-            model = model_name + self.model_save_format
+            trained_model_file = (
+                self.trained_models_dir + "/" + model_name + self.model_save_format
+            )
 
-            trained_model_file = self.trained_models_dir + "/" + model
+            stag_model_file = (
+                self.staged_models_dir + "/" + model_name + self.model_save_format
+            )
 
-            stag_model_file = self.staged_models_dir + "/" + model
-
-            prod_model_file = self.prod_models_dir + "/" + model
+            prod_model_file = (
+                self.prod_models_dir + "/" + model_name + self.model_save_format
+            )
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message="Created trained,stag and prod model files",
+                log_info="Created trained,stag and prod model files",
             )
 
             if stage == "Production":
                 self.log_writer.log(
                     table_name=self.table_name,
-                    log_message=f"{stage} is selected for transition",
+                    log_info=f"{stage} is selected for transition",
                 )
 
                 client.transition_model_version_stage(
@@ -625,21 +634,21 @@ class mlflow_operations:
 
                 self.log_writer.log(
                     table_name=self.table_name,
-                    log_message=f"Transitioned {model_name} to {stage} in mlflow",
+                    log_info=f"Transitioned {model_name} to {stage} in mlflow",
                 )
 
                 self.s3.copy_data(
-                    from_bucket=bucket,
-                    from_file=trained_model_file,
-                    to_bucket=bucket,
-                    to_file=prod_model_file,
+                    from_file_name=trained_model_file,
+                    from_bucket_name=from_bucket_name,
+                    to_file_name=prod_model_file,
+                    to_bucket_name=to_bucket_name,
                     table_name=self.table_name,
                 )
 
             elif stage == "Staging":
                 self.log_writer.log(
                     table_name=self.table_name,
-                    log_message=f"{stage} is selected for transition",
+                    log_info=f"{stage} is selected for transition",
                 )
 
                 client.transition_model_version_stage(
@@ -648,21 +657,21 @@ class mlflow_operations:
 
                 self.log_writer.log(
                     table_name=self.table_name,
-                    log_message=f"Transitioned {model_name} to {stage} in mlflow",
+                    log_info=f"Transitioned {model_name} to {stage} in mlflow",
                 )
 
                 self.s3.copy_data(
-                    from_bucket=bucket,
-                    from_file=trained_model_file,
-                    to_bucket=bucket,
-                    to_file=stag_model_file,
+                    from_file_name=trained_model_file,
+                    from_bucket_name=from_bucket_name,
+                    to_file_name=stag_model_file,
+                    to_bucket_name=to_bucket_name,
                     table_name=self.table_name,
                 )
 
             else:
                 self.log_writer.log(
                     table_name=self.table_name,
-                    log_message="Please select stage for model transition",
+                    log_info="Please select stage for model transition",
                 )
 
             self.log_writer.start_log(

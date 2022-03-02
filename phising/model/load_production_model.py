@@ -1,4 +1,4 @@
-from phising.mlflow_utils.mlflow_operations import mlflow_operations
+from phising.mlflow_utils.MLFlow_Operation import MLFlow_Operation
 from phising.bucket_operations.S3_Operation import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -33,7 +33,7 @@ class load_prod_model:
 
         self.s3 = S3_Operation()
 
-        self.mlflow_op = mlflow_operations(table_name=self.load_prod_model_log)
+        self.mlflow_op = MLFlow_Operation(table_name=self.load_prod_model_log)
 
     def create_folders_for_prod_and_stag(self, bucket_name, table_name):
         """
