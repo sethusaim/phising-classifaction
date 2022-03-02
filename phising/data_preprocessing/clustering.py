@@ -88,8 +88,8 @@ class KMeans_Clustering:
             )
 
             self.s3.upload_file(
-                from_file=self.elbow_plot_file,
-                to_file=self.elbow_plot_file,
+                from_file_name=self.elbow_plot_file,
+                to_file_name=self.elbow_plot_file,
                 bucket_name=self.input_files_bucket,
                 table_name=self.table_name,
             )

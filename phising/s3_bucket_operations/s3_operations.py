@@ -296,6 +296,45 @@ class S3_Operation:
                 table_name=table_name,
             )
 
+    def read_text(self, file_name, bucket_name, table_name):
+        method_name = self.read_text.__name__
+
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=table_name,
+        )
+
+        try:
+            f_obj = self.get_file_object(
+                file_name=file_name, bucket_name=bucket_name, table_name=table_name
+            )
+
+            content = self.read_object(object=f_obj, table_name=table_name)
+
+            self.log_writer.log(
+                table_name=table_name,
+                log_message=f"Read text data from {file_name} file in {bucket_name} bucket",
+            )
+
+            self.log_writer.start_log(
+                key="exit",
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=table_name,
+            )
+
+            return content
+
+        except Exception as e:
+            self.log_writer.exception_log(
+                error=e,
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=table_name,
+            )
+
     def read_csv(self, file_name, bucket_name, table_name):
         method_name = self.read_csv.__name__
 
@@ -527,7 +566,9 @@ class S3_Operation:
                 table_name=table_name,
             )
 
-    def upload_file(self, from_file, to_file, bucket_name, table_name, remove=True):
+    def upload_file(
+        self, from_file_name, to_file_name, bucket_name, table_name, remove=True
+    ):
         """
         Method Name :   upload_file
         Description :   This method is used for uploading the files to s3 bucket_name
@@ -547,16 +588,18 @@ class S3_Operation:
         try:
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Uploading {from_file} to s3 bucket_name {bucket_name}",
+                log_message=f"Uploading {from_file_name} to s3 bucket_name {bucket_name}",
             )
 
             s3_resource = self.get_s3_resource(table_name=table_name)
 
-            s3_resource.meta.client.upload_file(from_file, bucket_name, to_file)
+            s3_resource.meta.client.upload_file(
+                from_file_name, bucket_name, to_file_name
+            )
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Uploaded {from_file} to s3 bucket_name {bucket_name}",
+                log_message=f"Uploaded {from_file_name} to s3 bucket_name {bucket_name}",
             )
 
             if remove is True:
@@ -565,11 +608,11 @@ class S3_Operation:
                     log_message=f"Option remove is set {remove}..deleting the file",
                 )
 
-                os.remove(from_file)
+                os.remove(from_file_name)
 
                 self.log_writer.log(
                     table_name=table_name,
-                    log_message=f"Removed the local copy of {from_file}",
+                    log_message=f"Removed the local copy of {from_file_name}",
                 )
 
                 self.log_writer.start_log(
@@ -636,7 +679,9 @@ class S3_Operation:
                 table_name=table_name,
             )
 
-    def copy_data(self, from_file, from_bucket, to_file, to_bucket, table_name):
+    def copy_data(
+        self, from_file_name, from_bucket_name, to_file_name, to_bucket_name, table_name
+    ):
         """
         Method Name :   copy_data
         Description :   This method is used for copying the data from one bucket_name to another
@@ -654,15 +699,15 @@ class S3_Operation:
         )
 
         try:
-            copy_source = {"Bucket": from_bucket, "Key": from_file}
+            copy_source = {"Bucket": from_bucket_name, "Key": from_file_name}
 
             s3_resource = self.get_s3_resource(table_name=table_name)
 
-            s3_resource.meta.client.copy(copy_source, to_bucket, to_file)
+            s3_resource.meta.client.copy(copy_source, to_bucket_name, to_file_name)
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Copied data from bucket_name {from_bucket} to bucket_name {to_bucket}",
+                log_message=f"Copied data from bucket_name {from_bucket_name} to bucket_name {to_bucket_name}",
             )
 
             self.log_writer.start_log(
@@ -722,7 +767,9 @@ class S3_Operation:
                 table_name=table_name,
             )
 
-    def move_data(self, from_file, from_bucket, to_bucket, to_file, table_name):
+    def move_data(
+        self, from_file_name, from_bucket_name, to_file_name, to_bucket_name, table_name
+    ):
         """
         Method Name :   move_data
         Description :   This method is used for moving the data from one bucket_name to another bucket_name
@@ -741,20 +788,22 @@ class S3_Operation:
 
         try:
             self.copy_data(
-                from_bucket=from_bucket,
-                from_file=from_file,
-                to_bucket=to_bucket,
-                to_file=to_file,
+                from_bucket_name=from_bucket_name,
+                from_file_name=from_file_name,
+                to_bucket_name=to_bucket_name,
+                to_file_name=to_file_name,
                 table_name=table_name,
             )
 
             self.delete_file(
-                bucket_name=from_bucket, file=from_file, table_name=table_name,
+                bucket_name=from_bucket_name,
+                file=from_file_name,
+                table_name=table_name,
             )
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Moved {from_file} from bucket_name {from_bucket} to {to_bucket}",
+                log_message=f"Moved {from_file_name} from bucket_name {from_bucket_name} to {to_bucket_name}",
             )
 
             self.log_writer.start_log(
@@ -962,8 +1011,8 @@ class S3_Operation:
             )
 
             self.upload_file(
-                from_file=model_file,
-                to_file=bucket_model_path,
+                from_file_name=model_file,
+                to_file_name=bucket_model_path,
                 bucket_name=model_bucket,
                 table_name=table_name,
             )
@@ -1021,8 +1070,8 @@ class S3_Operation:
             )
 
             self.upload_file(
-                from_file=local_file_name,
-                to_file=bucket_file_name,
+                from_file_name=local_file_name,
+                to_file_name=bucket_file_name,
                 bucket_name=bucket_name,
                 table_name=table_name,
             )

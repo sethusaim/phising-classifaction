@@ -2,12 +2,12 @@ import re
 
 from utils.logger import App_Logger
 from utils.read_params import read_params
-from phising.bucket_operations.S3_Operation import S3_Operation
+from phising.s3_bucket_operations.s3_operations import S3_Operation
 
 
-class raw_train_data_validation:
+class Raw_Train_Data_Validation:
     """
-    Description :   This method is used for validating the raw training data
+    Description :   This method is used for validating the raw trainiction data
 
     Version     :   1.2
     Revisions   :   moved to setup to cloud
@@ -24,21 +24,21 @@ class raw_train_data_validation:
 
         self.s3 = S3_Operation()
 
-        self.train_data_bucket = self.config["bucket"]["phising_train_data_bucket"]
+        self.train_data_bucket = self.config["bucket"]["phising_train_data"]
 
-        self.input_files_bucket = self.config["bucket"]["input_files_bucket"]
+        self.input_files_bucket = self.config["bucket"]["input_files"]
 
         self.raw_train_data_dir = self.config["data"]["raw_data"]["train_batch"]
 
-        self.train_schema_file = self.config["schema_file"]["train_schema_file"]
+        self.train_schema_file = self.config["schema_file"]["train"]
 
         self.regex_file = self.config["regex_file"]
 
         self.train_schema_log = self.config["train_db_log"]["values_from_schema"]
 
-        self.good_train_data_dir = self.config["data"]["train"]["good_data_dir"]
+        self.good_train_data_dir = self.config["data"]["train"]["good"]
 
-        self.bad_train_data_dir = self.config["data"]["train"]["bad_data_dir"]
+        self.bad_train_data_dir = self.config["data"]["train"]["bad"]
 
         self.train_gen_log = self.config["train_db_log"]["general"]
 
@@ -69,8 +69,8 @@ class raw_train_data_validation:
             )
 
             dic = self.s3.read_json(
-                bucket=self.input_files_bucket,
                 file_name=self.train_schema_file,
+                bucket_name=self.input_files_bucket,
                 table_name=self.train_schema_log,
             )
 
@@ -181,14 +181,14 @@ class raw_train_data_validation:
 
         try:
             self.s3.create_folder(
-                bucket_name=self.train_data_bucket,
                 folder_name=self.good_train_data_dir,
+                bucket_name=self.train_data_bucket,
                 table_name=table_name,
             )
 
             self.s3.create_folder(
-                bucket_name=self.train_data_bucket,
                 folder_name=self.bad_train_data_dir,
+                bucket_name=self.train_data_bucket,
                 table_name=table_name,
             )
 
@@ -229,7 +229,7 @@ class raw_train_data_validation:
         try:
             self.create_dirs_for_good_bad_data(table_name=self.train_name_valid_log)
 
-            onlyfiles = self.s3.get_files(
+            onlyfiles = self.s3.get_files_from_folder(
                 bucket=self.raw_data_bucket_name,
                 folder_name=self.raw_train_data_dir,
                 table_name=self.train_name_valid_log,
@@ -239,7 +239,7 @@ class raw_train_data_validation:
 
             self.log_writer.log(
                 table_name=self.train_name_valid_log,
-                log_message="Got training files with exact name",
+                log_message="Got trainiction files with exact name",
             )
 
             for file_name in train_batch_files:
@@ -262,37 +262,36 @@ class raw_train_data_validation:
                     if len(splitAtDot[1]) == LengthOfDateStampInFile:
                         if len(splitAtDot[2]) == LengthOfTimeStampInFile:
                             self.s3.copy_data(
-                                from_bucket=self.raw_data_bucket_name,
-                                from_file=raw_data_train_file_name,
-                                to_bucket=self.train_data_bucket,
-                                to_file=good_data_train_file_name,
+                                from_file_name=raw_data_train_file_name,
+                                from_bucket_name=self.train_data_bucket,
+                                to_file_name=good_data_train_file_name,
+                                to_bucket_name=self.train_data_bucket,
                                 table_name=self.train_name_valid_log,
                             )
 
                         else:
                             self.s3.copy_data(
-                                from_bucket=self.raw_data_bucket_name,
-                                from_file=raw_data_train_file_name,
-                                to_bucket=self.train_data_bucket,
-                                to_file=bad_data_train_file_name,
+                                from_file_name=raw_data_train_file_name,
+                                from_bucket_name=self.train_data_bucket,
+                                to_file_name=bad_data_train_file_name,
+                                to_bucket_name=self.train_data_bucket,
                                 table_name=self.train_name_valid_log,
                             )
 
                     else:
                         self.s3.copy_data(
-                            from_bucket=self.raw_data_bucket_name,
-                            from_file=raw_data_train_file_name,
-                            to_bucket=self.train_data_bucket,
-                            to_file=bad_data_train_file_name,
+                            from_file_name=raw_data_train_file_name,
+                            from_bucket_name=self.train_data_bucket,
+                            to_file_name=bad_data_train_file_name,
+                            to_bucket_name=self.train_data_bucket,
                             table_name=self.train_name_valid_log,
                         )
-
                 else:
                     self.s3.copy_data(
-                        from_bucket=self.raw_data_bucket_name,
-                        from_file=raw_data_train_file_name,
-                        to_bucket=self.train_data_bucket,
-                        to_file=bad_data_train_file_name,
+                        from_file_name=raw_data_train_file_name,
+                        from_bucket_name=self.train_data_bucket,
+                        to_file_name=bad_data_train_file_name,
+                        to_bucket_name=self.train_data_bucket,
                         table_name=self.train_name_valid_log,
                     )
 
@@ -329,10 +328,9 @@ class raw_train_data_validation:
         )
 
         try:
-            lst = self.s3.read_csv(
-                bucket=self.train_data_bucket,
-                file_name=self.good_train_data_dir,
-                folder=True,
+            lst = self.s3.read_csv_from_folder(
+                folder_name=self.good_train_data_dir,
+                bucket_name=self.train_data_bucket,
                 table_name=self.train_col_valid_log,
             )
 
@@ -351,10 +349,10 @@ class raw_train_data_validation:
                         dest_f = self.bad_train_data_dir + "/" + abs_f
 
                         self.s3.move_data(
-                            from_bucket=self.train_data_bucket,
-                            from_file=file,
-                            to_bucket=self.train_data_bucket,
-                            to_file=dest_f,
+                            from_file_name=file,
+                            from_bucket_name=self.train_data_bucket,
+                            to_file_name=dest_f,
+                            to_bucket_name=self.train_data_bucket,
                             table_name=self.train_col_valid_log,
                         )
 
@@ -394,14 +392,13 @@ class raw_train_data_validation:
         )
 
         try:
-            lst = self.s3.read_csv(
-                bucket=self.train_data_bucket,
-                file_name=self.good_train_data_dir,
-                folder=True,
+            lst = self.s3.read_csv_from_folder(
+                folder_name=self.good_train_data_dir,
+                bucket_name=self.train_data_bucket,
                 table_name=self.train_missing_value_log,
             )
 
-            for idx, f in enumerate(lst):
+            for idx, f in lst:
                 df = f[idx][0]
 
                 file = f[idx][1]
@@ -418,10 +415,10 @@ class raw_train_data_validation:
                             dest_f = self.bad_train_data_dir + "/" + abs_f
 
                             self.s3.move_data(
-                                from_bucket=self.train_data_bucket,
-                                from_file=file,
-                                to_bucket=self.train_data_bucket,
-                                to_file=dest_f,
+                                from_file_name=file,
+                                from_bucket_name=self.train_data_bucket,
+                                to_file_name=dest_f,
+                                to_bucket_name=self.train_data_bucket,
                                 table_name=self.train_missing_value_log,
                             )
 
@@ -432,9 +429,9 @@ class raw_train_data_validation:
 
                         self.s3.upload_df_as_csv(
                             data_frame=df,
-                            file_name=abs_f,
-                            bucket=self.train_data_bucket,
-                            dest_file_name=dest_f,
+                            local_file_name=abs_f,
+                            bucket_file_name=dest_f,
+                            bucket_name=self.train_data_bucket,
                             table_name=self.train_missing_value_log,
                         )
 
