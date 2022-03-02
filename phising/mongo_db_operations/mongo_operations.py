@@ -22,50 +22,11 @@ class MongoDB_Operation:
 
         self.DB_URL = os.environ["MONGODB_URL"]
 
+        self.client = MongoClient(self.DB_URL)
+
         self.log_writer = App_Logger()
 
-    def get_client(self, table_name):
-        """
-        Method Name :   get_client
-        Description :   This method is used for getting the client from MongoDB
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.get_client.__name__
-
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=table_name,
-        )
-
-        try:
-            self.client = MongoClient(self.DB_URL)
-
-            self.log_writer.log(
-                table_name=table_name, log_message=f"Got MongoClient from MongoDB Atlas"
-            )
-
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
-            )
-
-            return self.client
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
-            )
-
-    def create_db(self, client, db_name, table_name):
+    def create_db(self, db_name, table_name):
         """
         Method Name :   create_db
         Description :   This method is creating a database in MongoDB
@@ -83,10 +44,11 @@ class MongoDB_Operation:
         )
 
         try:
-            db = client[db_name]
+            db = self.client[db_name]
 
             self.log_writer.log(
-                table_name=table_name, log_message=f"Created mongodb database"
+                table_name=table_name,
+                log_message=f"Created {db_name} database in MongoDB",
             )
 
             self.log_writer.start_log(
@@ -106,7 +68,7 @@ class MongoDB_Operation:
                 table_name=table_name,
             )
 
-    def create_collection(self, database, collection_name, table_name):
+    def get_collection(self, database, collection_name, table_name):
         """
         Method Name :   create_collection
         Description :   This method is used for creating a collection in created database
@@ -127,50 +89,8 @@ class MongoDB_Operation:
             collection = database[collection_name]
 
             self.log_writer.log(
-                table_name=table_name, log_message=f"Created collection in mongodb"
-            )
-
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
                 table_name=table_name,
-            )
-
-            return collection
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
-            )
-
-    def get_collection(self, collection_name, database, table_name):
-        """
-        Method Name :   get_collection
-        Description :   This method is used for getting collection from a database
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.get_collection.__name__
-
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=table_name,
-        )
-
-        try:
-            collection = self.create_collection(
-                database, collection_name, table_name=table_name
-            )
-
-            self.log_writer.log(
-                table_name=table_name, log_message=f"Got the collection from mongodb",
+                log_message=f"Created {collection_name} collection in mongodb",
             )
 
             self.log_writer.start_log(
@@ -208,9 +128,7 @@ class MongoDB_Operation:
         )
 
         try:
-            client = self.get_client(table_name=table_name)
-
-            database = self.create_db(client, db_name, table_name=table_name)
+            database = self.create_db(self.client, db_name, table_name=table_name)
 
             collection = database.get_collection(name=collection_name)
 
@@ -252,14 +170,14 @@ class MongoDB_Operation:
         """
         method_name = self.insert_dataframe_as_record.__name__
 
-        try:
-            self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
-            )
+        self.log_writer.start_log(
+            key="start",
+            class_name=self.class_name,
+            method_name=method_name,
+            table_name=table_name,
+        )
 
+        try:
             records = json.loads(data_frame.T.to_json()).values()
 
             self.log_writer.log(
@@ -267,9 +185,7 @@ class MongoDB_Operation:
                 log_message=f"Converted dataframe to json records",
             )
 
-            client = self.get_client(table_name=table_name)
-
-            database = self.create_db(client, db_name, table_name=table_name)
+            database = self.create_db(db_name, table_name=table_name)
 
             collection = database.get_collection(collection_name)
 
