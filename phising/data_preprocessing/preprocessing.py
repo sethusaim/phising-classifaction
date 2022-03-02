@@ -3,7 +3,7 @@ import pandas as pd
 from phising.s3_bucket_operations.s3_operations import s3_operations
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
-from utils.logger import app_logger
+from utils.logger import App_Logger
 from utils.model_utils import get_model_name
 from utils.read_params import read_params
 
@@ -16,7 +16,7 @@ class preprocessor:
     """
 
     def __init__(self, table_name):
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
         self.config = read_params()
 

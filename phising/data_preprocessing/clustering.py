@@ -2,7 +2,7 @@ from kneed import KneeLocator
 from matplotlib import pyplot as plt
 from phising.s3_bucket_operations.s3_operations import s3_operations
 from sklearn.cluster import KMeans
-from utils.logger import app_logger
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
@@ -36,7 +36,7 @@ class kmeans_clustering:
 
         self.elbow_plot_file = self.config["elbow_plot_fig"]
 
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
         self.class_name = self.__class__.__name__
 

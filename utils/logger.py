@@ -2,7 +2,7 @@ from datetime import datetime
 import boto3
 
 
-class app_logger:
+class App_Logger:
     """
     Description :   This class is used for logging the info to DynamoDB
 

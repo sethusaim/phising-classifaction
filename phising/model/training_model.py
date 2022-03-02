@@ -6,7 +6,7 @@ from phising.mlflow_utils.mlflow_operations import mlflow_operations
 from phising.model_finder.tuner import model_finder
 from phising.s3_bucket_operations.s3_operations import s3_operations
 from sklearn.model_selection import train_test_split
-from utils.logger import app_logger
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
@@ -20,7 +20,7 @@ class train_model:
     """
 
     def __init__(self):
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
         self.config = read_params()
 

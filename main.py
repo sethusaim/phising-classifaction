@@ -13,7 +13,7 @@ from phising.model.prediction_from_model import prediction
 from phising.model.training_model import train_model
 from phising.validation_insertion.prediction_validation_insertion import pred_validation
 from phising.validation_insertion.train_validation_insertion import train_validation
-from utils.log_tables import create_log_table
+from utils.log_tables import Create_Log_Table
 from utils.read_params import read_params
 
 os.putenv("LANG", "en_US.UTF-8")
@@ -48,7 +48,7 @@ async def trainRouteClient():
     try:
         raw_data_train_bucket_name = config["s3_bucket"]["phising_raw_data_bucket"]
 
-        table_obj = create_log_table()
+        table_obj = Create_Log_Table()
 
         table_obj.generate_log_tables(type="train")
 
@@ -77,7 +77,7 @@ async def predictRouteClient():
     try:
         raw_data_pred_bucket_name = config["s3_bucket"]["phising_raw_data_bucket"]
 
-        table_obj = create_log_table()
+        table_obj = Create_Log_Table()
 
         table_obj.generate_log_tables(type="pred")
 

@@ -3,7 +3,7 @@ import os
 
 import pandas as pd
 from pymongo import MongoClient
-from utils.logger import app_logger
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
@@ -22,7 +22,7 @@ class mongo_db_operation:
 
         self.DB_URL = os.environ["MONGODB_URL"]
 
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
     def get_client(self, table_name):
         """

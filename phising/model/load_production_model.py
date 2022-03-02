@@ -1,6 +1,6 @@
 from phising.mlflow_utils.mlflow_operations import mlflow_operations
 from phising.s3_bucket_operations.s3_operations import s3_operations
-from utils.logger import app_logger
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
@@ -13,7 +13,7 @@ class load_prod_model:
     """
 
     def __init__(self, num_clusters):
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
         self.config = read_params()
 

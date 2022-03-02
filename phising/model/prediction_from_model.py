@@ -3,7 +3,7 @@ from botocore.exceptions import ClientError
 from phising.data_ingestion.data_loader_prediction import data_getter_pred
 from phising.data_preprocessing.preprocessing import preprocessor
 from phising.s3_bucket_operations.s3_operations import s3_operations
-from utils.logger import app_logger
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
@@ -28,7 +28,7 @@ class prediction:
 
         self.pred_output_file = self.config["pred_output_file"]
 
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
         self.s3 = s3_operations()
 

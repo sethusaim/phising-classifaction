@@ -1,7 +1,7 @@
 from phising.data_transform.data_transformation_pred import data_transform_pred
 from phising.data_type_valid.data_type_valid_pred import db_operation_pred
 from phising.raw_data_validation.pred_data_validation import raw_pred_data_validation
-from utils.logger import app_logger
+from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
@@ -34,7 +34,7 @@ class pred_validation:
             "phising_pred_data_collection"
         ]
 
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
     def prediction_validation(self):
         """

@@ -2,7 +2,7 @@ import boto3
 from utils.read_params import read_params
 
 
-class create_log_table:
+class Create_Log_Table:
     def __init__(self):
         self.config = read_params()
 

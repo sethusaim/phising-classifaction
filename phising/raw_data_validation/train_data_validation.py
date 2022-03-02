@@ -1,6 +1,6 @@
 import re
 
-from utils.logger import app_logger
+from utils.logger import App_Logger
 from utils.read_params import read_params
 from phising.s3_bucket_operations.s3_operations import s3_operations
 
@@ -18,7 +18,7 @@ class raw_train_data_validation:
 
         self.raw_data_bucket_name = raw_data_bucket_name
 
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
         self.class_name = self.__class__.__name__
 

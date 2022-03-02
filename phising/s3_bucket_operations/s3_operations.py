@@ -6,7 +6,7 @@ from io import StringIO
 import boto3
 import pandas as pd
 from botocore.exceptions import ClientError
-from utils.logger import app_logger
+from utils.logger import App_Logger
 from utils.model_utils import get_model_name
 from utils.read_params import read_params
 
@@ -20,7 +20,7 @@ class s3_operations:
     """
 
     def __init__(self):
-        self.log_writer = app_logger()
+        self.log_writer = App_Logger()
 
         self.config = read_params()
 
