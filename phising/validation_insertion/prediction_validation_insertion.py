@@ -5,7 +5,7 @@ from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class pred_validation:
+class Pred_Validation:
     """
     Description :   This class is used for validating all the Prediction batch files
 
@@ -81,9 +81,7 @@ class pred_validation:
                 log_message="Starting Data Transformation",
             )
 
-            self.data_transform.rename_target_column()
-
-            self.data_transform.replace_missing_with_null()
+            self.data_transform.add_quotes_to_string()
 
             self.log_writer.log(
                 table_name=self.pred_main_log,

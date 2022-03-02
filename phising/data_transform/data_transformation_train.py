@@ -3,7 +3,7 @@ from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class Data_Transform_Pred:
+class Data_Transform_Train:
     """
     Description :  This class shall be used for transforming the training batch data before loading it in Database!!.
 

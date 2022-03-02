@@ -3,6 +3,10 @@ on:
     branches:
     - main
 
+    paths-ignore:
+      - "** .md"
+      - "LICENSE"
+
 name: Deploy to Amazon ECS
 
 jobs: 

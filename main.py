@@ -11,8 +11,8 @@ from fastapi.templating import Jinja2Templates
 from phising.model.load_production_model import Load_Prod_Model
 from phising.model.prediction_from_model import Prediction
 from phising.model.training_model import train_model
-from phising.validation_insertion.prediction_validation_insertion import pred_validation
-from phising.validation_insertion.train_validation_insertion import train_validation
+from phising.validation_insertion.prediction_validation_insertion import Pred_Validation
+from phising.validation_insertion.train_validation_insertion import Train_Validation
 from utils.log_tables import Create_Log_Table
 from utils.read_params import read_params
 
@@ -46,7 +46,7 @@ async def index(request: Request):
 @app.get("/train")
 async def trainRouteClient():
     try:
-        raw_data_train_bucket_name = config["bucket"]["phising_raw_data_bucket"]
+        raw_data_train_bucket_name = config["bucket"]["phising_raw_data"]
 
         table_obj = Create_Log_Table()
 
@@ -54,7 +54,7 @@ async def trainRouteClient():
 
         time.sleep(5)
 
-        train_val_obj = train_validation(bucket_name=raw_data_train_bucket_name)
+        train_val_obj = Train_Validation(bucket_name=raw_data_train_bucket_name)
 
         train_val_obj.training_validation()
 
@@ -67,7 +67,7 @@ async def trainRouteClient():
         load_prod_model_obj.load_production_model()
 
     except Exception as e:
-        return Response("Error Occurred! %s" % e)
+        return Response(f"Error Occurred : {e}")
 
     return Response("Training successfull!!")
 
@@ -75,13 +75,13 @@ async def trainRouteClient():
 @app.get("/predict")
 async def predictRouteClient():
     try:
-        raw_data_pred_bucket_name = config["bucket"]["phising_raw_data_bucket"]
+        raw_data_pred_bucket_name = config["bucket"]["phising_raw_data"]
 
         table_obj = Create_Log_Table()
 
         table_obj.generate_log_tables(type="pred")
 
-        pred_val = pred_validation(raw_data_pred_bucket_name)
+        pred_val = Pred_Validation(raw_data_pred_bucket_name)
 
         pred_val.prediction_validation()
 
@@ -94,7 +94,7 @@ async def predictRouteClient():
         )
 
     except Exception as e:
-        return Response("Error Occurred! %s" % e)
+        return Response(f"Error Occurred! {e}")
 
 
 if __name__ == "__main__":

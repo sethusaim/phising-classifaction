@@ -1,11 +1,11 @@
-from phising.data_transform.data_transformation_train import data_transform_train
-from phising.data_type_valid.data_type_valid_train import db_operation_train
-from phising.raw_data_validation.train_data_validation import raw_train_data_validation
+from phising.data_transform.data_transformation_train import Data_Transform_Train
+from phising.data_type_valid.data_type_valid_train import DB_Operation_Train
+from phising.raw_data_validation.train_data_validation import Raw_Train_Data_Validation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class train_validation:
+class Train_Validation:
     """
     Description :   This class is used for validating all the training batch files
 
@@ -14,11 +14,11 @@ class train_validation:
     """
 
     def __init__(self, bucket_name):
-        self.raw_data = raw_train_data_validation(raw_data_bucket_name=bucket_name)
+        self.raw_data = Raw_Train_Data_Validation(raw_data_bucket_name=bucket_name)
 
-        self.data_transform = data_transform_train()
+        self.data_transform = Data_Transform_Train()
 
-        self.db_operation = db_operation_train()
+        self.db_operation = DB_Operation_Train()
 
         self.config = read_params()
 
