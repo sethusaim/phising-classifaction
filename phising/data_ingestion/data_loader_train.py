@@ -3,7 +3,7 @@ from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class data_getter_train:
+class Data_Getter_Train:
     """
     Description :   This class shall be used for obtaining the df from the source for training
     Version     :   1.2
@@ -17,7 +17,7 @@ class data_getter_train:
 
         self.train_csv_file = self.config["export_csv_file"]["train"]
 
-        self.input_files_bucket = self.config["s3_bucket"]["input_files"]
+        self.input_files_bucket = self.config["bucket"]["input_files"]
 
         self.s3 = S3_Operation()
 

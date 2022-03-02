@@ -2,7 +2,7 @@ import pandas as pd
 from botocore.exceptions import ClientError
 from phising.data_ingestion.data_loader_prediction import Data_Getter_Pred
 from phising.data_preprocessing.preprocessing import preprocessor
-from phising.s3_bucket_operations.S3_Operation import S3_Operation
+from phising.bucket_operations.S3_Operation import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
@@ -20,9 +20,9 @@ class prediction:
 
         self.pred_log = self.config["pred_db_log"]["pred_main"]
 
-        self.model_bucket = self.config["s3_bucket"]["phising_model_bucket"]
+        self.model_bucket = self.config["bucket"]["phising_model_bucket"]
 
-        self.input_files_bucket = self.config["s3_bucket"]["inputs_files_bucket"]
+        self.input_files_bucket = self.config["bucket"]["inputs_files_bucket"]
 
         self.prod_model_dir = self.config["models_dir"]["prod"]
 

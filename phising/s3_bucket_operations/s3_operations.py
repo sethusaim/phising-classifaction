@@ -836,9 +836,9 @@ class S3_Operation:
         )
 
         try:
-            s3_bucket = self.get_bucket(bucket_name=bucket_name, table_name=table_name,)
+            bucket = self.get_bucket(bucket_name=bucket_name, table_name=table_name,)
 
-            lst_objs = [object for object in s3_bucket.objects.filter(Prefix=file_name)]
+            lst_objs = [object for object in bucket.objects.filter(Prefix=file_name)]
 
             self.log_writer.log(
                 table_name=table_name,

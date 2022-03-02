@@ -1,6 +1,6 @@
 from kneed import KneeLocator
 from matplotlib import pyplot as plt
-from phising.s3_bucket_operations.S3_Operation import S3_Operation
+from phising.s3_bucket_operations.s3_operations import S3_Operation
 from sklearn.cluster import KMeans
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -18,9 +18,9 @@ class kmeans_clustering:
 
         self.config = read_params()
 
-        self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
+        self.input_files_bucket = self.config["bucket"]["input_files"]
 
-        self.model_bucket = self.config["s3_bucket"]["phising_model_bucket"]
+        self.model_bucket = self.config["bucket"]["phising_model"]
 
         self.random_state = self.config["base"]["random_state"]
 
@@ -44,7 +44,7 @@ class kmeans_clustering:
         """
         Method Name :   elbow_plot
         Description :   This method saves the plot to s3 bucket and decides the optimum number of clusters to the file.
-        Output      :   A picture saved to the s3_bucket
+        Output      :   A picture saved to the bucket
         On Failure  :   Raise Exception
         Version     :   1.2
         Revisions   :   Moved to setup to cloud 

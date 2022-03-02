@@ -1,5 +1,5 @@
 from phising.mongo_db_operations.mongo_operations import mongodb_operation
-from phising.s3_bucket_operations.S3_Operation import S3_Operation
+from phising.bucket_operations.S3_Operation import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
@@ -17,13 +17,13 @@ class db_operation_train:
 
         self.class_name = self.__class__.__name__
 
-        self.train_data_bucket = self.config["s3_bucket"]["phising_train_data_bucket"]
+        self.train_data_bucket = self.config["bucket"]["phising_train_data_bucket"]
 
         self.train_export_csv_file = self.config["export_csv_file"]["train"]
 
         self.good_data_train_dir = self.config["data"]["train"]["good_data_dir"]
 
-        self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
+        self.input_files_bucket = self.config["bucket"]["input_files_bucket"]
 
         self.train_db_insert_log = self.config["train_db_log"]["db_insert"]
 

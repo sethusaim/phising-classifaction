@@ -2,7 +2,7 @@ import re
 
 from utils.logger import App_Logger
 from utils.read_params import read_params
-from phising.s3_bucket_operations.S3_Operation import S3_Operation
+from phising.bucket_operations.S3_Operation import S3_Operation
 
 
 class raw_pred_data_validation:
@@ -24,9 +24,9 @@ class raw_pred_data_validation:
 
         self.s3 = S3_Operation()
 
-        self.pred_data_bucket = self.config["s3_bucket"]["phising_pred_data_bucket"]
+        self.pred_data_bucket = self.config["bucket"]["phising_pred_data_bucket"]
 
-        self.input_files_bucket = self.config["s3_bucket"]["input_files_bucket"]
+        self.input_files_bucket = self.config["bucket"]["input_files_bucket"]
 
         self.raw_pred_data_dir = self.config["data"]["raw_data"]["pred_batch"]
 

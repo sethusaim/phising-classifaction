@@ -1,5 +1,5 @@
 from phising.mlflow_utils.mlflow_operations import mlflow_operations
-from phising.s3_bucket_operations.S3_Operation import S3_Operation
+from phising.bucket_operations.S3_Operation import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
 
@@ -21,7 +21,7 @@ class load_prod_model:
 
         self.num_clusters = num_clusters
 
-        self.model_bucket = self.config["s3_bucket"]["phising_model_bucket"]
+        self.model_bucket = self.config["bucket"]["phising_model_bucket"]
 
         self.load_prod_model_log = self.config["train_db_log"]["load_prod_model"]
 

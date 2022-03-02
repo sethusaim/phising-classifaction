@@ -1,10 +1,10 @@
 import mlflow
-from phising.data_ingestion.data_loader_train import data_getter_train
+from phising.data_ingestion.data_loader_train import Data_Getter_Train
 from phising.data_preprocessing.clustering import kmeans_clustering
 from phising.data_preprocessing.preprocessing import preprocessor
 from phising.mlflow_utils.mlflow_operations import mlflow_operations
 from phising.model_finder.tuner import model_finder
-from phising.s3_bucket_operations.S3_Operation import S3_Operation
+from phising.bucket_operations.S3_Operation import S3_Operation
 from sklearn.model_selection import train_test_split
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -26,7 +26,7 @@ class train_model:
 
         self.model_train_log = self.config["train_db_log"]["model_training"]
 
-        self.model_bucket = self.config["s3_bucket"]["phising_model_bucket"]
+        self.model_bucket = self.config["bucket"]["phising_model_bucket"]
 
         self.test_size = self.config["base"]["test_size"]
 
@@ -46,7 +46,7 @@ class train_model:
 
         self.mlflow_op = mlflow_operations(table_name=self.model_train_log)
 
-        self.data_getter_train_obj = data_getter_train(table_name=self.model_train_log)
+        self.data_getter_train_obj = Data_Getter_Train(table_name=self.model_train_log)
 
         self.preprocessor_obj = preprocessor(table_name=self.model_train_log)
 
