@@ -1,4 +1,4 @@
-from phising.data_transform.data_transformation_pred import data_transform_pred
+from phising.data_transform.data_transformation_pred import Data_Transform_Pred
 from phising.data_type_valid.data_type_valid_pred import db_operation_pred
 from phising.raw_data_validation.pred_data_validation import raw_pred_data_validation
 from utils.logger import App_Logger
@@ -16,7 +16,7 @@ class pred_validation:
     def __init__(self, bucket_name):
         self.raw_data = raw_pred_data_validation(raw_data_bucket_name=bucket_name)
 
-        self.data_transform = data_transform_pred()
+        self.data_transform = Data_Transform_Pred()
 
         self.db_operation = db_operation_pred()
 
