@@ -1,4 +1,3 @@
-from statistics import mode
 from phising.mlflow_utils.mlflow_operations import MLFlow_Operation
 from phising.s3_bucket_operations.s3_operations import S3_Operation
 from utils.logger import App_Logger
@@ -47,7 +46,7 @@ class Load_Prod_Model:
         method_name = self.create_folders_for_prod_and_stag.__name__
 
         self.log_writer.start_log(
-            key="exit",
+            key="start",
             class_name=self.class_name,
             method_name=method_name,
             table_name=table_name,

@@ -10,7 +10,7 @@ from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class train_model:
+class Train_Model:
     """
     Description :   This method is used for getting the data and applying
                     some preprocessing steps and then train the models and register them in mlflow
@@ -77,20 +77,16 @@ class train_model:
         try:
             data = self.data_getter_train.get_data()
 
-            data = self.preprocessor.remove_columns(data, ["phising"])
-
-            X, Y = self.preprocessor.separate_label_feature(
-                data, label_column_name=self.target_col
-            )
+            data = self.preprocessor.replace_invalid_values(data)
 
             is_null_present = self.preprocessor.is_null_present(X)
 
             if is_null_present:
-                X = self.preprocessor.impute_missing_values(X)
+                data = self.preprocessor.impute_missing_values(X)
 
-            cols_to_drop = self.preprocessor.get_columns_with_zero_std_deviation(X)
-
-            X = self.preprocessor.remove_columns(X, cols_to_drop)
+            X, Y = self.preprocessor.separate_label_feature(
+                data, label_column_name=self.target_col
+            )
 
             number_of_clusters = self.kmeans_op.elbow_plot(X)
 

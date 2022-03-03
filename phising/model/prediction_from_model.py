@@ -170,14 +170,12 @@ class Prediction:
 
             data = self.data_getter_pred.get_data()
 
+            data = self.preprocessor.replace_invalid_values(data)
+
             is_null_present = self.preprocessor.is_null_present(data)
 
             if is_null_present:
                 data = self.preprocessor.impute_missing_values(data)
-
-            cols_to_drop = self.preprocessor.get_columns_with_zero_std_deviation(data)
-
-            data = self.preprocessor.remove_columns(data, cols_to_drop)
 
             kmeans = self.s3.load_model(
                 model_name="KMeans",
@@ -211,7 +209,7 @@ class Prediction:
                 result = list(model.predict(cluster_data))
 
                 result = pd.DataFrame(
-                    list(zip(phising_names, result)), columns=["phising", "Prediction"]
+                    list(zip(phising_names, result)), columns=["phising", "prediction"]
                 )
 
                 self.s3.upload_df_as_csv(
@@ -223,7 +221,14 @@ class Prediction:
                 )
 
             self.log_writer.log(
-                table_name=self.pred_log, log_message=f"End of Prediction"
+                table_name=self.pred_log, log_message="End of Prediction"
+            )
+
+            self.log_writer.start_log(
+                key="exit",
+                class_name=self.class_name,
+                method_name=method_name,
+                table_name=self.pred_log,
             )
 
             return (

@@ -10,7 +10,7 @@ from fastapi.templating import Jinja2Templates
 
 from phising.model.load_production_model import Load_Prod_Model
 from phising.model.prediction_from_model import Prediction
-from phising.model.training_model import train_model
+from phising.model.training_model import Train_Model
 from phising.validation_insertion.prediction_validation_insertion import Pred_Validation
 from phising.validation_insertion.train_validation_insertion import Train_Validation
 from utils.log_tables import Create_Log_Table
@@ -48,23 +48,23 @@ async def trainRouteClient():
     try:
         raw_data_train_bucket_name = config["bucket"]["phising_raw_data"]
 
-        table_obj = Create_Log_Table()
+        table = Create_Log_Table()
 
-        table_obj.generate_log_tables(type="train")
+        table.generate_log_tables(type="train")
 
         time.sleep(5)
 
-        train_val_obj = Train_Validation(bucket_name=raw_data_train_bucket_name)
+        train_val = Train_Validation(bucket_name=raw_data_train_bucket_name)
 
-        train_val_obj.training_validation()
+        train_val.training_validation()
 
-        train_model_obj = train_model()
+        train_model = Train_Model()
 
-        num_clusters = train_model_obj.training_model()
+        num_clusters = train_model.training_model()
 
-        load_prod_model_obj = Load_Prod_Model(num_clusters=num_clusters)
+        load_prod_model = Load_Prod_Model(num_clusters=num_clusters)
 
-        load_prod_model_obj.load_production_model()
+        load_prod_model.load_production_model()
 
     except Exception as e:
         return Response(f"Error Occurred : {e}")
@@ -77,9 +77,9 @@ async def predictRouteClient():
     try:
         raw_data_pred_bucket_name = config["bucket"]["phising_raw_data"]
 
-        table_obj = Create_Log_Table()
+        table = Create_Log_Table()
 
-        table_obj.generate_log_tables(type="pred")
+        table.generate_log_tables(type="pred")
 
         pred_val = Pred_Validation(raw_data_pred_bucket_name)
 

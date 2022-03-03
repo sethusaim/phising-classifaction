@@ -60,9 +60,9 @@ class KMeans_Clustering:
             table_name=self.table_name,
         )
 
-        wcss = []
-
         try:
+            wcss = []
+
             for i in range(1, self.max_clusters):
                 kmeans = KMeans(
                     n_clusters=i, init=self.kmeans_init, random_state=self.random_state
@@ -141,9 +141,9 @@ class KMeans_Clustering:
             table_name=self.table_name,
         )
 
-        self.data = data
-
         try:
+            self.data = data
+
             self.kmeans = KMeans(
                 n_clusters=number_of_clusters,
                 init=self.kmeans_init,

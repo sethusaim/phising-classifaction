@@ -21,7 +21,7 @@ class DB_Operation_Train:
 
         self.train_export_csv_file = self.config["export_csv_file"]["train"]
 
-        self.good_data_train_dir = self.config["data"]["train"]["good_data_dir"]
+        self.good_data_train_dir = self.config["data"]["train"]["good"]
 
         self.input_files_bucket = self.config["bucket"]["input_files"]
 

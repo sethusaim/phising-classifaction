@@ -21,7 +21,7 @@ class DB_Operation_Pred:
 
         self.pred_export_csv_file = self.config["export_csv_file"]["pred"]
 
-        self.good_data_pred_dir = self.config["data"]["pred"]["good_data_dir"]
+        self.good_data_pred_dir = self.config["data"]["pred"]["good"]
 
         self.input_files_bucket = self.config["bucket"]["input_files"]
 

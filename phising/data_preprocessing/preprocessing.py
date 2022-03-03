@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 from phising.s3_bucket_operations.s3_operations import S3_Operation
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
 from utils.logger import App_Logger
 from utils.model_utils import Model_Utils
 from utils.read_params import read_params
@@ -30,56 +28,9 @@ class Preprocessor:
 
         self.n_components = self.config["pca_model"]["n_components"]
 
-        self.input_files_bucket = self.config["bucket"]["input_files_bucket"]
+        self.input_files_bucket = self.config["bucket"]["input_files"]
 
         self.s3 = S3_Operation()
-
-    def remove_columns(self, data, columns):
-        """
-        Method Name :   remove_columns
-        Description :   This method removes the given columns from a pandas dataframe.
-        Output      :   A pandas DataFrame after removing the specified columns.
-        On Failure  :   Raise Exception
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.remove_columns.__name__
-
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
-        )
-
-        try:
-            self.data = data
-
-            self.columns = columns
-
-            self.useful_data = self.data.drop(labels=self.columns, axis=1)
-
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message=f"Dropped {columns} from {data}",
-            )
-
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
-
-            return self.useful_data
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
 
     def separate_label_feature(self, data, label_column_name):
         """
@@ -260,49 +211,6 @@ class Preprocessor:
                 table_name=self.table_name,
             )
 
-    def encode_target_cols(self, data):
-        """
-        Method Name :   encode_target_cols
-        Description :   This method encodes all the categorical values in the training set.
-        Output      :   A Dataframe which has target values encoded.
-        On Failure  :   Raise Exception
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.encode_target_cols.__name__
-
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
-        )
-
-        try:
-            data["class"] = data["class"].map({"'neg'": 0, "'pos'": 1})
-
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message="Encoded target cols in dataframe",
-            )
-
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
-
-            return data
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
-
     def impute_missing_values(self, data):
         """
         Method Name :   impute_missing_values
@@ -338,176 +246,6 @@ class Preprocessor:
             )
 
             return data
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
-
-    def apply_pca_transform(self, X_scaled_data):
-        """
-        Method Name : apply_pca_transform
-        Description : This method applies the PCA transformation the features cols
-        Output      : A dataframe with scaled values
-        On Failure  : Raise Exception
-
-        Version     : 1.2
-        Revisions   : moved setup to cloud
-        """
-        method_name = self.apply_pca_transform.__name__
-
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
-        )
-
-        try:
-            pca = PCA(n_components=self.n_components)
-
-            pca_model_name = self.model_utils.get_model_name(
-                model=pca, table_name=self.table_name
-            )
-
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message=f"Initialized {pca_model_name} model with n_components to {self.n_components}",
-            )
-
-            new_data = pca.fit_transform(X_scaled_data)
-
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message=f"Transformed the data using {pca_model_name} model",
-            )
-
-            principal_x = pd.DataFrame(new_data, index=self.data.index)
-
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message="Created a dataframe for the transformed data",
-            )
-
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
-
-            return principal_x
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
-
-    def scale_numerical_columns(self, data):
-        """
-        Method Name : scale_numerical_columns
-        Description : This method scales the numerical values using the Standard scaler.
-        Output      : A dataframe with scaled values
-        On Failure  : Raise Exception
-
-        Version     : 1.2
-        Revisions   : moved setup to cloud
-        """
-        method_name = self.scale_numerical_columns.__name__
-
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
-        )
-
-        try:
-            self.data = data
-
-            self.scaler = StandardScaler()
-
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message=f"Initialized {self.scaler.__class__.__name__}",
-            )
-
-            self.scaled_data = self.scaler.fit_transform(self.data)
-
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message=f"Transformed data using {self.scaler.__class__.__name__}",
-            )
-
-            self.scaled_num_df = pd.DataFrame(
-                data=self.scaled_data, columns=self.data.columns, index=self.data.index
-            )
-
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message="Converted transformed data to dataframe",
-            )
-
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
-
-            return self.scaled_num_df
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
-
-    def get_columns_with_zero_std_deviation(self, data):
-        """
-        Method Name :   get_columns_with_zero_std_deviation
-        Description :   This method finds out the columns which have a standard deviation of zero.
-        Output      :   List of the columns with standard deviation of zero
-        On Failure  :   Raise Exception
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.get_columns_with_zero_std_deviation.__name__
-
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=self.table_name,
-        )
-
-        try:
-            data_n = data.describe()
-
-            cols_to_drop = [x for x in data.columns if data_n[x]["std"] == 0]
-
-            self.log_writer.log(
-                table_name=self.table_name,
-                log_message="Got cols with zero standard deviation",
-            )
-
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=self.table_name,
-            )
-
-            return cols_to_drop
 
         except Exception as e:
             self.log_writer.exception_log(

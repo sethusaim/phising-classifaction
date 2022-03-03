@@ -164,7 +164,7 @@ class S3_Operation:
     def read_text(self, file_name, bucket_name, table_name):
         """
         Method Name :   read_json
-        Description :   This method is used for loading a json file from s3 bucket_name (schema file)
+        Description :   This method is used for loading a json file from s3 bucket (schema file)
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -210,7 +210,7 @@ class S3_Operation:
     def read_json(self, file_name, bucket_name, table_name):
         """
         Method Name :   read_json
-        Description :   This method is used for loading a json file from s3 bucket_name (schema file)
+        Description :   This method is used for loading a json file from s3 bucket (schema file)
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -466,7 +466,7 @@ class S3_Operation:
     def create_folder(self, folder_name, bucket_name, table_name):
         """
         Method Name :   create_folder
-        Description :   This method is used for creating a folder in s3 bucket_name
+        Description :   This method is used for creating a folder in s3 bucket
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -527,7 +527,7 @@ class S3_Operation:
     def put_object(self, object, bucket_name, table_name):
         """
         Method Name :   put_object
-        Description :   This method is used for putting any object in s3 bucket_name
+        Description :   This method is used for putting any object in s3 bucket
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -571,7 +571,7 @@ class S3_Operation:
     ):
         """
         Method Name :   upload_file
-        Description :   This method is used for uploading the files to s3 bucket_name
+        Description :   This method is used for uploading the files to s3 bucket
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -588,7 +588,7 @@ class S3_Operation:
         try:
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Uploading {from_file_name} to s3 bucket_name {bucket_name}",
+                log_message=f"Uploading {from_file_name} to s3 bucket {bucket_name}",
             )
 
             s3_resource = self.get_s3_resource(table_name=table_name)
@@ -599,7 +599,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Uploaded {from_file_name} to s3 bucket_name {bucket_name}",
+                log_message=f"Uploaded {from_file_name} to s3 bucket {bucket_name}",
             )
 
             if remove is True:
@@ -728,7 +728,7 @@ class S3_Operation:
     def delete_file(self, file_name, bucket_name, table_name):
         """
         Method Name :   delete_file
-        Description :   This method is used for deleting any file from s3 bucket_name
+        Description :   This method is used for deleting any file from s3 bucket
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -824,7 +824,7 @@ class S3_Operation:
     def get_files_from_folder(self, folder_name, bucket_name, table_name):
         """
         Method Name :   get_files_from_folder
-        Description :   This method is used for getting the file names from s3 bucket_name
+        Description :   This method is used for getting the file names from s3 bucket
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -870,7 +870,7 @@ class S3_Operation:
     def get_file_object(self, file_name, bucket_name, table_name):
         """
         Method Name :   get_file_object
-        Description :   This method is used for getting file contents from s3 bucket_name
+        Description :   This method is used for getting file contents from s3 bucket
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -918,7 +918,7 @@ class S3_Operation:
     def load_model(self, model_name, bucket_name, table_name):
         """
         Method Name :   load_model
-        Description :   This method is used for loading the model from s3 bucket_name
+        Description :   This method is used for loading the model from s3 bucket
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -968,7 +968,7 @@ class S3_Operation:
     def save_model(self, model, model_dir, model_bucket, table_name, idx=None):
         """
         Method Name :   save_model
-        Description :   This method is used for saving a model to s3 bucket_name
+        Description :   This method is used for saving a model to s3 bucket
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -1047,7 +1047,7 @@ class S3_Operation:
     ):
         """
         Method Name :   upload_df_as_csv
-        Description :   This method is used for uploading a dataframe to s3 bucket_name as csv file
+        Description :   This method is used for uploading a dataframe to s3 bucket as csv file
 
         Version     :   1.2
         Revisions   :   moved setup to cloud

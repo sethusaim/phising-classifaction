@@ -24,8 +24,6 @@ class Pred_Validation:
 
         self.class_name = self.__class__.__name__
 
-        self.db_name = self.config["db_log"]["db_pred_log"]
-
         self.pred_main_log = self.config["pred_db_log"]["pred_main"]
 
         self.good_data_db_name = self.config["mongodb"]["phising_data_db_name"]

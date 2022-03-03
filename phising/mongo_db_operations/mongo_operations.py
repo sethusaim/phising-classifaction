@@ -26,15 +26,15 @@ class MongoDB_Operation:
 
         self.log_writer = App_Logger()
 
-    def create_db(self, db_name, table_name):
+    def get_database(self, db_name, table_name):
         """
-        Method Name :   create_db
+        Method Name :   get_database
         Description :   This method is creating a database in MongoDB
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.create_db.__name__
+        method_name = self.get_database.__name__
 
         self.log_writer.start_log(
             key="start",
@@ -70,13 +70,13 @@ class MongoDB_Operation:
 
     def get_collection(self, database, collection_name, table_name):
         """
-        Method Name :   create_collection
+        Method Name :   get_collection
         Description :   This method is used for creating a collection in created database
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-        method_name = self.create_collection.__name__
+        method_name = self.get_collection.__name__
 
         self.log_writer.start_log(
             key="start",
@@ -128,7 +128,7 @@ class MongoDB_Operation:
         )
 
         try:
-            database = self.create_db(self.client, db_name, table_name=table_name)
+            database = self.get_database(db_name=db_name, table_name=table_name)
 
             collection = database.get_collection(name=collection_name)
 
@@ -185,7 +185,7 @@ class MongoDB_Operation:
                 log_message=f"Converted dataframe to json records",
             )
 
-            database = self.create_db(db_name, table_name=table_name)
+            database = self.get_database(db_name, table_name=table_name)
 
             collection = database.get_collection(collection_name)
 

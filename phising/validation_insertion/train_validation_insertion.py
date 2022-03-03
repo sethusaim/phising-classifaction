@@ -24,7 +24,7 @@ class Train_Validation:
 
         self.class_name = self.__class__.__name__
 
-        self.db_name = self.config["db_log"]["db_train_log"]
+        self.db_name = self.config["db_log"]["train"]
 
         self.train_main_log = self.config["train_db_log"]["train_main"]
 
@@ -81,9 +81,7 @@ class Train_Validation:
                 log_message="Starting Data Transformation",
             )
 
-            self.data_transform.rename_target_column()
-
-            self.data_transform.replace_missing_with_null()
+            self.data_transform.add_quotes_to_string()
 
             self.log_writer.log(
                 table_name=self.train_main_log,

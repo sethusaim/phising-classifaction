@@ -17,6 +17,8 @@ class Model_Utils:
 
         self.n_jobs = self.config["model_utils"]["n_jobs"]
 
+        self.class_name = self.__class__.__name__
+
     def get_model_name(self, model, table_name):
         """
         Method Name :   get_model_name
@@ -29,7 +31,7 @@ class Model_Utils:
 
         self.log_writer.start_log(
             key="start",
-            class_name=__file__,
+            class_name=self.class_name,
             method_name=method_name,
             table_name=table_name,
         )
@@ -43,7 +45,7 @@ class Model_Utils:
 
             self.log_writer.start_log(
                 key="exit",
-                class_name=__file__,
+                class_name=self.class_name,
                 method_name=method_name,
                 table_name=table_name,
             )
@@ -53,7 +55,7 @@ class Model_Utils:
         except Exception as e:
             self.log_writer.exception_log(
                 error=e,
-                class_name=__file__,
+                class_name=self.class_name,
                 method_name=method_name,
                 table_name=table_name,
             )
@@ -70,7 +72,7 @@ class Model_Utils:
 
         self.log_writer.start_log(
             key="start",
-            class_name=__file__,
+            class_name=self.class_name,
             method_name=method_name,
             table_name=table_name,
         )
@@ -92,7 +94,7 @@ class Model_Utils:
 
             self.log_writer.start_log(
                 key="exit",
-                class_name=__file__,
+                class_name=self.class_name,
                 method_name=method_name,
                 table_name=table_name,
             )
@@ -102,7 +104,7 @@ class Model_Utils:
         except Exception as e:
             self.log_writer.exception_log(
                 error=e,
-                class_name=__file__,
+                class_name=self.class_name,
                 method_name=method_name,
                 table_name=table_name,
             )
@@ -119,7 +121,7 @@ class Model_Utils:
 
         self.log_writer.start_log(
             key="start",
-            class_name=__file__,
+            class_name=self.class_name,
             method_name=method_name,
             table_name=table_name,
         )
@@ -152,7 +154,7 @@ class Model_Utils:
 
                 self.log_writer.start_log(
                     key="exit",
-                    class_name=__file__,
+                    class_name=self.class_name,
                     method_name=method_name,
                     table_name=table_name,
                 )
@@ -162,7 +164,7 @@ class Model_Utils:
         except Exception as e:
             self.log_writer.exception_log(
                 error=e,
-                class_name=__file__,
+                class_name=self.class_name,
                 method_name=method_name,
                 table_name=table_name,
             )
@@ -179,7 +181,7 @@ class Model_Utils:
 
         self.log_writer.start_log(
             key="start",
-            class_name=__file__,
+            class_name=self.class_name,
             method_name=method_name,
             table_name=table_name,
         )
@@ -213,7 +215,7 @@ class Model_Utils:
 
             self.log_writer.start_log(
                 key="exit",
-                class_name=__file__,
+                class_name=self.class_name,
                 method_name=method_name,
                 table_name=table_name,
             )
@@ -223,7 +225,7 @@ class Model_Utils:
         except Exception as e:
             self.log_writer.exception_log(
                 error=e,
-                class_name=__file__,
+                class_name=self.class_name,
                 method_name=method_name,
                 table_name=table_name,
             )

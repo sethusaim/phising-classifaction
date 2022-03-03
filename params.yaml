@@ -1,6 +1,6 @@
 base:
   random_state : 42
-  target_col : Output
+  target_col : Result
   test_size : 0.33
 
 app:
@@ -13,11 +13,11 @@ data:
     pred_batch: prediction_data
 
   train:
-    good_data_dir : good/train
+    good : good/train
     bad_data_dir: bad/train
 
   pred:
-    good_data_dir: good/pred
+    good: good/pred
     bad_data_dir: bad/pred
 
 mongodb:

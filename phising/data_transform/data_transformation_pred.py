@@ -20,11 +20,11 @@ class Data_Transform_Pred:
 
         self.log_writer = App_Logger()
 
-        self.good_pred_data_dir = self.config["data"]["pred"]["good_data_dir"]
+        self.good_pred_data_dir = self.config["data"]["pred"]["good"]
 
         self.class_name = self.__class__.__name__
 
-        self.db_name = self.config["db_log"]["db_pred_log"]
+        self.db_name = self.config["db_log"]["pred"]
 
         self.pred_data_transform_log = self.config["pred_db_log"]["data_transform"]
 

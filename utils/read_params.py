@@ -3,8 +3,8 @@ import yaml
 
 def read_params(config_path="params.yaml"):
     """
-    Method Name :   starread_paramst_log
-    Description :   This method is used for read the params from yaml file
+    Method Name :   read_params
+    Description :   This method is used for read the parameters from yaml file
 
     Version     :   1.2
     Revisions   :   moved setup to cloud

@@ -20,7 +20,7 @@ class Data_Transform_Train:
 
         self.log_writer = App_Logger()
 
-        self.good_train_data_dir = self.config["data"]["train"]["good_data_dir"]
+        self.good_train_data_dir = self.config["data"]["train"]["good"]
 
         self.class_name = self.__class__.__name__
 
