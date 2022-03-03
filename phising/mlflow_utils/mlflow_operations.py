@@ -11,9 +11,10 @@ from utils.read_params import read_params
 class MLFlow_Operation:
     """
     Description :    This class shall be used for handling all the mlflow operations
-
-    Version     :    1.2
-    Revisions   :    moved to setup to cloud
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self, table_name):
@@ -42,9 +43,13 @@ class MLFlow_Operation:
     def get_experiment_from_mlflow(self, exp_name):
         """
         Method Name :   get_experiment_from_mlflow
-        Description :   This method gets the experiment from mlflow by name
+        Description :   This method gets the experiment from mlflow server using the experiment name
+
+        Output      :   An experiment which was stored in mlflow server
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_experiment_from_mlflow.__name__
@@ -84,9 +89,13 @@ class MLFlow_Operation:
     def get_runs_from_mlflow(self, exp_id):
         """
         Method Name :   get_runs_from_mlflow
-        Description :   This method gets the runs from mlflow as dataframe
+        Description :   This method gets the runs from the mlflow server for a particular experiment id
+
+        Output      :   A pandas series object consisting of runs for the particular experiment id
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_runs_from_mlflow.__name__
@@ -103,7 +112,7 @@ class MLFlow_Operation:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_info=f"Completed searchiing for runs in mlflow with experiment ids as {exp_id}",
+                log_info=f"Completed searching for runs in mlflow with experiment ids as {exp_id}",
             )
 
             self.log_writer.start_log(
@@ -126,9 +135,13 @@ class MLFlow_Operation:
     def set_mlflow_experiment(self, experiment_name):
         """
         Method Name :   set_mlflow_experiment
-        Description :   This method sets the mlflow experiment witht he given name
+        Description :   This method sets the mlflow experiment with the particular experiment name
+
+        Output      :   An experiment with experiment name will be created in mlflow server
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.set_mlflow_experiment.__name__
@@ -166,9 +179,13 @@ class MLFlow_Operation:
     def get_mlflow_client(self, server_uri):
         """
         Method Name :   get_mlflow_client
-        Description :   This method gets the mlflow client with the particular server uri
+        Description :   This method gets mlflow client for the particular server uri
+
+        Output      :   A mlflow client is created with particular server uri
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_mlflow_client.__name__
@@ -208,9 +225,13 @@ class MLFlow_Operation:
     def get_remote_server_uri(self):
         """
         Method Name :   get_remote_server_uri
-        Description :   This method sets the mlflow client with the particular server uri
+        Description :   This method gets the remote server uri from environment variables declared
+
+        Output      :   A variable which stores the remote server uri
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_remote_server_uri.__name__
@@ -249,9 +270,13 @@ class MLFlow_Operation:
     def set_mlflow_tracking_uri(self):
         """
         Method Name :   set_mlflow_tracking_uri
-        Description :   This method sets the mlflow client with the particular server uri
+        Description :   This method sets the mlflow tracking uri in mlflow server 
+
+        Output      :   MLFLow server will set the particular uri to communicate with code 
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.set_mlflow_tracking_uri.__name__
@@ -290,9 +315,13 @@ class MLFlow_Operation:
     def get_mlflow_models(self):
         """
         Method Name :   get_mlflow_models
-        Description :   This method gets the mlflow models from the mlflow model registry
+        Description :   This method gets the registered models in mlflow server
+
+        Output      :   A list of registered model names stored in mlflow server
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_mlflow_models.__name__
@@ -312,7 +341,8 @@ class MLFlow_Operation:
             reg_model_names = [rm.name for rm in client.list_registered_models()]
 
             self.log_writer.log(
-                table_name=self.table_name, log_info="Got registered model from mlflow",
+                table_name=self.table_name,
+                log_info="Got registered models from mlflow",
             )
 
             self.log_writer.start_log(
@@ -335,9 +365,13 @@ class MLFlow_Operation:
     def search_mlflow_models(self, order):
         """
         Method Name :   search_mlflow_models
-        Description :   This method searches the mlflow models and returns the result in the given order
+        Description :   This method searches for registered models and returns them in the mentioned order
+
+        Output      :   A list of registered models in the mentioned order
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.search_mlflow_models.__name__
@@ -381,9 +415,13 @@ class MLFlow_Operation:
     def log_model(self, model, model_name):
         """
         Method Name :   log_model
-        Description :   This method logs the model to mlflow with the mentioned format and name
+        Description :   This method logs the model to mlflow server
+
+        Output      :   A model is logged to the mlflow server
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_model.__name__
@@ -426,9 +464,13 @@ class MLFlow_Operation:
     def log_metric(self, model_name, metric):
         """
         Method Name :   log_metric
-        Description :   This method logs the metric of model to mlflow
+        Description :   This method logs the model metric to mlflow server
+
+        Output      :   A model metric is logged to mlflow server
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_metric.__name__
@@ -468,9 +510,13 @@ class MLFlow_Operation:
     def log_param(self, idx, model, model_name, param):
         """
         Method Name :   log_param
-        Description :   This method logs the params of the model to mlflow
+        Description :   This method logs the model param to mlflow server
+
+        Output      :   A model param is logged to mlflow server
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_param.__name__
@@ -510,9 +556,13 @@ class MLFlow_Operation:
     def log_all_for_model(self, idx, model, model_param_name, model_score):
         """
         Method Name :   log_all_for_model
-        Description :   This method logs the params,metrics and model itself for the particular model
+        Description :   This method logs model,model params and model score to mlflow server
+
+        Output      :   Model,model parameters and model score are logged to mlflow server
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.log_all_for_model.__name__
@@ -578,10 +628,13 @@ class MLFlow_Operation:
     ):
         """
         Method Name :   transition_mlflow_model
-        Description :   This method transitions the models in mlflow and as well as in s3 bucket based on
-                        the best model for the particular cluster
+        Description :   This method transitions mlflow model from one stage to other stage, and does the same in s3 bucket
+
+        Output      :   A mlflow model is transitioned from one stage to another, and same is reflected in s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.transition_mlflow_model.__name__

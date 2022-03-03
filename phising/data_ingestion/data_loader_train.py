@@ -5,7 +5,9 @@ from utils.read_params import read_params
 
 class Data_Getter_Train:
     """
-    Description :   This class shall be used for obtaining the df from the source for training
+    Description :   This class shall be used for obtaining the df from the input files s3 bucket where the training file is present
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -28,11 +30,14 @@ class Data_Getter_Train:
     def get_data(self):
         """
         Method Name :   get_data
-        Description :   This method reads the data from the source
+        Description :   This method reads the data from the input files s3 bucket where the training file is stored
         Output      :   A pandas dataframe
-        On failure  :   Raise Exception
+        
+        On Failure  :   Write an exception log and then raise exception
         Written by  :   iNeuron Intelligence
+        
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_data.__name__

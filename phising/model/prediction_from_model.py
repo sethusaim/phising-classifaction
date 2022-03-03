@@ -10,9 +10,10 @@ from utils.read_params import read_params
 class Prediction:
     """
     Description :   This class shall be used for loading the production model
-
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self):
@@ -20,7 +21,7 @@ class Prediction:
 
         self.pred_log = self.config["pred_db_log"]["pred_main"]
 
-        self.model_bucket = self.config["bucket"]["phising_model"]
+        self.model_bucket_name = self.config["bucket"]["phising_model"]
 
         self.input_files_bucket = self.config["bucket"]["inputs_files"]
 
@@ -41,9 +42,13 @@ class Prediction:
     def delete_pred_file(self, table_name):
         """
         Method Name :   delete_pred_file
-        Description :   This method is used for deleting the existing Prediction batch file
+        Description :   This method deletes the existing prediction file for the model prediction starts
+
+        Output      :   An existing prediction file is deleted
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.delete_pred_file.__name__
@@ -95,9 +100,13 @@ class Prediction:
     def find_correct_model_file(self, cluster_number, bucket_name, table_name):
         """
         Method Name :   find_correct_model_file
-        Description :   This method is used for finding the correct model file during Prediction
+        Description :   This method gets correct model file based on cluster number during prediction
+
+        Output      :   A correct model file is found 
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.find_correct_model_file.__name__
@@ -151,9 +160,13 @@ class Prediction:
     def predict_from_model(self):
         """
         Method Name :   predict_from_model
-        Description :   This method is used for loading from prod model dir of s3 bucket and use them for Prediction
+        Description :   This method predicts the new data using the existing models
+
+        Output      :   Prediction file is created in input files bucket
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.predict_from_model.__name__
@@ -179,7 +192,7 @@ class Prediction:
 
             kmeans = self.s3.load_model(
                 model_name="KMeans",
-                bucket_name=self.model_bucket,
+                bucket_name=self.model_bucket_name,
                 table_name=self.pred_log,
             )
 
@@ -200,7 +213,7 @@ class Prediction:
 
                 crt_model_name = self.find_correct_model_file(
                     cluster_number=i,
-                    bucket_name=self.model_bucket,
+                    bucket_name=self.model_bucket_name,
                     table_name=self.pred_log,
                 )
 

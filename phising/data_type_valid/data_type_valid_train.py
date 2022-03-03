@@ -7,9 +7,10 @@ from utils.read_params import read_params
 class DB_Operation_Train:
     """
     Description :    This class shall be used for handling all the db operations
-
-    Version     :    1.2
-    Revisions   :    moved setup to cloud
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self):
@@ -40,7 +41,11 @@ class DB_Operation_Train:
         Method Name :   insert_good_data_as_record
         Description :   This method inserts the good data in MongoDB as collection
 
+        Output      :   A MongoDB collection is created with good data present in it
+        On Failure  :   Write an exception log and then raise an exception
+
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.insert_good_data_as_record.__name__
@@ -97,10 +102,14 @@ class DB_Operation_Train:
 
     def export_collection_to_csv(self, good_data_db_name, good_data_collection_name):
         """
-        Method Name :   export_collection_to_csv
+        Method Name :   insert_good_data_as_record
+        Description :   This method inserts the good data in MongoDB as collection
 
-        Description :   This method extracts the inserted data to csv file, which will be used for training
+        Output      :   A csv file stored in input files bucket, containing good data which was stored in MongoDB
+        On Failure  :   Write an exception log and then raise an exception
+
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.export_collection_to_csv.__name__

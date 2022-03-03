@@ -14,9 +14,10 @@ class Train_Model:
     """
     Description :   This method is used for getting the data and applying
                     some preprocessing steps and then train the models and register them in mlflow
-
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self):
@@ -26,7 +27,7 @@ class Train_Model:
 
         self.model_train_log = self.config["train_db_log"]["model_training"]
 
-        self.model_bucket = self.config["bucket"]["phising_model"]
+        self.model_bucket_name = self.config["bucket"]["phising_model"]
 
         self.test_size = self.config["base"]["test_size"]
 
@@ -59,10 +60,14 @@ class Train_Model:
     def training_model(self):
         """
         Method Name :   training_model
-        Description :   This method is used for getting the data and applying
-                        some preprocessing steps and then train the models and register them in mlflow
+        Description :   This method is responsible for applying the preprocessing functions and then train models againist 
+                        training data and them register them in mlflow
+
+        Output      :   A pandas series object consisting of runs for the particular experiment id
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.training_model.__name__
@@ -127,7 +132,7 @@ class Train_Model:
                     xgb_model_score,
                     rf_model,
                     rf_model_score,
-                ) = self.Model_Finder.get_trained_models(
+                ) = self.model_finder.get_trained_models(
                     x_train, y_train, x_test, y_test
                 )
 
@@ -135,7 +140,7 @@ class Train_Model:
                     model=xgb_model,
                     idx=i,
                     model_dir=self.train_model_dir,
-                    model_bucket=self.model_bucket,
+                    model_bucket_name=self.model_bucket_name,
                     table_name=self.model_train_log,
                 )
 
@@ -143,7 +148,7 @@ class Train_Model:
                     model=rf_model,
                     idx=i,
                     model_dir=self.train_model_dir,
-                    model_bucket=self.model_bucket,
+                    model_bucket_name=self.model_bucket_name,
                     table_name=self.model_train_log,
                 )
 

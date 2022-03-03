@@ -5,9 +5,10 @@ import boto3
 class App_Logger:
     """
     Description :   This class is used for logging the info to DynamoDB
-
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self):
@@ -18,11 +19,15 @@ class App_Logger:
     def log(self, table_name, log_message):
         """
         Method Name :   log
-        Description :   This method is used for log the info to DynamoDB
+        Description :   This method is used for logging the info to DynamoDB
+
+        Output      :   A log is created is DynamoDB table
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
+
         method_name = self.log.__name__
 
         try:
@@ -50,11 +55,15 @@ class App_Logger:
     def start_log(self, key, class_name, method_name, table_name):
         """
         Method Name :   start_log
-        Description :   This method is used for logging the entry or exit of method depending on key value
+        Description :   This method creates an entry point log in DynamoDB
+
+        Output      :   An entry point is created in DynamoDB
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
+
         start_method_name = self.start_log.__name__
 
         try:
@@ -72,7 +81,10 @@ class App_Logger:
     def exception_log(self, error, class_name, method_name, table_name):
         """
         Method Name :   exception_log
-        Description :   This method is used for logging exception
+        Description :   This method creates an exception log in DynamoDB and raises Exception
+
+        Output      :   A exception log is created in DynamoDB and expection is raised
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud

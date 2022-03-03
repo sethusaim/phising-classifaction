@@ -8,9 +8,11 @@ from utils.read_params import read_params
 
 class KMeans_Clustering:
     """
-    Description :   This class shall  be used to divide the data into clusters before training.
+    Description :   This class shall be used to divide the data into clusters before training.
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to the setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self, table_name):
@@ -20,7 +22,7 @@ class KMeans_Clustering:
 
         self.input_files_bucket = self.config["bucket"]["input_files"]
 
-        self.model_bucket = self.config["bucket"]["phising_model"]
+        self.model_bucket_name = self.config["bucket"]["phising_model"]
 
         self.random_state = self.config["base"]["random_state"]
 
@@ -46,9 +48,12 @@ class KMeans_Clustering:
         """
         Method Name :   elbow_plot
         Description :   This method saves the plot to s3 bucket and decides the optimum number of clusters to the file.
-        Output      :   A picture saved to the bucket
-        On Failure  :   Raise Exception
+        
+        Output      :   An elbow plot figure saved to input files bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   Moved to setup to cloud 
         """
         method_name = self.elbow_plot.__name__
@@ -127,9 +132,12 @@ class KMeans_Clustering:
         """
         Method Name :   create_clusters
         Description :   Create a new dataframe consisting of the cluster information.
-        Output      :   A datframe with cluster column
-        On Failure  :   Raise Exception
+        
+        Output      :   A dataframe with cluster column
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   Moved to setup to cloud 
         """
         method_name = self.create_clusters.__name__
@@ -155,7 +163,7 @@ class KMeans_Clustering:
             self.s3.save_model(
                 model=self.kmeans,
                 model_dir=self.trained_model_dir,
-                model_bucket=self.model_bucket,
+                model_bucket_name=self.model_bucket_name,
                 table_name=self.table_name,
             )
 

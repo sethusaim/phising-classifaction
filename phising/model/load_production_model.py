@@ -8,6 +8,7 @@ class Load_Prod_Model:
     """
     Description :   This class shall be used for loading the production model
     Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
@@ -21,7 +22,7 @@ class Load_Prod_Model:
 
         self.num_clusters = num_clusters
 
-        self.model_bucket = self.config["bucket"]["phising_model"]
+        self.model_bucket_name = self.config["bucket"]["phising_model"]
 
         self.load_prod_model_log = self.config["train_db_log"]["Load_Prod_Model"]
 
@@ -37,12 +38,16 @@ class Load_Prod_Model:
 
     def create_folders_for_prod_and_stag(self, bucket_name, table_name):
         """
-            Method Name :   create_folders_for_prod_and_stag
-            Description :   This method is used for creating production and staging folder in s3 bucket
+        Method Name :   create_folders_for_prod_and_stag
+        Description :   This method creates folders for production and staging bucket
 
-            Version     :   1.2
-            Revisions   :   moved setup to cloud
-            """
+        Output      :   Folders for production and staging are created in s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        Written by  :   iNeuron Intelligence
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.create_folders_for_prod_and_stag.__name__
 
         self.log_writer.start_log(
@@ -83,10 +88,13 @@ class Load_Prod_Model:
     def load_production_model(self):
         """
         Method Name :   load_production_model
-        Description :   This method is responsible for moving the models from the trained models dir to
-                        prod models dir and stag models dir based on the metrics of the cluster
+        Description :   This method is responsible for finding the best model based on metrics and then transitioned them to thier stages
+
+        Output      :   The best models are put in production and rest are put in staging
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.load_production_model.__name__
@@ -100,7 +108,7 @@ class Load_Prod_Model:
 
         try:
             self.create_folders_for_prod_and_stag(
-                bucket_name=self.model_bucket, table_name=self.load_prod_model_log
+                bucket_name=self.model_bucket_name, table_name=self.load_prod_model_log
             )
 
             self.mlflow_op.set_mlflow_tracking_uri()
@@ -215,8 +223,8 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                             model_version=mv.version,
                             stage="Production",
                             model_name=mv.name,
-                            from_bucket_name=self.model_bucket,
-                            to_bucket_name=self.model_bucket,
+                            from_bucket_name=self.model_bucket_name,
+                            to_bucket_name=self.model_bucket_name,
                         )
 
                     ## In the registered models, even kmeans model is present, so during Prediction,
@@ -227,8 +235,8 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                             model_version=mv.version,
                             stage="Production",
                             model_name=mv.name,
-                            from_bucket_name=self.model_bucket,
-                            to_bucket_name=self.model_bucket,
+                            from_bucket_name=self.model_bucket_name,
+                            to_bucket_name=self.model_bucket_name,
                         )
 
                     else:
@@ -236,8 +244,8 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                             model_version=mv.version,
                             stage="Staging",
                             model_name=mv.name,
-                            from_bucket_name=self.model_bucket,
-                            to_bucket_name=self.model_bucket,
+                            from_bucket_name=self.model_bucket_name,
+                            to_bucket_name=self.model_bucket_name,
                         )
 
             self.log_writer.log(

@@ -7,10 +7,11 @@ from xgboost import XGBClassifier
 
 class Model_Finder:
     """
-    This class shall  be used to find the model with best accuracy and AUC score.
-    Written By: iNeuron Intelligence
-    Version: 1.0
-    Revisions: None
+    Description :   This class shall  be used to find the model with best accuracy and AUC score.
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self, table_name):
@@ -37,11 +38,12 @@ class Model_Finder:
         Method Name :   get_best_params_for_random_forest
         Description :   get the parameters for Random Forest Algorithm which give the best accuracy.
                         Use Hyper Parameter Tuning.
+        
         Output      :   The model with the best parameters
-        On Failure  :   Raise Exception
-
-        Written By  :   iNeuron Intelligence
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_best_params_for_random_forest.__name__
@@ -120,11 +122,12 @@ class Model_Finder:
         Method Name :   get_best_params_for_xgboost
         Description :   get the parameters for XGBoost Algorithm which give the best accuracy.
                         Use Hyper Parameter Tuning.
+        
         Output      :   The model with the best parameters
-        On Failure  :   Raise Exception
+        On Failure  :   Write an exception log and then raise an exception
 
-        Written By  :   iNeuron Intelligence
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_best_params_for_xgboost.__name__
@@ -199,11 +202,12 @@ class Model_Finder:
         """
         Method Name :   get_trained_models
         Description :   Find out the Model which has the best score.
+        
         Output      :   The best model name and the model object
-        On Failure  :   Raise Exception
+        On Failure  :   Write an exception log and then raise an exception
 
-        Written By  :   iNeuron Intelligence
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_trained_models.__name__

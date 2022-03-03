@@ -6,6 +6,13 @@ from utils.read_params import read_params
 
 
 class Model_Utils:
+    """
+    Description :   This class is used for all the model utils
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
+    """
     def __init__(self):
         self.log_writer = App_Logger()
 
@@ -22,11 +29,15 @@ class Model_Utils:
     def get_model_name(self, model, table_name):
         """
         Method Name :   get_model_name
-        Description :   This method is used for getting the actual model name
+        Description :   This method gets the model name from the particular model
+
+        Output      :   A model name is returned
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
+
         method_name = self.get_model_name.__name__
 
         self.log_writer.start_log(
@@ -63,11 +74,15 @@ class Model_Utils:
     def get_model_param_grid(self, model_key_name, table_name):
         """
         Method Name :   get_model_param_grid
-        Description :   This method is used for getting the param dict from params.yaml file
+        Description :   This method gets the model param grid as specified in params.yaml file
+
+        Output      :   A model param grid is created
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
+
         method_name = self.get_model_param_grid.__name__
 
         self.log_writer.start_log(
@@ -112,11 +127,15 @@ class Model_Utils:
     def get_model_score(self, model, test_x, test_y, table_name):
         """
         Method Name :   get_model_score
-        Description :   This method is used for calculating the best score for the model based on the test data
+        Description :   This method gets model score againist the test data
+
+        Output      :   A model score is returned 
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
+
         method_name = self.get_model_score.__name__
 
         self.log_writer.start_log(
@@ -172,11 +191,15 @@ class Model_Utils:
     def get_model_params(self, model, model_key_name, x_train, y_train, table_name):
         """
         Method Name :   get_model_params
-        Description :   This method is used for finding the best params for the given model
+        Description :   This method gets the model parameters based on model_key_name and train data
+
+        Output      :   Best model parameters are returned
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
+
         method_name = self.get_model_params.__name__
 
         self.log_writer.start_log(

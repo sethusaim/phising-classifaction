@@ -9,8 +9,10 @@ from utils.read_params import read_params
 class Preprocessor:
     """
     Description :   This class shall  be used to clean and transform the data before training.
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self, table_name):
@@ -36,10 +38,12 @@ class Preprocessor:
         """
         Method Name :   separate_label_feature
         Description :   This method separates the features and a Label Coulmns.
-        Output      :   Returns two separate Dataframes, one containing features and the other containing Labels .
-        On Failure  :   Raise Exception
+        
+        Output      :   Returns two separate dataframes, one containing features and the other containing labels .
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.separate_label_feature.__name__
@@ -82,8 +86,12 @@ class Preprocessor:
         """
         Method Name :   replace_invalid_values
         Description :   This method replaces invalid values i.e. 'na' with np.nan
-        
+
+        Output      :   Replaces the invalid values like "'na'" with np.nan, so that imputation can be done
+        On Failure  :   Write an exception log and then raise an exception
+
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.replace_invalid_values.__name__
@@ -123,10 +131,12 @@ class Preprocessor:
         """
         Method Name :   is_null_present
         Description :   This method checks whether there are null values present in the pandas Dataframe or not.
-        Output      :   Returns True if null values are present in the DataFrame, False if they are not present and
-                        returns the list of columns for which null values are present.
-        On Failure  :   Raise Exception
+        
+        Output      :   If null values are present in the dataframe, a csv file is created and then uploaded back to input files bucket
+        On Failure  :   Write an exception log and then raise an exception
+        
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.is_null_present.__name__
@@ -214,11 +224,13 @@ class Preprocessor:
     def impute_missing_values(self, data):
         """
         Method Name :   impute_missing_values
-        Description :   This method replaces all the missing values in the Dataframe using mean values of the column.
-        Output      :   A Dataframe which has all the missing values imputed.
-        On Failure  :   Raise Exception
+        Description :   This method replaces all the missing values in the dataframe using mean values of the column.
+        
+        Output      :   A dataframe which has all the missing values are imputed.
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.impute_missing_values.__name__

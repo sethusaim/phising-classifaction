@@ -14,9 +14,10 @@ from utils.read_params import read_params
 class S3_Operation:
     """
     Description :   This method is used for all the S3 bucket_name operations
-
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self):
@@ -33,7 +34,10 @@ class S3_Operation:
     def get_s3_client(self, table_name):
         """
         Method Name :   get_s3_client
-        Description :   This method is used getting the s3 client 
+        Description :   This method gets s3 client from boto3
+
+        Output      :   A boto3 client with s3 is created
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -72,7 +76,10 @@ class S3_Operation:
     def get_s3_resource(self, table_name):
         """
         Method Name :   get_s3_resource
-        Description :   This method is used getting the s3 resource
+        Description :   This method gets s3 resource from boto3
+
+        Output      :   A boto3 resource with s3 is created
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -111,7 +118,10 @@ class S3_Operation:
     def read_object(self, object, table_name, decode=True, make_readable=False):
         """
         Method Name :   read_object
-        Description :   This method is used reading the s3 object
+        Description :   This method reads the object with kwargs
+
+        Output      :   A object is read with kwargs
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -163,8 +173,11 @@ class S3_Operation:
 
     def read_text(self, file_name, bucket_name, table_name):
         """
-        Method Name :   read_json
-        Description :   This method is used for loading a json file from s3 bucket (schema file)
+        Method Name :   read_text
+        Description :   This method reads the text data from s3 bucket
+
+        Output      :   Text data is read from s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -210,7 +223,10 @@ class S3_Operation:
     def read_json(self, file_name, bucket_name, table_name):
         """
         Method Name :   read_json
-        Description :   This method is used for loading a json file from s3 bucket (schema file)
+        Description :   This method reads the json data from s3 bucket
+
+        Output      :   Json data is read from s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -258,7 +274,10 @@ class S3_Operation:
     def get_df_from_object(self, object, table_name):
         """
         Method Name :   get_df_from_object
-        Description :   This method is used for converting object to dataframe
+        Description :   This method gets dataframe from object 
+
+        Output      :   Dataframe is read from the object
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -296,46 +315,17 @@ class S3_Operation:
                 table_name=table_name,
             )
 
-    def read_text(self, file_name, bucket_name, table_name):
-        method_name = self.read_text.__name__
-
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=table_name,
-        )
-
-        try:
-            f_obj = self.get_file_object(
-                file_name=file_name, bucket_name=bucket_name, table_name=table_name
-            )
-
-            content = self.read_object(object=f_obj, table_name=table_name)
-
-            self.log_writer.log(
-                table_name=table_name,
-                log_message=f"Read text data from {file_name} file in {bucket_name} bucket",
-            )
-
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
-            )
-
-            return content
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
-            )
-
     def read_csv(self, file_name, bucket_name, table_name):
+        """
+        Method Name :   read_csv
+        Description :   This method reads the csv data from s3 bucket
+
+        Output      :   A pandas series object consisting of runs for the particular experiment id
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.read_csv.__name__
 
         self.log_writer.start_log(
@@ -375,6 +365,16 @@ class S3_Operation:
             )
 
     def read_csv_from_folder(self, folder_name, bucket_name, table_name):
+        """
+        Method Name :   read_csv_from_folder
+        Description :   This method reads the csv files from folder
+
+        Output      :   A list of tuple of dataframe, along with absolute file name and file name is returned
+        On Failure  :   Write an exception log and then raise an exception
+
+        Version     :   1.2
+        Revisions   :   moved setup to cloud
+        """
         method_name = self.read_csv_from_folder.__name__
 
         self.log_writer.start_log(
@@ -424,7 +424,10 @@ class S3_Operation:
     def load_object(self, object, bucket_name, table_name):
         """
         Method Name :   load_object
-        Description :   This method is used for loading a object from s3 bucket
+        Description :   This method loads the object from s3 bucket
+
+        Output      :   An object is loaded from s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -466,7 +469,10 @@ class S3_Operation:
     def create_folder(self, folder_name, bucket_name, table_name):
         """
         Method Name :   create_folder
-        Description :   This method is used for creating a folder in s3 bucket
+        Description :   This method creates a folder in s3 bucket
+
+        Output      :   A folder is created in s3 bucket 
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -527,7 +533,10 @@ class S3_Operation:
     def put_object(self, object, bucket_name, table_name):
         """
         Method Name :   put_object
-        Description :   This method is used for putting any object in s3 bucket
+        Description :   This method puts an object in s3 bucket
+
+        Output      :   An object is put in s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -571,7 +580,10 @@ class S3_Operation:
     ):
         """
         Method Name :   upload_file
-        Description :   This method is used for uploading the files to s3 bucket
+        Description :   This method uploades a file to s3 bucket with kwargs
+
+        Output      :   A file is uploaded to s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -639,7 +651,10 @@ class S3_Operation:
     def get_bucket(self, bucket_name, table_name):
         """
         Method Name :   get_bucket
-        Description :   This method is used for getting the bucket_name from s3
+        Description :   This method gets the bucket from s3 
+
+        Output      :   A s3 bucket name is returned based on the bucket_name
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -684,7 +699,10 @@ class S3_Operation:
     ):
         """
         Method Name :   copy_data
-        Description :   This method is used for copying the data from one bucket_name to another
+        Description :   This method copies the data from one bucket to another bucket
+
+        Output      :   The data is copied from one bucket to another
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -728,7 +746,10 @@ class S3_Operation:
     def delete_file(self, file_name, bucket_name, table_name):
         """
         Method Name :   delete_file
-        Description :   This method is used for deleting any file from s3 bucket
+        Description :   This method delete the file from s3 bucket
+
+        Output      :   The file is deleted from s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -772,7 +793,10 @@ class S3_Operation:
     ):
         """
         Method Name :   move_data
-        Description :   This method is used for moving the data from one bucket_name to another bucket_name
+        Description :   This method moves the data from one bucket to other bucket
+
+        Output      :   The data is moved from one bucket to another
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -824,7 +848,10 @@ class S3_Operation:
     def get_files_from_folder(self, folder_name, bucket_name, table_name):
         """
         Method Name :   get_files_from_folder
-        Description :   This method is used for getting the file names from s3 bucket
+        Description :   This method gets the files a folder in s3 bucket
+
+        Output      :   A list of files is returned
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -870,7 +897,10 @@ class S3_Operation:
     def get_file_object(self, file_name, bucket_name, table_name):
         """
         Method Name :   get_file_object
-        Description :   This method is used for getting file contents from s3 bucket
+        Description :   This method gets the file object from s3 bucket
+
+        Output      :   A file object is returned
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -915,10 +945,13 @@ class S3_Operation:
                 table_name=table_name,
             )
 
-    def load_model(self, model_name, bucket_name, table_name):
+    def load_model(self, model_name, bucket_name, table_name, model_dir=None):
         """
         Method Name :   load_model
-        Description :   This method is used for loading the model from s3 bucket
+        Description :   This method loads the model from s3 bucket
+
+        Output      :   A pandas series object consisting of runs for the particular experiment id
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -933,6 +966,18 @@ class S3_Operation:
         )
 
         try:
+            func = (
+                lambda: model_name + self.file_format
+                if model_dir is None
+                else model_dir + model_name + self.file_format
+            )
+
+            model_file = func()
+
+            self.log_writer.log(
+                table_name == table_name, log_info=f"Got {model_file} as model file",
+            )
+
             f_obj = self.get_file_object(
                 file_name=model_name, bucket_name=bucket_name, table_name=table_name
             )
@@ -965,10 +1010,13 @@ class S3_Operation:
                 table_name=table_name,
             )
 
-    def save_model(self, model, model_dir, model_bucket, table_name, idx=None):
+    def save_model(self, model, model_dir, model_bucket_name, table_name, idx=None):
         """
         Method Name :   save_model
-        Description :   This method is used for saving a model to s3 bucket
+        Description :   This method saves the model into particular model directory in s3 bucket with kwargs
+
+        Output      :   A pandas series object consisting of runs for the particular experiment id
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -1007,19 +1055,19 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Uploading {model_file} to {model_bucket} bucket",
+                log_message=f"Uploading {model_file} to {model_bucket_name} bucket",
             )
 
             self.upload_file(
                 from_file_name=model_file,
                 to_file_name=bucket_model_path,
-                bucket_name=model_bucket,
+                bucket_name=model_bucket_name,
                 table_name=table_name,
             )
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Uploaded  {model_file} to {model_bucket} bucket_name",
+                log_message=f"Uploaded  {model_file} to {model_bucket_name} bucket_name",
             )
 
             self.log_writer.start_log(
@@ -1047,7 +1095,10 @@ class S3_Operation:
     ):
         """
         Method Name :   upload_df_as_csv
-        Description :   This method is used for uploading a dataframe to s3 bucket as csv file
+        Description :   This method uploades a dataframe as csv file to s3 bucket
+
+        Output      :   A dataframe is uploaded as csv file to s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud

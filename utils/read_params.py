@@ -4,7 +4,10 @@ import yaml
 def read_params(config_path="params.yaml"):
     """
     Method Name :   read_params
-    Description :   This method is used for read the parameters from yaml file
+    Description :   This method reads the parameters from params.yaml file
+
+    Output      :   Parameters are read from the params.yaml file
+    On Failure  :   Write an exception log and then raise an exception
 
     Version     :   1.2
     Revisions   :   moved setup to cloud

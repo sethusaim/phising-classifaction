@@ -7,10 +7,11 @@ from phising.s3_bucket_operations.s3_operations import S3_Operation
 
 class Raw_Train_Data_Validation:
     """
-    Description :   This method is used for validating the raw trainiction data
-
+    Description :   This method is used for validating the raw training data
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self, raw_data_bucket_name):
@@ -53,7 +54,10 @@ class Raw_Train_Data_Validation:
     def values_from_schema(self):
         """
         Method Name :   values_from_schema
-        Description :   This method is used for getting values from schema_trainiction.json
+        Description :   This method gets schema values from the schema_training.json file
+
+        Output      :   Schema values are extracted from the schema_training.json file
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -120,7 +124,10 @@ class Raw_Train_Data_Validation:
     def get_regex_pattern(self):
         """
         Method Name :   get_regex_pattern
-        Description :   This method is used for getting regex pattern for file validation
+        Description :   This method gets regex pattern from input files s3 bucket
+
+        Output      :   A regex pattern is extracted
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -165,7 +172,10 @@ class Raw_Train_Data_Validation:
     def create_dirs_for_good_bad_data(self, table_name):
         """
         Method Name :   create_dirs_for_good_bad_data
-        Description :   This method is used for creating directory for good and bad data in s3 bucket
+        Description :   This method creates folders for good and bad data in s3 bucket
+
+        Output      :   Good and bad folders are created in s3 bucket
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -212,7 +222,10 @@ class Raw_Train_Data_Validation:
     ):
         """
         Method Name :   validate_raw_file_name
-        Description :   This method is used for validating raw file name based on the regex pattern
+        Description :   This method validates the raw file name based on regex pattern and schema values
+
+        Output      :   Raw file names are validated, good file names are stored in good data folder and rest is stored in bad data
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -239,7 +252,7 @@ class Raw_Train_Data_Validation:
 
             self.log_writer.log(
                 table_name=self.train_name_valid_log,
-                log_message="Got trainiction files with exact name",
+                log_message="Got training files with absolute file name",
             )
 
             for file_name in train_batch_files:
@@ -251,7 +264,7 @@ class Raw_Train_Data_Validation:
 
                 self.log_writer.log(
                     table_name=self.train_name_valid_log,
-                    log_message="Created raw,good and bad data file_names",
+                    log_message="Created raw,good and bad data file name",
                 )
 
                 if re.match(regex, file_name):
@@ -313,7 +326,10 @@ class Raw_Train_Data_Validation:
     def validate_col_length(self, NumberofColumns):
         """
         Method Name :   validate_col_length
-        Description :   This method is used for validating the column length of the csv file
+        Description :   This method validates the column length based on number of columns as mentioned in schema values
+
+        Output      :   The files' columns length are validated and good data is stored in good data folder and rest is stored in bad data folder
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -377,7 +393,10 @@ class Raw_Train_Data_Validation:
     def validate_missing_values_in_col(self):
         """
         Method Name :   validate_missing_values_in_col
-        Description :   This method is used for validating the missing values in columns
+        Description :   This method validates the missing values in columns
+
+        Output      :   Missing columns are validated, and good data is stored in good data folder and rest is to stored in bad data folder
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud

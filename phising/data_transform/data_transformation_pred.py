@@ -6,9 +6,10 @@ from utils.read_params import read_params
 class Data_Transform_Pred:
     """
     Description :  This class shall be used for transforming the Prediction batch data before loading it in Database!!.
-
-    Version     :   1.0
-    Revisions   :   None
+    Written by  :   iNeuron Intelligence
+    
+    Version     :   1.2
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self):
@@ -33,7 +34,11 @@ class Data_Transform_Pred:
         Method Name :   add_quotes_to_string
         Description :   This method addes the quotes to the string data present in columns
 
+        Output      :   A csv file where all the string values have quotes inserted
+        On Failure  :   Write an exception log and then raise an exception
+
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.add_quotes_to_string.__name__

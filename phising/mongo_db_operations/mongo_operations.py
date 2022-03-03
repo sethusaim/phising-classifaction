@@ -10,9 +10,10 @@ from utils.read_params import read_params
 class MongoDB_Operation:
     """
     Description :   This method is used for all mongodb operations
-
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self):
@@ -29,7 +30,10 @@ class MongoDB_Operation:
     def get_database(self, db_name, table_name):
         """
         Method Name :   get_database
-        Description :   This method is creating a database in MongoDB
+        Description :   This method gets database from MongoDB from the db_name
+
+        Output      :   A database is created in MongoDB with name as db_name
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -71,7 +75,10 @@ class MongoDB_Operation:
     def get_collection(self, database, collection_name, table_name):
         """
         Method Name :   get_collection
-        Description :   This method is used for creating a collection in created database
+        Description :   This method gets collection from the particular database and collection name
+
+        Output      :   A collection is returned from database with name as collection name
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -115,7 +122,11 @@ class MongoDB_Operation:
         Method Name :   get_collection_as_dataframe
         Description :   This method is used for converting the selected collection to dataframe
 
+        Output      :   A collection is returned from the selected db_name and collection_name
+        On Failure  :   Write an exception log and then raise an exception
+
         Version     :   1.2
+        Written by  :   iNeuron Intelligence
         Revisions   :   moved setup to cloud
         """
         method_name = self.get_collection_as_dataframe.__name__
@@ -163,7 +174,10 @@ class MongoDB_Operation:
     ):
         """
         Method Name :   insert_dataframe_as_record
-        Description :   This method is used for inserting the dataframe in collection as record
+        Description :   This method inserts the dataframe as record in database collection
+
+        Output      :   The dataframe is inserted in database collection
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud

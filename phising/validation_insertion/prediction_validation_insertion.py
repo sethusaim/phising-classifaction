@@ -8,9 +8,10 @@ from utils.read_params import read_params
 class Pred_Validation:
     """
     Description :   This class is used for validating all the Prediction batch files
-
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self, bucket_name):
@@ -36,8 +37,11 @@ class Pred_Validation:
 
     def prediction_validation(self):
         """
-        Method Name :   load_s3
-        Description :   This method is used for validating the Prediction btach files
+        Method Name :   prediction_validation
+        Description :   This method is responsible for converting raw data to cleaned data for prediction
+
+        Output      :   Raw data is converted to cleaned data for prediction
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud

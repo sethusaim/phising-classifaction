@@ -5,12 +5,13 @@ from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class Train_Validation:
+class train_Validation:
     """
     Description :   This class is used for validating all the training batch files
-
+    Written by  :   iNeuron Intelligence
+    
     Version     :   1.2
-    Revisions   :   moved to setup to cloud
+    Revisions   :   Moved to setup to cloud 
     """
 
     def __init__(self, bucket_name):
@@ -23,8 +24,6 @@ class Train_Validation:
         self.config = read_params()
 
         self.class_name = self.__class__.__name__
-
-        self.db_name = self.config["db_log"]["train"]
 
         self.train_main_log = self.config["train_db_log"]["train_main"]
 
@@ -39,7 +38,10 @@ class Train_Validation:
     def training_validation(self):
         """
         Method Name :   training_validation
-        Description :   This method is used for validating the training batch files
+        Description :   This method is responsible for converting raw data to cleaned data for training
+
+        Output      :   Raw data is converted to cleaned data for training
+        On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
         Revisions   :   moved setup to cloud
@@ -51,7 +53,7 @@ class Train_Validation:
                 key="start",
                 class_name=self.class_name,
                 method_name=method_name,
-                collection_name=self.train_main_log,
+                table_name=self.train_main_log,
             )
 
             (
@@ -107,7 +109,7 @@ class Train_Validation:
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                collection_name=self.train_main_log,
+                table_name=self.train_main_log,
             )
 
         except Exception as e:
@@ -115,5 +117,5 @@ class Train_Validation:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                collection_name=self.train_main_log,
+                table_name=self.train_main_log,
             )
