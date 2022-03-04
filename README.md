@@ -1,4 +1,4 @@
-# Phising Classification System
+# Phising Classification AWS System
 
 This is an end to end machine learning system for predicting whether a website is a phising website on the basis of given set of predictors.
 This entire solution is built using AWS Services like S3 bucket (for storing the data), DynamoDB (for logging and improvising the system performance), Elastic Container Registry (for storing the container images), and Elastic Container Service (for running the container image). Apart from AWS services, MLFlow was used for experiment tracking and model versioning and model staging with artifacts stored in S3 bucket. Docker for containerization of application. 
