@@ -5,7 +5,7 @@ from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class train_Validation:
+class Train_Validation:
     """
     Description :   This class is used for validating all the training batch files
     Written by  :   iNeuron Intelligence
