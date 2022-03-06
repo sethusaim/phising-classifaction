@@ -18,13 +18,13 @@ class DB_Operation_Train:
 
         self.class_name = self.__class__.__name__
 
-        self.train_data_bucket = self.config["bucket"]["phising_train_data"]
+        self.train_data_bucket = self.config["s3_bucket"]["phising_train_data"]
 
         self.train_export_csv_file = self.config["export_csv_file"]["train"]
 
         self.good_data_train_dir = self.config["data"]["train"]["good"]
 
-        self.input_files_bucket = self.config["bucket"]["input_files"]
+        self.input_files_bucket = self.config["s3_bucket"]["input_files"]
 
         self.train_db_insert_log = self.config["train_db_log"]["db_insert"]
 

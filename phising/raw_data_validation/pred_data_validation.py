@@ -25,9 +25,9 @@ class Raw_Pred_Data_Validation:
 
         self.s3 = S3_Operation()
 
-        self.pred_data_bucket = self.config["bucket"]["phising_pred_data"]
+        self.pred_data_bucket = self.config["s3_bucket"]["phising_pred_data"]
 
-        self.input_files_bucket = self.config["bucket"]["input_files"]
+        self.input_files_bucket = self.config["s3_bucket"]["input_files"]
 
         self.raw_pred_data_dir = self.config["data"]["raw_data"]["pred_batch"]
 

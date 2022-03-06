@@ -21,9 +21,9 @@ class Prediction:
 
         self.pred_log = self.config["pred_db_log"]["pred_main"]
 
-        self.model_bucket_name = self.config["bucket"]["phising_model"]
+        self.model_bucket_name = self.config["s3_bucket"]["phising_model"]
 
-        self.input_files_bucket = self.config["bucket"]["inputs_files"]
+        self.input_files_bucket = self.config["s3_bucket"]["inputs_files"]
 
         self.prod_model_dir = self.config["models_dir"]["prod"]
 

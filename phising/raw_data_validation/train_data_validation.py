@@ -25,9 +25,9 @@ class Raw_Train_Data_Validation:
 
         self.s3 = S3_Operation()
 
-        self.train_data_bucket = self.config["bucket"]["phising_train_data"]
+        self.train_data_bucket = self.config["s3_bucket"]["phising_train_data"]
 
-        self.input_files_bucket = self.config["bucket"]["input_files"]
+        self.input_files_bucket = self.config["s3_bucket"]["input_files"]
 
         self.raw_train_data_dir = self.config["data"]["raw_data"]["train_batch"]
 

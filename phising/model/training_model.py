@@ -27,7 +27,7 @@ class Train_Model:
 
         self.model_train_log = self.config["train_db_log"]["model_training"]
 
-        self.model_bucket_name = self.config["bucket"]["phising_model"]
+        self.model_bucket_name = self.config["s3_bucket"]["phising_model"]
 
         self.test_size = self.config["base"]["test_size"]
 

@@ -22,7 +22,7 @@ class Load_Prod_Model:
 
         self.num_clusters = num_clusters
 
-        self.model_bucket_name = self.config["bucket"]["phising_model"]
+        self.model_bucket_name = self.config["s3_bucket"]["phising_model"]
 
         self.load_prod_model_log = self.config["train_db_log"]["Load_Prod_Model"]
 

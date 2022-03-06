@@ -18,13 +18,13 @@ class DB_Operation_Pred:
 
         self.class_name = self.__class__.__name__
 
-        self.pred_data_bucket = self.config["bucket"]["phising_pred_data"]
+        self.pred_data_bucket = self.config["s3_bucket"]["phising_pred_data"]
 
         self.pred_export_csv_file = self.config["export_csv_file"]["pred"]
 
         self.good_data_pred_dir = self.config["data"]["pred"]["good"]
 
-        self.input_files_bucket = self.config["bucket"]["input_files"]
+        self.input_files_bucket = self.config["s3_bucket"]["input_files"]
 
         self.pred_db_insert_log = self.config["pred_db_log"]["db_insert"]
 

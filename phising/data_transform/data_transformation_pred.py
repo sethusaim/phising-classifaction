@@ -15,7 +15,7 @@ class Data_Transform_Pred:
     def __init__(self):
         self.config = read_params()
 
-        self.pred_data_bucket = self.config["bucket"]["phising_pred_data"]
+        self.pred_data_bucket = self.config["s3_bucket"]["phising_pred_data"]
 
         self.s3 = S3_Operation()
 
