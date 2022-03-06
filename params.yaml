@@ -105,8 +105,8 @@ mlflow_config:
   num_of_prod_models : 3
 
 db_log:
-  db_train_log : phising_training_logs
-  db_pred_log : phising_prediction_logs
+  train : phising_training_logs
+  pred : phising_prediction_logs
 
 train_db_log:
   model_training : model_training_log
@@ -115,7 +115,7 @@ train_db_log:
   export_csv : train_export_to_csv_log
   general : train_general_log
   db_insert: train_db_insert_log
-  Load_Prod_Model : load_prod_model_log
+  load_prod_model : load_prod_model_log
   missing_values_in_col : train_missing_values_in_column
   name_validation : train_name_validation_log
   train_main : training_main_log

@@ -25,7 +25,7 @@ class Data_Transform_Train:
 
         self.class_name = self.__class__.__name__
 
-        self.db_name = self.config["db_log"]["db_train_log"]
+        self.db_name = self.config["db_log"]["train"]
 
         self.train_data_transform_log = self.config["train_db_log"]["data_transform"]
 
