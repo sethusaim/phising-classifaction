@@ -78,7 +78,7 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"{self.rf_model_name} model best params are {self.rf_best_params}",
+                log_info=f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
             self.rf_model = RandomForestClassifier(
@@ -90,14 +90,14 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Initialized {self.rf_model_name} with {self.rf_best_params} as params",
+                log_info=f"Initialized {self.rf_model_name} with {self.rf_best_params} as params",
             )
 
             self.rf_model.fit(train_x, train_y)
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
+                log_info=f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
             )
 
             self.log_writer.start_log(
@@ -160,7 +160,7 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"{self.rf_model_name} model best params are {self.rf_best_params}",
+                log_info=f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
             self.xgb_model = XGBClassifier(
@@ -171,14 +171,14 @@ class Model_Finder:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Initialized {self.xgb_model_name} model with best params as {self.xgb_best_params}",
+                log_info=f"Initialized {self.xgb_model_name} model with best params as {self.xgb_best_params}",
             )
 
             self.xgb_model.fit(train_x, train_y)
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Created {self.xgb_model_name} model with best params as {self.xgb_best_params}",
+                log_info=f"Created {self.xgb_model_name} model with best params as {self.xgb_best_params}",
             )
 
             self.log_writer.start_log(

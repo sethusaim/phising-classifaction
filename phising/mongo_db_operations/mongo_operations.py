@@ -52,7 +52,7 @@ class MongoDB_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Created {db_name} database in MongoDB",
+                log_info=f"Created {db_name} database in MongoDB",
             )
 
             self.log_writer.start_log(
@@ -97,7 +97,7 @@ class MongoDB_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Created {collection_name} collection in mongodb",
+                log_info=f"Created {collection_name} collection in mongodb",
             )
 
             self.log_writer.start_log(
@@ -149,7 +149,7 @@ class MongoDB_Operation:
                 df = df.drop(columns=["_id"], axis=1)
 
             self.log_writer.log(
-                table_name=table_name, log_message="Converted collection to dataframe",
+                table_name=table_name, log_info="Converted collection to dataframe",
             )
 
             self.log_writer.start_log(
@@ -195,8 +195,7 @@ class MongoDB_Operation:
             records = json.loads(data_frame.T.to_json()).values()
 
             self.log_writer.log(
-                table_name=table_name,
-                log_message=f"Converted dataframe to json records",
+                table_name=table_name, log_info=f"Converted dataframe to json records",
             )
 
             database = self.get_database(db_name, table_name=table_name)
@@ -204,13 +203,13 @@ class MongoDB_Operation:
             collection = database.get_collection(collection_name)
 
             self.log_writer.log(
-                table_name=table_name, log_message="Inserting records to MongoDB"
+                table_name=table_name, log_info="Inserting records to MongoDB"
             )
 
             collection.insert_many(records)
 
             self.log_writer.log(
-                table_name=table_name, log_message="Inserted records to MongoDB"
+                table_name=table_name, log_info="Inserted records to MongoDB"
             )
 
             self.log_writer.start_log(

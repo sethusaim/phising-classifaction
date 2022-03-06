@@ -137,21 +137,21 @@ class Load_Prod_Model:
 
             self.log_writer.log(
                 table_name=self.load_prod_model_log,
-                log_message="Created cols for all registered model",
+                log_info="Created cols for all registered model",
             )
 
             runs_cols = runs[cols].max().sort_values(ascending=False)
 
             self.log_writer.log(
                 table_name=self.load_prod_model_log,
-                log_message="Sorted the runs cols in descending order",
+                log_info="Sorted the runs cols in descending order",
             )
 
             metrics_dict = runs_cols.to_dict()
 
             self.log_writer.log(
                 table_name=self.load_prod_model_log,
-                log_message="Converted runs cols to dict",
+                log_info="Converted runs cols to dict",
             )
 
             """ 
@@ -192,7 +192,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
 
             self.log_writer.log(
                 table_name=self.load_prod_model_log,
-                log_message=f"Got top model names based on the metrics of clusters",
+                log_info=f"Got top model names based on the metrics of clusters",
             )
 
             ## best_metrics will store the value of metrics, but we want the names of the models,
@@ -206,7 +206,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
 
             self.log_writer.log(
                 table_name=self.load_prod_model_log,
-                log_message=f"Got the top model names",
+                log_info=f"Got the top model names",
             )
 
             results = self.mlflow_op.search_mlflow_models(order="DESC")
@@ -250,7 +250,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
 
             self.log_writer.log(
                 table_name=self.load_prod_model_log,
-                log_message="Transitioning of models based on scores successfully done",
+                log_info="Transitioning of models based on scores successfully done",
             )
 
             self.log_writer.start_log(

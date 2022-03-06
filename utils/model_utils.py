@@ -13,6 +13,7 @@ class Model_Utils:
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
+
     def __init__(self):
         self.log_writer = App_Logger()
 
@@ -51,7 +52,7 @@ class Model_Utils:
             model_name = model.__class__.__name__
 
             self.log_writer.log(
-                table_name=table_name, log_message=f"Got the {model} model_name",
+                table_name=table_name, log_info=f"Got the {model} model_name",
             )
 
             self.log_writer.start_log(
@@ -104,7 +105,7 @@ class Model_Utils:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Inserted {model_key_name} params to model_grid dict",
+                log_info=f"Inserted {model_key_name} params to model_grid dict",
             )
 
             self.log_writer.start_log(
@@ -152,7 +153,7 @@ class Model_Utils:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Used {model_name} model to get predictions on test data",
+                log_info=f"Used {model_name} model to get predictions on test data",
             )
 
             if len(test_y.unique()) == 1:
@@ -160,7 +161,7 @@ class Model_Utils:
 
                 self.log_writer.log(
                     table_name=table_name,
-                    log_message=f"Accuracy for {model_name} is {model_score}",
+                    log_info=f"Accuracy for {model_name} is {model_score}",
                 )
 
             else:
@@ -168,7 +169,7 @@ class Model_Utils:
 
                 self.log_writer.log(
                     table_name=table_name,
-                    log_message=f"AUC score for {model_name} is {model_score}",
+                    log_info=f"AUC score for {model_name} is {model_score}",
                 )
 
                 self.log_writer.start_log(
@@ -226,14 +227,14 @@ class Model_Utils:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Initialized {model_grid.__class__.__name__}  with {model_param_grid} as params",
+                log_info=f"Initialized {model_grid.__class__.__name__}  with {model_param_grid} as params",
             )
 
             model_grid.fit(x_train, y_train)
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Found the best params for {model_name} model based on {model_param_grid} as params",
+                log_info=f"Found the best params for {model_name} model based on {model_param_grid} as params",
             )
 
             self.log_writer.start_log(

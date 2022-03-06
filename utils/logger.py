@@ -16,7 +16,7 @@ class App_Logger:
 
         self.class_name = self.__class__.__name__
 
-    def log(self, table_name, log_message):
+    def log(self, table_name, log_info):
         """
         Method Name :   log
         Description :   This method is used for logging the info to DynamoDB
@@ -27,7 +27,6 @@ class App_Logger:
         Version     :   1.2
         Revisions   :   moved setup to cloud
         """
-
         method_name = self.log.__name__
 
         try:
@@ -42,7 +41,7 @@ class App_Logger:
             log = {
                 "Log_updated_date": str(self.now),
                 "Log_updated_time": str(self.current_time),
-                "Log_message": log_message,
+                "Log_message": log_info,
             }
 
             self.table.put_item(Item=log)
@@ -71,7 +70,7 @@ class App_Logger:
 
             log_msg = f"{func()} {method_name} method of class {class_name}"
 
-            self.log(table_name, log_message=log_msg)
+            self.log(table_name, log_info=log_msg)
 
         except Exception as e:
             error_msg = f"Exception occured in Class : {self.class_name}, Method : {start_method_name}, Error : {str(e)}"
@@ -99,6 +98,6 @@ class App_Logger:
 
         exception_msg = f"Exception occured in Class : {class_name}, Method : {method_name}, Error : {str(error)}"
 
-        self.log(table_name=table_name, log_message=exception_msg)
+        self.log(table_name=table_name, log_info=exception_msg)
 
         raise Exception(exception_msg)

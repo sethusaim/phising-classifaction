@@ -54,7 +54,7 @@ class S3_Operation:
         try:
             s3_client = boto3.client("s3")
 
-            self.log_writer.log(table_name=table_name, log_message="Got s3 client")
+            self.log_writer.log(table_name=table_name, log_info="Got s3 client")
 
             self.log_writer.start_log(
                 key="exit",
@@ -96,7 +96,7 @@ class S3_Operation:
         try:
             s3_resource = boto3.resource("s3")
 
-            self.log_writer.log(table_name=table_name, log_message="Got s3 resource")
+            self.log_writer.log(table_name=table_name, log_info="Got s3 resource")
 
             self.log_writer.start_log(
                 key="exit",
@@ -144,14 +144,14 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Read the s3 object with decode as {decode}",
+                log_info=f"Read the s3 object with decode as {decode}",
             )
 
             conv_func = lambda: StringIO(func()) if make_readable is True else func()
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"read the s3 object with make_readable as {make_readable}",
+                log_info=f"read the s3 object with make_readable as {make_readable}",
             )
 
             self.log_writer.start_log(
@@ -200,7 +200,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Read {file_name} file as text from {bucket_name} bucket_name",
+                log_info=f"Read {file_name} file as text from {bucket_name} bucket_name",
             )
 
             self.log_writer.start_log(
@@ -251,7 +251,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Read {file_name} from {bucket_name} bucket_name",
+                log_info=f"Read {file_name} from {bucket_name} bucket_name",
             )
 
             self.log_writer.start_log(
@@ -448,7 +448,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Loaded {object} from {bucket_name} bucket_name",
+                log_info=f"Loaded {object} from {bucket_name} bucket_name",
             )
 
             self.log_writer.start_log(
@@ -490,8 +490,7 @@ class S3_Operation:
             self.load_object(bucket_name=bucket_name, object=folder_name)
 
             self.log_writer.log(
-                table_name=table_name,
-                log_message=f"Folder {folder_name} already exists.",
+                table_name=table_name, log_info=f"Folder {folder_name} already exists.",
             )
 
             self.log_writer.start_log(
@@ -505,7 +504,7 @@ class S3_Operation:
             if e.response["Error"]["Code"] == "404":
                 self.log_writer.log(
                     table_name=table_name,
-                    log_message=f"{folder_name} folder does not exist,creating new one",
+                    log_info=f"{folder_name} folder does not exist,creating new one",
                 )
 
                 self.put_object(
@@ -514,13 +513,13 @@ class S3_Operation:
 
                 self.log_writer.log(
                     table_name=table_name,
-                    log_message=f"{folder_name} folder created in {bucket_name} bucket_name",
+                    log_info=f"{folder_name} folder created in {bucket_name} bucket_name",
                 )
 
             else:
                 self.log_writer.log(
                     table_name=table_name,
-                    log_message=f"Error occured in creating {folder_name} folder",
+                    log_info=f"Error occured in creating {folder_name} folder",
                 )
 
                 self.log_writer.exception_log(
@@ -557,7 +556,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Created {object} folder in {bucket_name} bucket",
+                log_info=f"Created {object} folder in {bucket_name} bucket",
             )
 
             self.log_writer.start_log(
@@ -600,7 +599,7 @@ class S3_Operation:
         try:
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Uploading {from_file_name} to s3 bucket {bucket_name}",
+                log_info=f"Uploading {from_file_name} to s3 bucket {bucket_name}",
             )
 
             s3_resource = self.get_s3_resource(table_name=table_name)
@@ -611,20 +610,20 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Uploaded {from_file_name} to s3 bucket {bucket_name}",
+                log_info=f"Uploaded {from_file_name} to s3 bucket {bucket_name}",
             )
 
             if remove is True:
                 self.log_writer.log(
                     table_name=table_name,
-                    log_message=f"Option remove is set {remove}..deleting the file",
+                    log_info=f"Option remove is set {remove}..deleting the file",
                 )
 
                 os.remove(from_file_name)
 
                 self.log_writer.log(
                     table_name=table_name,
-                    log_message=f"Removed the local copy of {from_file_name}",
+                    log_info=f"Removed the local copy of {from_file_name}",
                 )
 
                 self.log_writer.start_log(
@@ -637,7 +636,7 @@ class S3_Operation:
             else:
                 self.log_writer.log(
                     table_name=table_name,
-                    log_message=f"Option remove is set {remove}, not deleting the file",
+                    log_info=f"Option remove is set {remove}, not deleting the file",
                 )
 
         except Exception as e:
@@ -674,7 +673,7 @@ class S3_Operation:
             bucket_name = s3_resource.Bucket(bucket_name)
 
             self.log_writer.log(
-                table_name=table_name, log_message=f"Got {bucket_name} bucket_name",
+                table_name=table_name, log_info=f"Got {bucket_name} bucket_name",
             )
 
             self.log_writer.start_log(
@@ -725,7 +724,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Copied data from bucket_name {from_bucket_name} to bucket_name {to_bucket_name}",
+                log_info=f"Copied data from bucket_name {from_bucket_name} to bucket_name {to_bucket_name}",
             )
 
             self.log_writer.start_log(
@@ -770,7 +769,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Deleted {file_name} from bucket_name {bucket_name}",
+                log_info=f"Deleted {file_name} from bucket_name {bucket_name}",
             )
 
             self.log_writer.start_log(
@@ -827,7 +826,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Moved {from_file_name} from bucket_name {from_bucket_name} to {to_bucket_name}",
+                log_info=f"Moved {from_file_name} from bucket_name {from_bucket_name} to {to_bucket_name}",
             )
 
             self.log_writer.start_log(
@@ -874,7 +873,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Got list of files from bucket_name {bucket_name}",
+                log_info=f"Got list of files from bucket_name {bucket_name}",
             )
 
             self.log_writer.start_log(
@@ -921,7 +920,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Got {file_name} from bucket_name {bucket_name}",
+                log_info=f"Got {file_name} from bucket_name {bucket_name}",
             )
 
             func = lambda x: x[0] if len(x) == 1 else x
@@ -990,7 +989,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Loaded {model_name} from bucket_name {bucket_name}",
+                log_info=f"Loaded {model_name} from bucket_name {bucket_name}",
             )
 
             self.log_writer.start_log(
@@ -1048,14 +1047,14 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Saved {model_name} model as {model_file} name",
+                log_info=f"Saved {model_name} model as {model_file} name",
             )
 
             bucket_model_path = model_dir + "/" + model_file
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Uploading {model_file} to {model_bucket_name} bucket",
+                log_info=f"Uploading {model_file} to {model_bucket_name} bucket",
             )
 
             self.upload_file(
@@ -1067,7 +1066,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Uploaded  {model_file} to {model_bucket_name} bucket_name",
+                log_info=f"Uploaded  {model_file} to {model_bucket_name} bucket_name",
             )
 
             self.log_writer.start_log(
@@ -1080,7 +1079,7 @@ class S3_Operation:
         except Exception as e:
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Model file {model_name} could not be saved",
+                log_info=f"Model file {model_name} could not be saved",
             )
 
             self.log_writer.exception_log(
@@ -1117,7 +1116,7 @@ class S3_Operation:
 
             self.log_writer.log(
                 table_name=table_name,
-                log_message=f"Created a local copy of dataframe with name {local_file_name}",
+                log_info=f"Created a local copy of dataframe with name {local_file_name}",
             )
 
             self.upload_file(

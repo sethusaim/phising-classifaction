@@ -62,7 +62,7 @@ class Preprocessor:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Separated {label_column_name} from {data}",
+                log_info=f"Separated {label_column_name} from {data}",
             )
 
             self.log_writer.start_log(
@@ -107,7 +107,7 @@ class Preprocessor:
             data.replace(to_replace="'na'", value=np.nan, inplace=True)
 
             self.log_writer.log(
-                table_name=self.table_name, log_message="Replaced " "na" " with np.nan"
+                table_name=self.table_name, log_info="Replaced " "na" " with np.nan"
             )
 
             self.log_writer.start_log(
@@ -159,7 +159,7 @@ class Preprocessor:
 
             self.log_writer.log(
                 table_name=self.table_name,
-                log_message=f"Null values count is : {self.null_counts}",
+                log_info=f"Null values count is : {self.null_counts}",
             )
 
             for i in range(len(self.null_counts)):
@@ -169,14 +169,13 @@ class Preprocessor:
                     cols_with_missing_values.append(cols[i])
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_message="created cols with missing values",
+                table_name=self.table_name, log_info="created cols with missing values",
             )
 
             if null_present is True:
                 self.log_writer.log(
                     table_name=self.table_name,
-                    log_message="null values were found the columns...preparing dataframe with null values",
+                    log_info="null values were found the columns...preparing dataframe with null values",
                 )
 
                 self.null_df = pd.DataFrame()
@@ -187,7 +186,7 @@ class Preprocessor:
 
                 self.log_writer.log(
                     table_name=self.table_name,
-                    log_message="Created dataframe with null values",
+                    log_info="Created dataframe with null values",
                 )
 
                 self.s3.upload_df_as_csv(
@@ -201,7 +200,7 @@ class Preprocessor:
             else:
                 self.log_writer.log(
                     table_name=self.table_name,
-                    log_message="No null values are present in cols. Skipped the creation of dataframe",
+                    log_info="No null values are present in cols. Skipped the creation of dataframe",
                 )
 
             self.log_writer.start_log(

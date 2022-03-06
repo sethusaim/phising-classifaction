@@ -73,7 +73,7 @@ class Data_Transform_Train:
 
                     self.log_writer.log(
                         table_name=self.train_data_transform_log,
-                        log_message=f"Quotes added for the file {file}",
+                        log_info=f"Quotes added for the file {file}",
                     )
 
                     self.s3.upload_df_as_csv(

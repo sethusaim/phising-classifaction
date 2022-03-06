@@ -96,7 +96,7 @@ class Raw_Pred_Data_Validation:
             )
 
             self.log_writer.log(
-                table_name=self.pred_schema_log, log_message=message,
+                table_name=self.pred_schema_log, log_info=message,
             )
 
             self.log_writer.start_log(
@@ -149,7 +149,7 @@ class Raw_Pred_Data_Validation:
             )
 
             self.log_writer.log(
-                table_name=self.pred_gen_log, log_message=f"Got {regex} pattern",
+                table_name=self.pred_gen_log, log_info=f"Got {regex} pattern",
             )
 
             self.log_writer.start_log(
@@ -252,7 +252,7 @@ class Raw_Pred_Data_Validation:
 
             self.log_writer.log(
                 table_name=self.pred_name_valid_log,
-                log_message="Got Prediction files with absolute file name",
+                log_info="Got Prediction files with absolute file name",
             )
 
             for file_name in pred_batch_files:
@@ -264,7 +264,7 @@ class Raw_Pred_Data_Validation:
 
                 self.log_writer.log(
                     table_name=self.pred_name_valid_log,
-                    log_message="Created raw,good and bad data file name",
+                    log_info="Created raw,good and bad data file name",
                 )
 
                 if re.match(regex, file_name):
