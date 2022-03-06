@@ -31,89 +31,9 @@ class S3_Operation:
 
         self.file_format = self.config["model_utils"]["save_format"]
 
-    def get_s3_client(self, table_name):
-        """
-        Method Name :   get_s3_client
-        Description :   This method gets s3 client from boto3
+        self.s3_client = boto3.client("s3")
 
-        Output      :   A boto3 client with s3 is created
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.get_s3_client.__name__
-
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=table_name,
-        )
-
-        try:
-            s3_client = boto3.client("s3")
-
-            self.log_writer.log(table_name=table_name, log_info="Got s3 client")
-
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
-            )
-
-            return s3_client
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
-            )
-
-    def get_s3_resource(self, table_name):
-        """
-        Method Name :   get_s3_resource
-        Description :   This method gets s3 resource from boto3
-
-        Output      :   A boto3 resource with s3 is created
-        On Failure  :   Write an exception log and then raise an exception
-
-        Version     :   1.2
-        Revisions   :   moved setup to cloud
-        """
-        method_name = self.get_s3_resource.__name__
-
-        self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=table_name,
-        )
-
-        try:
-            s3_resource = boto3.resource("s3")
-
-            self.log_writer.log(table_name=table_name, log_info="Got s3 resource")
-
-            self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
-            )
-
-            return s3_resource
-
-        except Exception as e:
-            self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
-            )
+        self.s3_resource = boto3.resource("s3")
 
     def read_object(self, object, table_name, decode=True, make_readable=False):
         """
@@ -442,9 +362,7 @@ class S3_Operation:
         )
 
         try:
-            s3_resource = self.get_s3_resource(table_name=table_name)
-
-            s3_resource.Object(bucket_name, object).load()
+            self.s3_resource.Object(bucket_name, object).load()
 
             self.log_writer.log(
                 table_name=table_name,
@@ -550,9 +468,7 @@ class S3_Operation:
         )
 
         try:
-            s3_client = self.get_s3_client(table_name=table_name)
-
-            s3_client.put_object(Bucket=bucket_name, Key=(object + "/"))
+            self.s3_client.put_object(Bucket=bucket_name, Key=(object + "/"))
 
             self.log_writer.log(
                 table_name=table_name,
@@ -602,9 +518,7 @@ class S3_Operation:
                 log_info=f"Uploading {from_file_name} to s3 bucket {bucket_name}",
             )
 
-            s3_resource = self.get_s3_resource(table_name=table_name)
-
-            s3_resource.meta.client.upload_file(
+            self.s3_resource.meta.client.upload_file(
                 from_file_name, bucket_name, to_file_name
             )
 
@@ -668,9 +582,7 @@ class S3_Operation:
         )
 
         try:
-            s3_resource = self.get_s3_resource(table_name=table_name)
-
-            bucket_name = s3_resource.Bucket(bucket_name)
+            bucket_name = self.s3_resource.Bucket(bucket_name)
 
             self.log_writer.log(
                 table_name=table_name, log_info=f"Got {bucket_name} bucket_name",
@@ -718,9 +630,7 @@ class S3_Operation:
         try:
             copy_source = {"Bucket": from_bucket_name, "Key": from_file_name}
 
-            s3_resource = self.get_s3_resource(table_name=table_name)
-
-            s3_resource.meta.client.copy(copy_source, to_bucket_name, to_file_name)
+            self.s3_resource.meta.client.copy(copy_source, to_bucket_name, to_file_name)
 
             self.log_writer.log(
                 table_name=table_name,
@@ -763,9 +673,7 @@ class S3_Operation:
         )
 
         try:
-            s3_resource = self.get_s3_resource(table_name=table_name)
-
-            s3_resource.Object(bucket_name, file_name).delete()
+            self.s3_resource.Object(bucket_name, file_name).delete()
 
             self.log_writer.log(
                 table_name=table_name,
@@ -866,7 +774,7 @@ class S3_Operation:
 
         try:
             lst = self.get_file_object(
-                bucket_name=bucket_name, table_name=table_name, file_name=folder_name,
+                file_name=folder_name, bucket_name=bucket_name, table_name=table_name
             )
 
             list_of_files = [object.key for object in lst]
