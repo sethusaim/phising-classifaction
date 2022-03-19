@@ -34,9 +34,9 @@ class Load_Prod_Model:
 
         self.s3 = S3_Operation()
 
-        self.mlflow_op = MLFlow_Operation(table_name=self.load_prod_model_log)
+        self.mlflow_op = MLFlow_Operation(log_file=self.load_prod_model_log)
 
-    def create_folders_for_prod_and_stag(self, bucket_name, table_name):
+    def create_folders_for_prod_and_stag(self, bucket_name, log_file):
         """
         Method Name :   create_folders_for_prod_and_stag
         Description :   This method creates folders for production and staging bucket
@@ -54,27 +54,27 @@ class Load_Prod_Model:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=table_name,
+            
         )
 
         try:
             self.s3.create_folder(
                 folder_name=self.prod_model_dir,
                 bucket_name=bucket_name,
-                table_name=table_name,
+                
             )
 
             self.s3.create_folder(
                 folder_name=self.stag_model_dir,
                 bucket_name=bucket_name,
-                table_name=table_name,
+                
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=table_name,
+                
             )
 
         except Exception as e:
@@ -82,7 +82,7 @@ class Load_Prod_Model:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=table_name,
+                
             )
 
     def load_production_model(self):
@@ -103,12 +103,12 @@ class Load_Prod_Model:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=self.load_prod_model_log,
+            log_file=self.load_prod_model_log,
         )
 
         try:
             self.create_folders_for_prod_and_stag(
-                bucket_name=self.model_bucket_name, table_name=self.load_prod_model_log
+                bucket_name=self.model_bucket_name, log_file=self.load_prod_model_log
             )
 
             self.mlflow_op.set_mlflow_tracking_uri()
@@ -136,22 +136,22 @@ class Load_Prod_Model:
             ]
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
-                log_info="Created cols for all registered model",
+                log_file=self.load_prod_model_log,
+                log_file,"Created cols for all registered model",
             )
 
             runs_cols = runs[cols].max().sort_values(ascending=False)
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
-                log_info="Sorted the runs cols in descending order",
+                log_file=self.load_prod_model_log,
+                log_file,"Sorted the runs cols in descending order",
             )
 
             metrics_dict = runs_cols.to_dict()
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
-                log_info="Converted runs cols to dict",
+                log_file=self.load_prod_model_log,
+                log_file,"Converted runs cols to dict",
             )
 
             """ 
@@ -191,8 +191,8 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
             ]
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
-                log_info=f"Got top model names based on the metrics of clusters",
+                log_file=self.load_prod_model_log,
+                log_file,f"Got top model names based on the metrics of clusters",
             )
 
             ## best_metrics will store the value of metrics, but we want the names of the models,
@@ -205,8 +205,8 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
             top_mn_lst = [mn.split(".")[1].split("-")[0] for mn in best_metrics_names]
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
-                log_info=f"Got the top model names",
+                log_file=self.load_prod_model_log,
+                log_file,f"Got the top model names",
             )
 
             results = self.mlflow_op.search_mlflow_models(order="DESC")
@@ -249,15 +249,15 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                         )
 
             self.log_writer.log(
-                table_name=self.load_prod_model_log,
-                log_info="Transitioning of models based on scores successfully done",
+                log_file=self.load_prod_model_log,
+                log_file,"Transitioning of models based on scores successfully done",
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.load_prod_model_log,
+                log_file=self.load_prod_model_log,
             )
 
         except Exception as e:
@@ -265,5 +265,5 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.load_prod_model_log,
+                log_file=self.load_prod_model_log,
             )

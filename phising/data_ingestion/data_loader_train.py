@@ -12,10 +12,10 @@ class Data_Getter_Train:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, table_name):
+    def __init__(self, log_file):
         self.config = read_params()
 
-        self.table_name = table_name
+        self.log_file = log_file
 
         self.train_csv_file = self.config["export_csv_file"]["train"]
 
@@ -46,21 +46,21 @@ class Data_Getter_Train:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=self.table_name,
+            log_file=self.log_file,
         )
 
         try:
             df = self.s3.read_csv(
                 file_name=self.train_csv_file,
                 bucket_name=self.input_files_bucket,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             return df
@@ -70,5 +70,5 @@ class Data_Getter_Train:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )

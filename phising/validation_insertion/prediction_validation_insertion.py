@@ -53,7 +53,7 @@ class Pred_Validation:
                 key="start",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_main_log,
+                log_file=self.pred_main_log,
             )
 
             (
@@ -74,19 +74,19 @@ class Pred_Validation:
             self.raw_data.validate_missing_values_in_col()
 
             self.log_writer.log(
-                table_name=self.pred_main_log,
-                log_info="Raw Data Validation Completed !!",
+                log_file=self.pred_main_log,
+                log_file,"Raw Data Validation Completed !!",
             )
 
             self.log_writer.log(
-                table_name=self.pred_main_log, log_info="Starting Data Transformation",
+                log_file=self.pred_main_log, log_file,"Starting Data Transformation",
             )
 
             self.data_transform.add_quotes_to_string()
 
             self.log_writer.log(
-                table_name=self.pred_main_log,
-                log_info="Data Transformation completed !!",
+                log_file=self.pred_main_log,
+                log_file,"Data Transformation completed !!",
             )
 
             self.db_operation.insert_good_data_as_record(
@@ -95,8 +95,8 @@ class Pred_Validation:
             )
 
             self.log_writer.log(
-                table_name=self.pred_main_log,
-                log_info="Data type validation Operation completed !!",
+                log_file=self.pred_main_log,
+                log_file,"Data type validation Operation completed !!",
             )
 
             self.db_operation.export_collection_to_csv(
@@ -108,7 +108,7 @@ class Pred_Validation:
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_main_log,
+                log_file=self.pred_main_log,
             )
 
         except Exception as e:
@@ -116,5 +116,5 @@ class Pred_Validation:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_main_log,
+                log_file=self.pred_main_log,
             )

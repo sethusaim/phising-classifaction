@@ -69,13 +69,13 @@ class Raw_Pred_Data_Validation:
                 key="start",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_schema_log,
+                log_file=self.pred_schema_log,
             )
 
             dic = self.s3.read_json(
                 file_name=self.pred_schema_file,
                 bucket_name=self.input_files_bucket,
-                table_name=self.pred_schema_log,
+                log_file=self.pred_schema_log,
             )
 
             LengthOfDateStampInFile = dic["LengthOfDateStampInFile"]
@@ -96,14 +96,14 @@ class Raw_Pred_Data_Validation:
             )
 
             self.log_writer.log(
-                table_name=self.pred_schema_log, log_info=message,
+                log_file=self.pred_schema_log, log_file,message,
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_schema_log,
+                log_file=self.pred_schema_log,
             )
 
         except Exception as e:
@@ -111,7 +111,7 @@ class Raw_Pred_Data_Validation:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_schema_log,
+                log_file=self.pred_schema_log,
             )
 
         return (
@@ -139,24 +139,24 @@ class Raw_Pred_Data_Validation:
                 key="start",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_gen_log,
+                log_file=self.pred_gen_log,
             )
 
             regex = self.s3.read_text(
                 file_name=self.regex_file,
                 bucket_name=self.input_files_bucket,
-                table_name=self.pred_gen_log,
+                log_file=self.pred_gen_log,
             )
 
             self.log_writer.log(
-                table_name=self.pred_gen_log, log_info=f"Got {regex} pattern",
+                log_file=self.pred_gen_log, log_file,f"Got {regex} pattern",
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_gen_log,
+                log_file=self.pred_gen_log,
             )
 
             return regex
@@ -166,10 +166,10 @@ class Raw_Pred_Data_Validation:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_gen_log,
+                log_file=self.pred_gen_log,
             )
 
-    def create_dirs_for_good_bad_data(self, table_name):
+    def create_dirs_for_good_bad_data(self, log_file):
         """
         Method Name :   create_dirs_for_good_bad_data
         Description :   This method creates folders for good and bad data in s3 bucket
@@ -186,27 +186,27 @@ class Raw_Pred_Data_Validation:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=table_name,
+            
         )
 
         try:
             self.s3.create_folder(
                 folder_name=self.good_pred_data_dir,
                 bucket_name=self.pred_data_bucket,
-                table_name=table_name,
+                
             )
 
             self.s3.create_folder(
                 folder_name=self.bad_pred_data_dir,
                 bucket_name=self.pred_data_bucket,
-                table_name=table_name,
+                
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=table_name,
+                
             )
 
         except Exception as e:
@@ -214,7 +214,7 @@ class Raw_Pred_Data_Validation:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=table_name,
+                
             )
 
     def validate_raw_file_name(
@@ -236,23 +236,23 @@ class Raw_Pred_Data_Validation:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=self.pred_name_valid_log,
+            log_file=self.pred_name_valid_log,
         )
 
         try:
-            self.create_dirs_for_good_bad_data(table_name=self.pred_name_valid_log)
+            self.create_dirs_for_good_bad_data(log_file=self.pred_name_valid_log)
 
             onlyfiles = self.s3.get_files_from_folder(
                 bucket=self.raw_data_bucket_name,
                 folder_name=self.raw_pred_data_dir,
-                table_name=self.pred_name_valid_log,
+                log_file=self.pred_name_valid_log,
             )
 
             pred_batch_files = [f.split("/")[1] for f in onlyfiles]
 
             self.log_writer.log(
-                table_name=self.pred_name_valid_log,
-                log_info="Got Prediction files with absolute file name",
+                log_file=self.pred_name_valid_log,
+                log_file,"Got Prediction files with absolute file name",
             )
 
             for file_name in pred_batch_files:
@@ -263,8 +263,8 @@ class Raw_Pred_Data_Validation:
                 bad_data_pred_file_name = self.bad_pred_data_dir + "/" + file_name
 
                 self.log_writer.log(
-                    table_name=self.pred_name_valid_log,
-                    log_info="Created raw,good and bad data file name",
+                    log_file=self.pred_name_valid_log,
+                    log_file,"Created raw,good and bad data file name",
                 )
 
                 if re.match(regex, file_name):
@@ -279,7 +279,7 @@ class Raw_Pred_Data_Validation:
                                 from_bucket_name=self.pred_data_bucket,
                                 to_file_name=good_data_pred_file_name,
                                 to_bucket_name=self.pred_data_bucket,
-                                table_name=self.pred_name_valid_log,
+                                log_file=self.pred_name_valid_log,
                             )
 
                         else:
@@ -288,7 +288,7 @@ class Raw_Pred_Data_Validation:
                                 from_bucket_name=self.pred_data_bucket,
                                 to_file_name=bad_data_pred_file_name,
                                 to_bucket_name=self.pred_data_bucket,
-                                table_name=self.pred_name_valid_log,
+                                log_file=self.pred_name_valid_log,
                             )
 
                     else:
@@ -297,7 +297,7 @@ class Raw_Pred_Data_Validation:
                             from_bucket_name=self.pred_data_bucket,
                             to_file_name=bad_data_pred_file_name,
                             to_bucket_name=self.pred_data_bucket,
-                            table_name=self.pred_name_valid_log,
+                            log_file=self.pred_name_valid_log,
                         )
                 else:
                     self.s3.copy_data(
@@ -305,14 +305,14 @@ class Raw_Pred_Data_Validation:
                         from_bucket_name=self.pred_data_bucket,
                         to_file_name=bad_data_pred_file_name,
                         to_bucket_name=self.pred_data_bucket,
-                        table_name=self.pred_name_valid_log,
+                        log_file=self.pred_name_valid_log,
                     )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_name_valid_log,
+                log_file=self.pred_name_valid_log,
             )
 
         except Exception as e:
@@ -320,7 +320,7 @@ class Raw_Pred_Data_Validation:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_name_valid_log,
+                log_file=self.pred_name_valid_log,
             )
 
     def validate_col_length(self, NumberofColumns):
@@ -340,14 +340,14 @@ class Raw_Pred_Data_Validation:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=self.pred_col_valid_log,
+            log_file=self.pred_col_valid_log,
         )
 
         try:
             lst = self.s3.read_csv_from_folder(
                 folder_name=self.good_pred_data_dir,
                 bucket_name=self.pred_data_bucket,
-                table_name=self.pred_col_valid_log,
+                log_file=self.pred_col_valid_log,
             )
 
             for idx, f in enumerate(lst):
@@ -369,7 +369,7 @@ class Raw_Pred_Data_Validation:
                             from_bucket_name=self.pred_data_bucket,
                             to_file_name=dest_f,
                             to_bucket_name=self.pred_data_bucket,
-                            table_name=self.pred_col_valid_log,
+                            log_file=self.pred_col_valid_log,
                         )
 
                 else:
@@ -379,7 +379,7 @@ class Raw_Pred_Data_Validation:
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_col_valid_log,
+                log_file=self.pred_col_valid_log,
             )
 
         except Exception as e:
@@ -387,7 +387,7 @@ class Raw_Pred_Data_Validation:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_col_valid_log,
+                log_file=self.pred_col_valid_log,
             )
 
     def validate_missing_values_in_col(self):
@@ -407,14 +407,14 @@ class Raw_Pred_Data_Validation:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=self.pred_missing_value_log,
+            log_file=self.pred_missing_value_log,
         )
 
         try:
             lst = self.s3.read_csv_from_folder(
                 folder_name=self.good_pred_data_dir,
                 bucket_name=self.pred_data_bucket,
-                table_name=self.pred_missing_value_log,
+                log_file=self.pred_missing_value_log,
             )
 
             for idx, f in lst:
@@ -438,7 +438,7 @@ class Raw_Pred_Data_Validation:
                                 from_bucket_name=self.pred_data_bucket,
                                 to_file_name=dest_f,
                                 to_bucket_name=self.pred_data_bucket,
-                                table_name=self.pred_missing_value_log,
+                                log_file=self.pred_missing_value_log,
                             )
 
                             break
@@ -451,7 +451,7 @@ class Raw_Pred_Data_Validation:
                             local_file_name=abs_f,
                             bucket_file_name=dest_f,
                             bucket_name=self.pred_data_bucket,
-                            table_name=self.pred_missing_value_log,
+                            log_file=self.pred_missing_value_log,
                         )
 
                 else:
@@ -461,7 +461,7 @@ class Raw_Pred_Data_Validation:
                     key="exit",
                     class_name=self.class_name,
                     method_name=method_name,
-                    table_name=self.pred_missing_value_log,
+                    log_file=self.pred_missing_value_log,
                 )
 
         except Exception as e:
@@ -469,5 +469,5 @@ class Raw_Pred_Data_Validation:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.pred_missing_value_log,
+                log_file=self.pred_missing_value_log,
             )

@@ -14,8 +14,8 @@ class Model_Finder:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, table_name):
-        self.table_name = table_name
+    def __init__(self, log_file):
+        self.log_file = log_file
 
         self.class_name = self.__class__.__name__
 
@@ -52,12 +52,12 @@ class Model_Finder:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=self.table_name,
+            log_file=self.log_file,
         )
 
         try:
             self.rf_model_name = self.model_utils.get_model_name(
-                model=self.rf_model, table_name=self.table_name
+                model=self.rf_model, log_file=self.log_file
             )
 
             self.rf_best_params = self.model_utils.get_model_params(
@@ -65,7 +65,7 @@ class Model_Finder:
                 model_key_name="rf_model",
                 x_train=train_x,
                 y_train=train_y,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             self.criterion = self.rf_best_params["criterion"]
@@ -77,8 +77,8 @@ class Model_Finder:
             self.n_estimators = self.rf_best_params["n_estimators"]
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info=f"{self.rf_model_name} model best params are {self.rf_best_params}",
+                log_file=self.log_file,
+                log_file,f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
             self.rf_model = RandomForestClassifier(
@@ -89,22 +89,22 @@ class Model_Finder:
             )
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info=f"Initialized {self.rf_model_name} with {self.rf_best_params} as params",
+                log_file=self.log_file,
+                log_file,f"Initialized {self.rf_model_name} with {self.rf_best_params} as params",
             )
 
             self.rf_model.fit(train_x, train_y)
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info=f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
+                log_file=self.log_file,
+                log_file,f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             return self.rf_model
@@ -114,7 +114,7 @@ class Model_Finder:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
     def get_best_params_for_xgboost(self, train_x, train_y):
@@ -136,12 +136,12 @@ class Model_Finder:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=self.table_name,
+            log_file=self.log_file,
         )
 
         try:
             self.xgb_model_name = self.model_utils.get_model_name(
-                model=self.xgb_model, table_name=self.table_name
+                model=self.xgb_model, log_file=self.log_file
             )
 
             self.xgb_best_params = self.model_utils.get_model_params(
@@ -149,7 +149,7 @@ class Model_Finder:
                 model_key_name="xgb_model",
                 x_train=train_x,
                 y_train=train_y,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             self.learning_rate = self.xgb_best_params["learning_rate"]
@@ -159,8 +159,8 @@ class Model_Finder:
             self.n_estimators = self.rf_best_params["n_estimators"]
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info=f"{self.rf_model_name} model best params are {self.rf_best_params}",
+                log_file=self.log_file,
+                log_file,f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
             self.xgb_model = XGBClassifier(
@@ -170,22 +170,22 @@ class Model_Finder:
             )
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info=f"Initialized {self.xgb_model_name} model with best params as {self.xgb_best_params}",
+                log_file=self.log_file,
+                log_file,f"Initialized {self.xgb_model_name} model with best params as {self.xgb_best_params}",
             )
 
             self.xgb_model.fit(train_x, train_y)
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info=f"Created {self.xgb_model_name} model with best params as {self.xgb_best_params}",
+                log_file=self.log_file,
+                log_file,f"Created {self.xgb_model_name} model with best params as {self.xgb_best_params}",
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             return self.xgb_model
@@ -195,7 +195,7 @@ class Model_Finder:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
     def get_trained_models(self, train_x, train_y, test_x, test_y):
@@ -216,7 +216,7 @@ class Model_Finder:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=self.table_name,
+            log_file=self.log_file,
         )
 
         try:
@@ -226,7 +226,7 @@ class Model_Finder:
                 model=self.xgb_model,
                 test_x=test_x,
                 test_y=test_y,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             self.rf_model = self.get_best_params_for_random_forest(train_x, train_y)
@@ -235,14 +235,14 @@ class Model_Finder:
                 model=self.rf_model,
                 test_x=test_x,
                 test_y=test_y,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             return (
@@ -257,5 +257,5 @@ class Model_Finder:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )

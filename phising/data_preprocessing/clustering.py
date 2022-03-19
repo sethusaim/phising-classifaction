@@ -15,8 +15,8 @@ class KMeans_Clustering:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, table_name):
-        self.table_name = table_name
+    def __init__(self, log_file):
+        self.log_file = log_file
 
         self.config = read_params()
 
@@ -62,7 +62,7 @@ class KMeans_Clustering:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=self.table_name,
+            log_file=self.log_file,
         )
 
         try:
@@ -88,15 +88,15 @@ class KMeans_Clustering:
             plt.savefig(self.elbow_plot_file)
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info="Saved elbow_plot fig and local copy is created",
+                log_file=self.log_file,
+                log_file,"Saved elbow_plot fig and local copy is created",
             )
 
             self.s3.upload_file(
                 from_file_name=self.elbow_plot_file,
                 to_file_name=self.elbow_plot_file,
                 bucket_name=self.input_files_bucket,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             self.kn = KneeLocator(
@@ -107,15 +107,15 @@ class KMeans_Clustering:
             )
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info=f"The optimum number of clusters is {str(self.kn.knee)}.",
+                log_file=self.log_file,
+                log_file,f"The optimum number of clusters is {str(self.kn.knee)}.",
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             return self.kn.knee
@@ -125,7 +125,7 @@ class KMeans_Clustering:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
     def create_clusters(self, data, number_of_clusters):
@@ -146,7 +146,7 @@ class KMeans_Clustering:
             key="start",
             class_name=self.class_name,
             method_name=method_name,
-            table_name=self.table_name,
+            log_file=self.log_file,
         )
 
         try:
@@ -164,21 +164,21 @@ class KMeans_Clustering:
                 model=self.kmeans,
                 model_dir=self.trained_model_dir,
                 model_bucket_name=self.model_bucket_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             self.data["Cluster"] = self.y_kmeans
 
             self.log_writer.log(
-                table_name=self.table_name,
-                log_info=f"Successfully created {str(self.kn.knee)} clusters",
+                log_file=self.log_file,
+                log_file,f"Successfully created {str(self.kn.knee)} clusters",
             )
 
             self.log_writer.start_log(
                 key="exit",
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )
 
             return self.data, self.kmeans
@@ -188,5 +188,5 @@ class KMeans_Clustering:
                 error=e,
                 class_name=self.class_name,
                 method_name=method_name,
-                table_name=self.table_name,
+                log_file=self.log_file,
             )

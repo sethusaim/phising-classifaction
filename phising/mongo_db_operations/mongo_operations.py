@@ -27,7 +27,7 @@ class MongoDB_Operation:
 
         self.log_writer = App_Logger()
 
-    def get_database(self, db_name, table_name):
+    def get_database(self, db_name, log_file):
         """
         Method Name :   get_database
         Description :   This method gets database from MongoDB from the db_name
@@ -41,38 +41,28 @@ class MongoDB_Operation:
         method_name = self.get_database.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=table_name,
+            key="start", class_name=self.class_name, method_name=method_name,
         )
 
         try:
             db = self.client[db_name]
 
             self.log_writer.log(
-                table_name=table_name,
-                log_info=f"Created {db_name} database in MongoDB",
+                log_file, f"Created {db_name} database in MongoDB",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
+                key="exit", class_name=self.class_name, method_name=method_name,
             )
 
             return db
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
+                error=e, class_name=self.class_name, method_name=method_name,
             )
 
-    def get_collection(self, database, collection_name, table_name):
+    def get_collection(self, database, collection_name, log_file):
         """
         Method Name :   get_collection
         Description :   This method gets collection from the particular database and collection name
@@ -86,38 +76,28 @@ class MongoDB_Operation:
         method_name = self.get_collection.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=table_name,
+            key="start", class_name=self.class_name, method_name=method_name,
         )
 
         try:
             collection = database[collection_name]
 
             self.log_writer.log(
-                table_name=table_name,
-                log_info=f"Created {collection_name} collection in mongodb",
+                log_file, f"Created {collection_name} collection in mongodb",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
+                key="exit", class_name=self.class_name, method_name=method_name,
             )
 
             return collection
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
+                error=e, class_name=self.class_name, method_name=method_name,
             )
 
-    def get_collection_as_dataframe(self, db_name, collection_name, table_name):
+    def get_collection_as_dataframe(self, db_name, collection_name, log_file):
         """
         Method Name :   get_collection_as_dataframe
         Description :   This method is used for converting the selected collection to dataframe
@@ -132,14 +112,11 @@ class MongoDB_Operation:
         method_name = self.get_collection_as_dataframe.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=table_name,
+            key="start", class_name=self.class_name, method_name=method_name,
         )
 
         try:
-            database = self.get_database(db_name=db_name, table_name=table_name)
+            database = self.get_database(db_name=db_name, log_file=log_file)
 
             collection = database.get_collection(name=collection_name)
 
@@ -149,28 +126,22 @@ class MongoDB_Operation:
                 df = df.drop(columns=["_id"], axis=1)
 
             self.log_writer.log(
-                table_name=table_name, log_info="Converted collection to dataframe",
+                log_file, "Converted collection to dataframe",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
+                key="exit", class_name=self.class_name, method_name=method_name,
             )
 
             return df
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
+                error=e, class_name=self.class_name, method_name=method_name,
             )
 
     def insert_dataframe_as_record(
-        self, data_frame, db_name, collection_name, table_name
+        self, data_frame, db_name, collection_name, log_file
     ):
         """
         Method Name :   insert_dataframe_as_record
@@ -185,44 +156,31 @@ class MongoDB_Operation:
         method_name = self.insert_dataframe_as_record.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            table_name=table_name,
+            key="start", class_name=self.class_name, method_name=method_name,
         )
 
         try:
             records = json.loads(data_frame.T.to_json()).values()
 
             self.log_writer.log(
-                table_name=table_name, log_info=f"Converted dataframe to json records",
+                log_file, f"Converted dataframe to json records",
             )
 
-            database = self.get_database(db_name, table_name=table_name)
+            database = self.get_database(db_name, log_file=log_file)
 
             collection = database.get_collection(collection_name)
 
-            self.log_writer.log(
-                table_name=table_name, log_info="Inserting records to MongoDB"
-            )
+            self.log_writer.log(log_file, "Inserting records to MongoDB")
 
             collection.insert_many(records)
 
-            self.log_writer.log(
-                table_name=table_name, log_info="Inserted records to MongoDB"
-            )
+            self.log_writer.log(log_file, "Inserted records to MongoDB")
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
+                key="exit", class_name=self.class_name, method_name=method_name,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                table_name=table_name,
+                error=e, class_name=self.class_name, method_name=method_name,
             )
