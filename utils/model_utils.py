@@ -61,19 +61,15 @@ class Model_Utils:
                 model_score = roc_auc_score(test_y, preds)
 
                 self.log_writer.log(
-                    log_file, f"AUC score for {model_name} is {model_score}",
+                    log_file, f"AUC score for {model_name} is {model_score}"
                 )
 
-                self.log_writer.start_log(
-                    key="exit", class_name=self.class_name, method_name=method_name,
-                )
+            self.log_writer.start_log("exit", log_file, self.class_name, method_name)
 
             return model_score
 
         except Exception as e:
-            self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
-            )
+            self.log_writer.exception_log(e, log_file, self.class_name, method_name)
 
     def get_model_params(self, model, model_key_name, x_train, y_train, log_file):
         """
@@ -94,19 +90,11 @@ class Model_Utils:
         )
 
         try:
-            model_name = self.get_model_name(model=model, log_file=log_file)
+            model_name = model.__class__.__name__
 
-            model_param_grid = self.get_model_param_grid(
-                model_key_name=model_key_name, log_file=log_file
-            )
+            model_param_grid = self.config[model_name]
 
-            model_grid = GridSearchCV(
-                estimator=model,
-                param_grid=model_param_grid,
-                cv=self.cv,
-                verbose=self.verbose,
-                n_jobs=self.n_jobs,
-            )
+            model_grid = GridSearchCV(model, model_param_grid, **self.tuner_params)
 
             self.log_writer.log(
                 log_file,
