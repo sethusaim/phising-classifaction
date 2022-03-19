@@ -41,14 +41,20 @@ class Data_Getter_Pred:
         """
         method_name = self.get_data.__name__
 
-        self.log_writer.start_log("start",self.log_file,self.class_name,method_name)
+        self.log_writer.start_log("start", self.log_file, self.class_name, method_name)
 
         try:
-            df = self.s3.read_csv(self.prediction_file,self.input_files_bucket,self.log_file)
+            df = self.s3.read_csv(
+                self.prediction_file, self.input_files_bucket, self.log_file
+            )
 
-            self.log_writer.start_log("exit",self.log_file,self.class_name,method_name)
+            self.log_writer.start_log(
+                "exit", self.log_file, self.class_name, method_name
+            )
 
             return df
 
         except Exception as e:
-            self.log_writer.exception_log(e,self.log_file,self.class_name,method_name)
+            self.log_writer.exception_log(
+                e, self.log_file, self.class_name, method_name
+            )
