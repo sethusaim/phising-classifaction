@@ -49,10 +49,7 @@ class Model_Finder:
         method_name = self.get_best_params_for_random_forest.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            log_file=self.log_file,
+            key="start", class_name=self.class_name, method_name=method_name,
         )
 
         try:
@@ -65,7 +62,6 @@ class Model_Finder:
                 model_key_name="rf_model",
                 x_train=train_x,
                 y_train=train_y,
-                log_file=self.log_file,
             )
 
             self.criterion = self.rf_best_params["criterion"]
@@ -77,8 +73,8 @@ class Model_Finder:
             self.n_estimators = self.rf_best_params["n_estimators"]
 
             self.log_writer.log(
-                log_file=self.log_file,
-                log_file,f"{self.rf_model_name} model best params are {self.rf_best_params}",
+                log_file,
+                f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
             self.rf_model = RandomForestClassifier(
@@ -89,32 +85,26 @@ class Model_Finder:
             )
 
             self.log_writer.log(
-                log_file=self.log_file,
-                log_file,f"Initialized {self.rf_model_name} with {self.rf_best_params} as params",
+                log_file,
+                f"Initialized {self.rf_model_name} with {self.rf_best_params} as params",
             )
 
             self.rf_model.fit(train_x, train_y)
 
             self.log_writer.log(
-                log_file=self.log_file,
-                log_file,f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
+                log_file,
+                f"Created {self.rf_model_name} based on the {self.rf_best_params} as params",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.log_file,
+                key="exit", class_name=self.class_name, method_name=method_name,
             )
 
             return self.rf_model
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.log_file,
+                error=e, class_name=self.class_name, method_name=method_name,
             )
 
     def get_best_params_for_xgboost(self, train_x, train_y):
@@ -133,10 +123,7 @@ class Model_Finder:
         method_name = self.get_best_params_for_xgboost.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            log_file=self.log_file,
+            key="start", class_name=self.class_name, method_name=method_name,
         )
 
         try:
@@ -149,7 +136,6 @@ class Model_Finder:
                 model_key_name="xgb_model",
                 x_train=train_x,
                 y_train=train_y,
-                log_file=self.log_file,
             )
 
             self.learning_rate = self.xgb_best_params["learning_rate"]
@@ -159,8 +145,8 @@ class Model_Finder:
             self.n_estimators = self.rf_best_params["n_estimators"]
 
             self.log_writer.log(
-                log_file=self.log_file,
-                log_file,f"{self.rf_model_name} model best params are {self.rf_best_params}",
+                log_file,
+                f"{self.rf_model_name} model best params are {self.rf_best_params}",
             )
 
             self.xgb_model = XGBClassifier(
@@ -170,32 +156,26 @@ class Model_Finder:
             )
 
             self.log_writer.log(
-                log_file=self.log_file,
-                log_file,f"Initialized {self.xgb_model_name} model with best params as {self.xgb_best_params}",
+                log_file,
+                f"Initialized {self.xgb_model_name} model with best params as {self.xgb_best_params}",
             )
 
             self.xgb_model.fit(train_x, train_y)
 
             self.log_writer.log(
-                log_file=self.log_file,
-                log_file,f"Created {self.xgb_model_name} model with best params as {self.xgb_best_params}",
+                log_file,
+                f"Created {self.xgb_model_name} model with best params as {self.xgb_best_params}",
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.log_file,
+                key="exit", class_name=self.class_name, method_name=method_name,
             )
 
             return self.xgb_model
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.log_file,
+                error=e, class_name=self.class_name, method_name=method_name,
             )
 
     def get_trained_models(self, train_x, train_y, test_x, test_y):
@@ -213,36 +193,24 @@ class Model_Finder:
         method_name = self.get_trained_models.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            log_file=self.log_file,
+            key="start", class_name=self.class_name, method_name=method_name,
         )
 
         try:
             self.xgb_model = self.get_best_params_for_xgboost(train_x, train_y)
 
             self.xgb_model_score = self.model_utils.get_model_score(
-                model=self.xgb_model,
-                test_x=test_x,
-                test_y=test_y,
-                log_file=self.log_file,
+                model=self.xgb_model, test_x=test_x, test_y=test_y,
             )
 
             self.rf_model = self.get_best_params_for_random_forest(train_x, train_y)
 
             self.rf_model_score = self.model_utils.get_model_score(
-                model=self.rf_model,
-                test_x=test_x,
-                test_y=test_y,
-                log_file=self.log_file,
+                model=self.rf_model, test_x=test_x, test_y=test_y,
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.log_file,
+                key="exit", class_name=self.class_name, method_name=method_name,
             )
 
             return (
@@ -254,8 +222,5 @@ class Model_Finder:
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.log_file,
+                error=e, class_name=self.class_name, method_name=method_name,
             )
