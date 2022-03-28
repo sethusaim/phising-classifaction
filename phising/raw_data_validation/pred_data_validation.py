@@ -73,7 +73,7 @@ class Raw_Pred_Data_Validation:
             )
 
             dic = self.s3.read_json(
-                file_name=self.pred_schema_file,
+                self.pred_schema_file,
                 self.input_files_bucket,
                 self.pred_schema_log,
             )
@@ -143,7 +143,7 @@ class Raw_Pred_Data_Validation:
             )
 
             regex = self.s3.read_text(
-                file_name=self.regex_file,
+                self.regex_file,
                 self.input_files_bucket,
                 self.pred_gen_log,
             )
@@ -243,7 +243,7 @@ class Raw_Pred_Data_Validation:
             self.create_dirs_for_good_bad_data(self.pred_name_valid_log)
 
             onlyfiles = self.s3.get_files_from_folder(
-                bucket=self.raw_data_bucket_name,
+                self.raw_data_bucket_name,
                 self.raw_pred_data_dir,
                 self.pred_name_valid_log,
             )
@@ -255,20 +255,20 @@ class Raw_Pred_Data_Validation:
                 log_file,"Got Prediction files with absolute file name",
             )
 
-            for file_name in pred_batch_files:
-                raw_data_pred_file_name = self.raw_pred_data_dir + "/" + file_name
+            for fname in pred_batch_files:
+                raw_data_pred_file_name = self.raw_pred_data_dir + "/" + fname
 
-                good_data_pred_file_name = self.good_pred_data_dir + "/" + file_name
+                good_data_pred_file_name = self.good_pred_data_dir + "/" + fname
 
-                bad_data_pred_file_name = self.bad_pred_data_dir + "/" + file_name
+                bad_data_pred_file_name = self.bad_pred_data_dir + "/" + fname
 
                 self.log_writer.log(
                     self.pred_name_valid_log,
                     log_file,"Created raw,good and bad data file name",
                 )
 
-                if re.match(regex, file_name):
-                    splitAtDot = re.split(".csv", file_name)
+                if re.match(regex, fname):
+                    splitAtDot = re.split(".csv", fname)
 
                     splitAtDot = re.split("_", splitAtDot[0])
 

@@ -7,7 +7,6 @@ from utils.read_params import read_params
 class Load_Prod_Model:
     """
     Description :   This class shall be used for loading the production model
-    Written by  :   iNeuron Intelligence
     
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
@@ -22,7 +21,7 @@ class Load_Prod_Model:
 
         self.num_clusters = num_clusters
 
-        self.model_bucket_name = self.config["s3_bucket"]["phising_model"]
+        self.model_bucket = self.config["s3_bucket"]["wafer_model"]
 
         self.load_prod_model_log = self.config["train_db_log"]["Load_Prod_Model"]
 
@@ -45,32 +44,22 @@ class Load_Prod_Model:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.create_folders_for_prod_and_stag.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            self.s3.create_folder(
-                self.prod_model_dir, bucket,
-            )
+            self.s3.create_folder(self.prod_model_dir, bucket, log_file)
 
-            self.s3.create_folder(
-                self.stag_model_dir, bucket,
-            )
+            self.s3.create_folder(self.stag_model_dir, bucket, log_file)
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def load_production_model(self):
         """
@@ -81,18 +70,18 @@ class Load_Prod_Model:
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
-        Written by  :   iNeuron Intelligence
+        
         Revisions   :   moved setup to cloud
         """
         method_name = self.load_production_model.__name__
 
         self.log_writer.start_log(
-            "start", self.class_name, method_name, self.load_prod_model_log,
+            "start", self.class_name, method_name, self.load_prod_model_log
         )
 
         try:
             self.create_folders_for_prod_and_stag(
-                self.model_bucket_name, self.load_prod_model_log
+                self.model_bucket, self.load_prod_model_log
             )
 
             self.mlflow_op.set_mlflow_tracking_uri()
@@ -120,24 +109,18 @@ class Load_Prod_Model:
             ]
 
             self.log_writer.log(
-                self.load_prod_model_log,
-                log_file,
-                "Created cols for all registered model",
+                self.load_prod_model_log, "Created cols for all registered model"
             )
 
             runs_cols = runs[cols].max().sort_values(ascending=False)
 
             self.log_writer.log(
-                self.load_prod_model_log,
-                log_file,
-                "Sorted the runs cols in descending order",
+                self.load_prod_model_log, "Sorted the runs cols in descending order"
             )
 
             metrics_dict = runs_cols.to_dict()
 
-            self.log_writer.log(
-                self.load_prod_model_log, log_file, "Converted runs cols to dict",
-            )
+            self.log_writer.log(self.load_prod_model_log, "Converted runs cols to dict")
 
             """ 
             Eg-output: For 3 clusters, 
@@ -177,7 +160,6 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
 
             self.log_writer.log(
                 self.load_prod_model_log,
-                log_file,
                 f"Got top model names based on the metrics of clusters",
             )
 
@@ -190,9 +172,7 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
 
             top_mn_lst = [mn.split(".")[1].split("-")[0] for mn in best_metrics_names]
 
-            self.log_writer.log(
-                self.load_prod_model_log, log_file, f"Got the top model names",
-            )
+            self.log_writer.log(self.load_prod_model_log, f"Got the top model names")
 
             results = self.mlflow_op.search_mlflow_models(order="DESC")
 
@@ -205,11 +185,11 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
                 for mv in res.latest_versions:
                     if mv.name in top_mn_lst:
                         self.mlflow_op.transition_mlflow_model(
-                            model_version=mv.version,
-                            stage="Production",
-                            model_name=mv.name,
-                            from_bucket_name=self.model_bucket_name,
-                            to_bucket_name=self.model_bucket_name,
+                            mv.version,
+                            "Production",
+                            mv.name,
+                            self.model_bucket,
+                            self.model_bucket,
                         )
 
                     ## In the registered models, even kmeans model is present, so during Prediction,
@@ -217,33 +197,32 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
 
                     elif mv.name == "KMeans":
                         self.mlflow_op.transition_mlflow_model(
-                            model_version=mv.version,
-                            stage="Production",
-                            model_name=mv.name,
-                            from_bucket_name=self.model_bucket_name,
-                            to_bucket_name=self.model_bucket_name,
+                            mv.version,
+                            "Production",
+                            mv.name,
+                            self.model_bucket,
+                            self.model_bucket,
                         )
 
                     else:
                         self.mlflow_op.transition_mlflow_model(
-                            model_version=mv.version,
-                            stage="Staging",
-                            model_name=mv.name,
-                            from_bucket_name=self.model_bucket_name,
-                            to_bucket_name=self.model_bucket_name,
+                            mv.version,
+                            "Staging",
+                            mv.name,
+                            self.model_bucket,
+                            self.model_bucket,
                         )
 
             self.log_writer.log(
                 self.load_prod_model_log,
-                log_file,
                 "Transitioning of models based on scores successfully done",
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.load_prod_model_log,
+                "exit", self.class_name, method_name, self.load_prod_model_log
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.load_prod_model_log,
+                e, self.class_name, method_name, self.load_prod_model_log
             )

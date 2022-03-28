@@ -70,7 +70,6 @@ class Data_Transform_Train:
 
                     self.log_writer.log(
                         self.train_data_transform_log,
-                        log_file,
                         f"Quotes added for the file {file}",
                     )
 

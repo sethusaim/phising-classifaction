@@ -201,7 +201,7 @@ class Preprocessor:
         try:
             data = data[data.columns[data.isnull().mean() < 0.6]]
 
-            data = data.apply(pd.to_numeric)
+            data = data.apply(pd.to_numeric())
 
             for col in data.columns:
                 data[col] = data[col].replace(np.NaN, data[col].mean())

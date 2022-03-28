@@ -137,7 +137,7 @@ class Train_Model:
                 )
 
                 self.s3.save_model(
-                    model=xgb_model,
+                    xgb_model,
                     idx=i,
                     model_dir=self.train_model_dir,
                     model_bucket_name=self.model_bucket_name,
@@ -145,7 +145,7 @@ class Train_Model:
                 )
 
                 self.s3.save_model(
-                    model=rf_model,
+                    rf_model,
                     idx=i,
                     model_dir=self.train_model_dir,
                     model_bucket_name=self.model_bucket_name,
@@ -162,21 +162,21 @@ class Train_Model:
                     with mlflow.start_run(run_name=self.run_name):
                         self.mlflow_op.log_all_for_model(
                             idx=None,
-                            model=kmeans_model,
+                            kmeans_model,
                             model_param_name=None,
                             model_score=None,
                         )
 
                         self.mlflow_op.log_all_for_model(
                             idx=i,
-                            model=xgb_model,
+                            xgb_model,
                             model_param_name="xgb_model",
                             model_score=xgb_model_score,
                         )
 
                         self.mlflow_op.log_all_for_model(
                             idx=i,
-                            model=rf_model,
+                            rf_model,
                             model_param_name="rf_model",
                             model_score=rf_model_score,
                         )

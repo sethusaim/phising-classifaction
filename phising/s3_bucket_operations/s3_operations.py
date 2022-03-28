@@ -80,7 +80,7 @@ class S3_Operation:
                 e, self.class_name, method_name,
             )
 
-    def read_text(self, file_name, bucket, log_file):
+    def read_text(self, fname, bucket, log_file):
         """
         Method Name :   read_text
         Description :   This method reads the text data from s3 bucket
@@ -99,14 +99,14 @@ class S3_Operation:
 
         try:
             txt_obj = self.get_file_object(
-                file_name=file_name, bucket, log_file
+                fname, bucket, log_file
             )
 
-            content = self.read_object(object=txt_obj, log_file)
+            content = self.read_object(txt_obj, log_file)
 
             self.log_writer.log(
                 log_file,
-                f"Read {file_name} file as text from {bucket} bucket",
+                f"Read {fname} file as text from {bucket} bucket",
             )
 
             self.log_writer.start_log(
@@ -120,7 +120,7 @@ class S3_Operation:
                 e, self.class_name, method_name,
             )
 
-    def read_json(self, file_name, bucket, log_file):
+    def read_json(self, fname, bucket, log_file):
         """
         Method Name :   read_json
         Description :   This method reads the json data from s3 bucket
@@ -139,15 +139,15 @@ class S3_Operation:
 
         try:
             f_obj = self.get_file_object(
-                file_name=file_name, bucket, log_file
+                fname, bucket, log_file
             )
 
-            json_content = self.read_object(object=f_obj, log_file)
+            json_content = self.read_object(f_obj, log_file)
 
             dic = json.loads(json_content)
 
             self.log_writer.log(
-                log_file, f"Read {file_name} from {bucket} bucket",
+                log_file, f"Read {fname} from {bucket} bucket",
             )
 
             self.log_writer.start_log(
@@ -179,7 +179,7 @@ class S3_Operation:
         )
 
         try:
-            content = self.read_object(object=object, make_readable=True)
+            content = self.read_object(object, make_readable=True)
 
             df = pd.read_csv(content)
 
@@ -194,7 +194,7 @@ class S3_Operation:
                 e, self.class_name, method_name,
             )
 
-    def read_csv(self, file_name, bucket, log_file):
+    def read_csv(self, fname, bucket, log_file):
         """
         Method Name :   read_csv
         Description :   This method reads the csv data from s3 bucket
@@ -213,13 +213,13 @@ class S3_Operation:
 
         try:
             csv_obj = self.get_file_object(
-                file_name=file_name, bucket,
+                fname, bucket,
             )
 
-            df = self.get_df_from_object(object=csv_obj, log_file)
+            df = self.get_df_from_object(csv_obj, log_file)
 
             self.log_writer.log(
-                log_file, f"Read {file_name} csv file from {bucket} bucket",
+                log_file, f"Read {fname} csv file from {bucket} bucket",
             )
 
             self.log_writer.start_log(
@@ -256,7 +256,7 @@ class S3_Operation:
 
             lst = [
                 (
-                    self.read_csv(file_name=f, bucket,),
+                    self.read_csv(f, bucket,),
                     f,
                     f.split("/")[-1],
                 )
@@ -330,7 +330,7 @@ class S3_Operation:
         )
 
         try:
-            self.load_object(bucket, object=folder_name)
+            self.load_object(bucket, folder_name)
 
             self.log_writer.log(
                 log_file, f"Folder {folder_name} already exists.",
@@ -347,7 +347,7 @@ class S3_Operation:
                 )
 
                 self.put_object(
-                    object=folder_name, bucket, log_file
+                    folder_name, bucket, log_file
                 )
 
                 self.log_writer.log(
@@ -527,7 +527,7 @@ class S3_Operation:
                 e, self.class_name, method_name,
             )
 
-    def delete_file(self, file_name, bucket, log_file):
+    def delete_file(self, fname, bucket, log_file):
         """
         Method Name :   delete_file
         Description :   This method delete the file from s3 bucket
@@ -545,10 +545,10 @@ class S3_Operation:
         )
 
         try:
-            self.s3_resource.Object(bucket, file_name).delete()
+            self.s3_resource.Object(bucket, fname).delete()
 
             self.log_writer.log(
-                log_file, f"Deleted {file_name} from bucket {bucket}",
+                log_file, f"Deleted {fname} from bucket {bucket}",
             )
 
             self.log_writer.start_log(
@@ -624,7 +624,7 @@ class S3_Operation:
 
         try:
             lst = self.get_file_object(
-                file_name=folder_name, bucket, log_file
+                folder_name, bucket, log_file
             )
 
             list_of_files = [object.key for object in lst]
@@ -644,7 +644,7 @@ class S3_Operation:
                 e, self.class_name, method_name,
             )
 
-    def get_file_object(self, file_name, bucket, log_file):
+    def get_file_object(self, fname, bucket, log_file):
         """
         Method Name :   get_file_object
         Description :   This method gets the file object from s3 bucket
@@ -664,10 +664,10 @@ class S3_Operation:
         try:
             bucket = self.get_bucket(bucket,)
 
-            lst_objs = [object for object in bucket.objects.filter(Prefix=file_name)]
+            lst_objs = [object for object in bucket.objects.filter(Prefix=fname)]
 
             self.log_writer.log(
-                log_file, f"Got {file_name} from bucket {bucket}",
+                log_file, f"Got {fname} from bucket {bucket}",
             )
 
             func = lambda x: x[0] if len(x) == 1 else x
@@ -716,10 +716,10 @@ class S3_Operation:
             )
 
             f_obj = self.get_file_object(
-                file_name=model_name, bucket, log_file
+                model_name, bucket, log_file
             )
 
-            model_obj = self.read_object(object=f_obj, decode=False)
+            model_obj = self.read_object(f_obj, decode=False)
 
             model = pickle.loads(model_obj)
 
@@ -756,7 +756,7 @@ class S3_Operation:
         )
 
         try:
-            model_name = self.model_utils.get_model_name(model=model, log_file)
+            model_name = self.model_utils.get_model_name(model, log_file)
 
             func = (
                 lambda: model_name + self.file_format

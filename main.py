@@ -78,10 +78,10 @@ async def predictRouteClient():
 
         pred = Prediction()
 
-        bucket, file_name, json_predictions = pred.predict_from_model()
+        bucket, fname, json_predictions = pred.predict_from_model()
 
         return Response(
-            f"Prediction file created in {bucket} bucket with file_name as {file_name}, and few of the predictions are {str(json.loads(json_predictions))}"
+            f"Prediction file created in {bucket} bucket with fname as {fname}, and few of the predictions are {str(json.loads(json_predictions))}"
         )
 
     except Exception as e:

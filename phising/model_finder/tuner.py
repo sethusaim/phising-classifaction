@@ -54,11 +54,11 @@ class Model_Finder:
 
         try:
             self.rf_model_name = self.model_utils.get_model_name(
-                model=self.rf_model, self.log_file
+                self.rf_model, self.log_file
             )
 
             self.rf_best_params = self.model_utils.get_model_params(
-                model=self.rf_model,
+                self.rf_model,
                 model_key_name="rf_model",
                 x_train=train_x,
                 y_train=train_y,
@@ -128,11 +128,11 @@ class Model_Finder:
 
         try:
             self.xgb_model_name = self.model_utils.get_model_name(
-                model=self.xgb_model, self.log_file
+                self.xgb_model, self.log_file
             )
 
             self.xgb_best_params = self.model_utils.get_model_params(
-                model=self.xgb_model,
+                self.xgb_model,
                 model_key_name="xgb_model",
                 x_train=train_x,
                 y_train=train_y,
@@ -200,13 +200,13 @@ class Model_Finder:
             self.xgb_model = self.get_best_params_for_xgboost(train_x, train_y)
 
             self.xgb_model_score = self.model_utils.get_model_score(
-                model=self.xgb_model, test_x=test_x, test_y=test_y,
+                self.xgb_model, test_x=test_x, test_y=test_y,
             )
 
             self.rf_model = self.get_best_params_for_random_forest(train_x, train_y)
 
             self.rf_model_score = self.model_utils.get_model_score(
-                model=self.rf_model, test_x=test_x, test_y=test_y,
+                self.rf_model, test_x=test_x, test_y=test_y,
             )
 
             self.log_writer.start_log(
