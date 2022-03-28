@@ -21,7 +21,7 @@ class Prediction:
 
         self.pred_log = self.config["pred_db_log"]["pred_main"]
 
-        self.model_bucket_name = self.config["s3_bucket"]["phising_model"]
+        self.model_bucket = self.config["s3_bucket"]["phising_model"]
 
         self.input_files_bucket = self.config["s3_bucket"]["inputs_files"]
 
@@ -161,7 +161,7 @@ class Prediction:
                 data = self.preprocessor.impute_missing_values(data)
 
             kmeans = self.s3.load_model(
-                "KMeans", self.model_bucket_name, self.pred_log,
+                "KMeans", self.model_bucket, self.pred_log,
             )
 
             clusters = kmeans.predict(data.drop(["clusters"], axis=1))
@@ -180,7 +180,7 @@ class Prediction:
                 cluster_data = cluster_data.drop(["clusters"], axis=1)
 
                 crt_model_name = self.find_correct_model_file(
-                    i, self.model_bucket_name, self.pred_log,
+                    i, self.model_bucket, self.pred_log,
                 )
 
                 model = self.s3.load_model(crt_model_name)

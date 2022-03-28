@@ -467,7 +467,7 @@ class S3_Operation:
             )
 
     def copy_data(
-        self, from_fname, from_bucket_name, to_file_name, to_bucket, log_file
+        self, from_fname, from_bucket, to_file_name, to_bucket, log_file
     ):
         """
         Method Name :   copy_data
@@ -486,13 +486,13 @@ class S3_Operation:
         )
 
         try:
-            copy_source = {"Bucket": from_bucket_name, "Key": from_fname}
+            copy_source = {"Bucket": from_bucket, "Key": from_fname}
 
             self.s3_resource.meta.client.copy(copy_source, to_bucket, to_file_name)
 
             self.log_writer.log(
                 log_file,
-                f"Copied data from bucket {from_bucket_name} to bucket {to_bucket}",
+                f"Copied data from bucket {from_bucket} to bucket {to_bucket}",
             )
 
             self.log_writer.start_log(
@@ -538,7 +538,7 @@ class S3_Operation:
             )
 
     def move_data(
-        self, from_fname, from_bucket_name, to_file_name, to_bucket, log_file
+        self, from_fname, from_bucket, to_file_name, to_bucket, log_file
     ):
         """
         Method Name :   move_data
@@ -558,16 +558,16 @@ class S3_Operation:
 
         try:
             self.copy_data(
-                from_bucket_name, from_fname, to_bucket, to_file_name,
+                from_bucket, from_fname, to_bucket, to_file_name,
             )
 
             self.delete_file(
-                from_bucket_name, file=from_fname,
+                from_bucket, file=from_fname,
             )
 
             self.log_writer.log(
                 log_file,
-                f"Moved {from_fname} from bucket {from_bucket_name} to {to_bucket}",
+                f"Moved {from_fname} from bucket {from_bucket} to {to_bucket}",
             )
 
             self.log_writer.start_log(
@@ -708,7 +708,7 @@ class S3_Operation:
                 e, self.class_name, method_name,
             )
 
-    def save_model(self, model, model_dir, model_bucket_name, log_file, idx=None):
+    def save_model(self, model, model_dir, model_bucket, log_file, idx=None):
         """
         Method Name :   save_model
         Description :   This method saves the model into particular model directory in s3 bucket with kwargs
@@ -746,15 +746,15 @@ class S3_Operation:
             bucket_model_path = model_dir + "/" + model_file
 
             self.log_writer.log(
-                log_file, f"Uploading {model_file} to {model_bucket_name} bucket",
+                log_file, f"Uploading {model_file} to {model_bucket} bucket",
             )
 
             self.upload_file(
-                model_file, bucket_model_path, model_bucket_name,
+                model_file, bucket_model_path, model_bucket,
             )
 
             self.log_writer.log(
-                log_file, f"Uploaded  {model_file} to {model_bucket_name} bucket",
+                log_file, f"Uploaded  {model_file} to {model_bucket} bucket",
             )
 
             self.log_writer.start_log(

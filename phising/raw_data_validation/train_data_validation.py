@@ -14,10 +14,10 @@ class Raw_Train_Data_Validation:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, raw_data_bucket_name):
+    def __init__(self, raw_data_bucket):
         self.config = read_params()
 
-        self.raw_data_bucket_name = raw_data_bucket_name
+        self.raw_data_bucket = raw_data_bucket
 
         self.log_writer = App_Logger()
 
@@ -205,7 +205,7 @@ class Raw_Train_Data_Validation:
             self.create_dirs_for_good_bad_data(self.train_name_valid_log)
 
             onlyfiles = self.s3.get_files_from_folder(
-                self.raw_data_bucket_name,
+                self.raw_data_bucket,
                 self.raw_train_data_dir,
                 self.train_name_valid_log,
             )
