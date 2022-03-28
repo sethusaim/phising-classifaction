@@ -41,7 +41,7 @@ class MongoDB_Operation:
         method_name = self.get_database.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -52,14 +52,14 @@ class MongoDB_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return db
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def get_collection(self, database, collection_name, log_file):
@@ -76,7 +76,7 @@ class MongoDB_Operation:
         method_name = self.get_collection.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -87,14 +87,14 @@ class MongoDB_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return collection
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def get_collection_as_dataframe(self, db_name, collection_name, log_file):
@@ -112,11 +112,11 @@ class MongoDB_Operation:
         method_name = self.get_collection_as_dataframe.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
-            database = self.get_database(db_name=db_name, log_file=log_file)
+            database = self.get_database(db_name=db_name, log_file)
 
             collection = database.get_collection(name=collection_name)
 
@@ -130,14 +130,14 @@ class MongoDB_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return df
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def insert_dataframe_as_record(
@@ -156,7 +156,7 @@ class MongoDB_Operation:
         method_name = self.insert_dataframe_as_record.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -166,7 +166,7 @@ class MongoDB_Operation:
                 log_file, f"Converted dataframe to json records",
             )
 
-            database = self.get_database(db_name, log_file=log_file)
+            database = self.get_database(db_name, log_file)
 
             collection = database.get_collection(collection_name)
 
@@ -177,10 +177,10 @@ class MongoDB_Operation:
             self.log_writer.log(log_file, "Inserted records to MongoDB")
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )

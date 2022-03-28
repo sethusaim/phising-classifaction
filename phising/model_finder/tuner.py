@@ -49,12 +49,12 @@ class Model_Finder:
         method_name = self.get_best_params_for_random_forest.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
             self.rf_model_name = self.model_utils.get_model_name(
-                model=self.rf_model, log_file=self.log_file
+                model=self.rf_model, self.log_file
             )
 
             self.rf_best_params = self.model_utils.get_model_params(
@@ -97,14 +97,14 @@ class Model_Finder:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return self.rf_model
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def get_best_params_for_xgboost(self, train_x, train_y):
@@ -123,12 +123,12 @@ class Model_Finder:
         method_name = self.get_best_params_for_xgboost.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
             self.xgb_model_name = self.model_utils.get_model_name(
-                model=self.xgb_model, log_file=self.log_file
+                model=self.xgb_model, self.log_file
             )
 
             self.xgb_best_params = self.model_utils.get_model_params(
@@ -168,14 +168,14 @@ class Model_Finder:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return self.xgb_model
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def get_trained_models(self, train_x, train_y, test_x, test_y):
@@ -193,7 +193,7 @@ class Model_Finder:
         method_name = self.get_trained_models.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -210,7 +210,7 @@ class Model_Finder:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return (
@@ -222,5 +222,5 @@ class Model_Finder:
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )

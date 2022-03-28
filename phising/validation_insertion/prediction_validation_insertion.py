@@ -14,8 +14,8 @@ class Pred_Validation:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, bucket_name):
-        self.raw_data = Raw_Pred_Data_Validation(raw_data_bucket_name=bucket_name)
+    def __init__(self, bucket):
+        self.raw_data = Raw_Pred_Data_Validation(raw_data_bucket_name=bucket)
 
         self.data_transform = Data_Transform_Pred()
 
@@ -50,10 +50,7 @@ class Pred_Validation:
 
         try:
             self.log_writer.start_log(
-                key="start",
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.pred_main_log,
+                "start", self.class_name, method_name, self.pred_main_log,
             )
 
             (
@@ -74,19 +71,17 @@ class Pred_Validation:
             self.raw_data.validate_missing_values_in_col()
 
             self.log_writer.log(
-                log_file=self.pred_main_log,
-                log_file,"Raw Data Validation Completed !!",
+                self.pred_main_log, log_file, "Raw Data Validation Completed !!",
             )
 
             self.log_writer.log(
-                log_file=self.pred_main_log, log_file,"Starting Data Transformation",
+                self.pred_main_log, log_file, "Starting Data Transformation",
             )
 
             self.data_transform.add_quotes_to_string()
 
             self.log_writer.log(
-                log_file=self.pred_main_log,
-                log_file,"Data Transformation completed !!",
+                self.pred_main_log, log_file, "Data Transformation completed !!",
             )
 
             self.db_operation.insert_good_data_as_record(
@@ -95,8 +90,9 @@ class Pred_Validation:
             )
 
             self.log_writer.log(
-                log_file=self.pred_main_log,
-                log_file,"Data type validation Operation completed !!",
+                self.pred_main_log,
+                log_file,
+                "Data type validation Operation completed !!",
             )
 
             self.db_operation.export_collection_to_csv(
@@ -105,16 +101,10 @@ class Pred_Validation:
             )
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.pred_main_log,
+                "exit", self.class_name, method_name, self.pred_main_log,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.pred_main_log,
+                e, self.class_name, method_name, self.pred_main_log,
             )

@@ -49,7 +49,7 @@ async def trainRouteClient():
 
         time.sleep(5)
 
-        train_val = Train_Validation(bucket_name=raw_data_train_bucket_name)
+        train_val = Train_Validation(raw_data_train_bucket_name)
 
         train_val.training_validation()
 

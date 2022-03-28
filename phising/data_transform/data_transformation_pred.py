@@ -44,17 +44,14 @@ class Data_Transform_Pred:
         method_name = self.add_quotes_to_string.__name__
 
         self.log_writer.start_log(
-            key="start",
-            class_name=self.class_name,
-            method_name=method_name,
-            log_file=self.pred_data_transform_log,
+            "start", self.class_name, method_name, self.pred_data_transform_log,
         )
 
         try:
             lst = self.s3.read_csv_from_folder(
-                folder_name=self.good_pred_data_dir,
-                bucket_name=self.pred_data_bucket,
-                log_file=self.pred_data_transform_log,
+                self.good_pred_data_dir,
+                self.pred_data_bucket,
+                self.pred_data_transform_log,
             )
 
             for idx, f in enumerate(lst):
@@ -72,32 +69,27 @@ class Data_Transform_Pred:
                             df[column] = df[column].replace("?", "'?'")
 
                     self.log_writer.log(
-                        log_file=self.pred_data_transform_log,
-                        log_file,f"Quotes added for the file {file}",
+                        self.pred_data_transform_log,
+                        self.pred_data_transform_log,
+                        f"Quotes added for the file {file}",
                     )
 
                     self.s3.upload_df_as_csv(
-                        data_frame=df,
-                        local_file_name=abs_f,
-                        bucket_file_name=file,
-                        bucket_name=self.pred_data_bucket,
-                        log_file=self.pred_data_transform_log,
+                        df,
+                        abs_f,
+                        file,
+                        self.pred_data_bucket,
+                        self.pred_data_transform_log,
                     )
 
                 else:
                     pass
 
             self.log_writer.start_log(
-                key="exit",
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.pred_data_transform_log,
+                "exit", self.class_name, method_name, self.pred_data_transform_log,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e,
-                class_name=self.class_name,
-                method_name=method_name,
-                log_file=self.pred_data_transform_log,
+                e, self.class_name, method_name, self.pred_data_transform_log,
             )

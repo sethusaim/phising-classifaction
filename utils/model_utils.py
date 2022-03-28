@@ -37,9 +37,7 @@ class Model_Utils:
 
         method_name = self.get_model_score.__name__
 
-        self.log_writer.start_log(
-            "start", log_file, self.class_name, method_name=method_name
-        )
+        self.log_writer.start_log("start", log_file, self.class_name, method_name)
 
         try:
             model_name = model.__class__.__name__
@@ -85,7 +83,7 @@ class Model_Utils:
 
         method_name = self.get_model_params.__name__
 
-        self.log_writer.start_log("start",self.log_file,self.class_name,method_name)
+        self.log_writer.start_log("start", self.log_file, self.class_name, method_name)
 
         try:
             model_name = model.__class__.__name__
@@ -106,9 +104,13 @@ class Model_Utils:
                 f"Found the best params for {model_name} model based on {model_param_grid} as params",
             )
 
-            self.log_writer.start_log("exit",self.log_file,self.class_name,method_name)
+            self.log_writer.start_log(
+                "exit", self.log_file, self.class_name, method_name
+            )
 
             return model_grid.best_params_
 
         except Exception as e:
-            self.log_writer.exception_log(e,self.log_file,self.class_name,method_name)
+            self.log_writer.exception_log(
+                e, self.log_file, self.class_name, method_name
+            )

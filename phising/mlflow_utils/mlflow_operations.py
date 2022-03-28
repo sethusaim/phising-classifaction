@@ -55,7 +55,7 @@ class MLFlow_Operation:
         method_name = self.get_experiment_from_mlflow.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -66,14 +66,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return exp
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def get_runs_from_mlflow(self, exp_id):
@@ -91,7 +91,7 @@ class MLFlow_Operation:
         method_name = self.get_runs_from_mlflow.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -103,14 +103,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return runs
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def set_mlflow_experiment(self, experiment_name):
@@ -128,7 +128,7 @@ class MLFlow_Operation:
         method_name = self.set_mlflow_experiment.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -139,12 +139,12 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def get_mlflow_client(self, server_uri):
@@ -162,7 +162,7 @@ class MLFlow_Operation:
         method_name = self.get_mlflow_client.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -173,14 +173,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return client
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def get_remote_server_uri(self):
@@ -198,7 +198,7 @@ class MLFlow_Operation:
         method_name = self.get_remote_server_uri.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -209,14 +209,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return remote_server_uri
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def set_mlflow_tracking_uri(self):
@@ -234,7 +234,7 @@ class MLFlow_Operation:
         method_name = self.set_mlflow_tracking_uri.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -247,12 +247,12 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def get_mlflow_models(self):
@@ -270,7 +270,7 @@ class MLFlow_Operation:
         method_name = self.get_mlflow_models.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -285,14 +285,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return reg_model_names
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def search_mlflow_models(self, order):
@@ -310,7 +310,7 @@ class MLFlow_Operation:
         method_name = self.search_mlflow_models.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -325,14 +325,14 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
             return results
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def log_model(self, model, model_name):
@@ -350,7 +350,7 @@ class MLFlow_Operation:
         method_name = self.log_model.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -366,12 +366,12 @@ class MLFlow_Operation:
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def log_metric(self, model_name, metric):
@@ -389,25 +389,25 @@ class MLFlow_Operation:
         method_name = self.log_metric.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
             model_score_name = f"{model_name}-best_score"
 
-            mlflow.log_metric(key=model_score_name, value=metric)
+            mlflow.log_metric(model_score_name, value=metric)
 
             self.log_writer.log(
                 log_file, f"{model_score_name} logged in mlflow",
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def log_param(self, idx, model, model_name, param):
@@ -425,25 +425,25 @@ class MLFlow_Operation:
         method_name = self.log_param.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
             model_param_name = model_name + str(idx) + f"-{param}"
 
-            mlflow.log_param(key=model_param_name, value=model.__dict__[param])
+            mlflow.log_param(model_param_name, value=model.__dict__[param])
 
             self.log_writer.log(
                 log_file, f"{model_param_name} logged in mlflow",
             )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def log_all_for_model(self, idx, model, model_param_name, model_score):
@@ -462,11 +462,11 @@ class MLFlow_Operation:
 
         try:
             self.log_writer.start_log(
-                key="start", class_name=self.class_name, method_name=method_name,
+                "start", self.class_name, method_name,
             )
 
             base_model_name = self.model_utils.get_model_name(
-                model=model, log_file=self.log_file
+                model=model, self.log_file
             )
 
             if base_model_name is "KMeans":
@@ -497,12 +497,12 @@ class MLFlow_Operation:
                 self.log_metric(model_name=model_name, metric=float(model_score))
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
 
     def transition_mlflow_model(
@@ -522,7 +522,7 @@ class MLFlow_Operation:
         method_name = self.transition_mlflow_model.__name__
 
         self.log_writer.start_log(
-            key="start", class_name=self.class_name, method_name=method_name,
+            "start", self.class_name, method_name,
         )
 
         try:
@@ -598,10 +598,10 @@ class MLFlow_Operation:
                 )
 
             self.log_writer.start_log(
-                key="exit", class_name=self.class_name, method_name=method_name,
+                "exit", self.class_name, method_name,
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                error=e, class_name=self.class_name, method_name=method_name,
+                e, self.class_name, method_name,
             )
