@@ -1,6 +1,4 @@
 import json
-import os
-import time
 
 import uvicorn
 from fastapi import FastAPI, Request
@@ -13,10 +11,8 @@ from phising.model.prediction_from_model import Prediction
 from phising.model.training_model import Train_Model
 from phising.validation_insertion.prediction_validation_insertion import Pred_Validation
 from phising.validation_insertion.train_validation_insertion import Train_Validation
+from utils.main_utils import upload_logs
 from utils.read_params import read_params
-
-os.putenv("LANG", "en_US.UTF-8")
-os.putenv("LC_ALL", "en_US.UTF-8")
 
 app = FastAPI()
 
@@ -45,11 +41,9 @@ async def index(request: Request):
 @app.get("/train")
 async def trainRouteClient():
     try:
-        raw_data_train_bucket_name = config["s3_bucket"]["phising_raw_data"]
+        raw_data_train_bucket = config["s3_bucket"]["phising_raw_data"]
 
-        time.sleep(5)
-
-        train_val = Train_Validation(raw_data_train_bucket_name)
+        train_val = Train_Validation(raw_data_train_bucket)
 
         train_val.training_validation()
 
@@ -61,6 +55,8 @@ async def trainRouteClient():
 
         load_prod_model.load_production_model()
 
+        upload_logs("logs", bucket=config["s3_bucket"]["inputs_files"])
+
     except Exception as e:
         return Response(f"Error Occurred : {e}")
 
@@ -70,9 +66,9 @@ async def trainRouteClient():
 @app.get("/predict")
 async def predictRouteClient():
     try:
-        raw_data_pred_bucket_name = config["s3_bucket"]["phising_raw_data"]
+        raw_data_pred_bucket = config["s3_bucket"]["phising_raw_data"]
 
-        pred_val = Pred_Validation(raw_data_pred_bucket_name)
+        pred_val = Pred_Validation(raw_data_pred_bucket)
 
         pred_val.prediction_validation()
 
