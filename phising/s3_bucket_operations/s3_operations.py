@@ -98,15 +98,12 @@ class S3_Operation:
         )
 
         try:
-            txt_obj = self.get_file_object(
-                fname, bucket, log_file
-            )
+            txt_obj = self.get_file_object(fname, bucket, log_file)
 
             content = self.read_object(txt_obj, log_file)
 
             self.log_writer.log(
-                log_file,
-                f"Read {fname} file as text from {bucket} bucket",
+                log_file, f"Read {fname} file as text from {bucket} bucket",
             )
 
             self.log_writer.start_log(
@@ -138,9 +135,7 @@ class S3_Operation:
         )
 
         try:
-            f_obj = self.get_file_object(
-                fname, bucket, log_file
-            )
+            f_obj = self.get_file_object(fname, bucket, log_file)
 
             json_content = self.read_object(f_obj, log_file)
 
@@ -212,9 +207,7 @@ class S3_Operation:
         )
 
         try:
-            csv_obj = self.get_file_object(
-                fname, bucket,
-            )
+            csv_obj = self.get_file_object(fname, bucket,)
 
             df = self.get_df_from_object(csv_obj, log_file)
 
@@ -250,18 +243,9 @@ class S3_Operation:
             "start", self.class_name, method_name,
         )
         try:
-            files = self.get_files_from_folder(
-                folder_name, bucket,
-            )
+            files = self.get_files_from_folder(folder_name, bucket,)
 
-            lst = [
-                (
-                    self.read_csv(f, bucket,),
-                    f,
-                    f.split("/")[-1],
-                )
-                for f in files
-            ]
+            lst = [(self.read_csv(f, bucket,), f, f.split("/")[-1],) for f in files]
 
             self.log_writer.log(
                 log_file,
@@ -346,13 +330,10 @@ class S3_Operation:
                     log_file, f"{folder_name} folder does not exist,creating new one",
                 )
 
-                self.put_object(
-                    folder_name, bucket, log_file
-                )
+                self.put_object(folder_name, bucket, log_file)
 
                 self.log_writer.log(
-                    log_file,
-                    f"{folder_name} folder created in {bucket} bucket",
+                    log_file, f"{folder_name} folder created in {bucket} bucket",
                 )
 
             else:
@@ -397,9 +378,7 @@ class S3_Operation:
                 e, self.class_name, method_name,
             )
 
-    def upload_file(
-        self, from_file_name, to_file_name, bucket, log_file, remove=True
-    ):
+    def upload_file(self, from_fname, to_file_name, bucket, log_file, remove=True):
         """
         Method Name :   upload_file
         Description :   This method uploades a file to s3 bucket with kwargs
@@ -418,15 +397,13 @@ class S3_Operation:
 
         try:
             self.log_writer.log(
-                log_file, f"Uploading {from_file_name} to s3 bucket {bucket}",
+                log_file, f"Uploading {from_fname} to s3 bucket {bucket}",
             )
 
-            self.s3_resource.meta.client.upload_file(
-                from_file_name, bucket, to_file_name
-            )
+            self.s3_resource.meta.client.upload_file(from_fname, bucket, to_file_name)
 
             self.log_writer.log(
-                log_file, f"Uploaded {from_file_name} to s3 bucket {bucket}",
+                log_file, f"Uploaded {from_fname} to s3 bucket {bucket}",
             )
 
             if remove is True:
@@ -434,10 +411,10 @@ class S3_Operation:
                     log_file, f"Option remove is set {remove}..deleting the file",
                 )
 
-                os.remove(from_file_name)
+                os.remove(from_fname)
 
                 self.log_writer.log(
-                    log_file, f"Removed the local copy of {from_file_name}",
+                    log_file, f"Removed the local copy of {from_fname}",
                 )
 
                 self.log_writer.start_log(
@@ -490,7 +467,7 @@ class S3_Operation:
             )
 
     def copy_data(
-        self, from_file_name, from_bucket_name, to_file_name, to_bucket_name, log_file
+        self, from_fname, from_bucket_name, to_file_name, to_bucket, log_file
     ):
         """
         Method Name :   copy_data
@@ -509,13 +486,13 @@ class S3_Operation:
         )
 
         try:
-            copy_source = {"Bucket": from_bucket_name, "Key": from_file_name}
+            copy_source = {"Bucket": from_bucket_name, "Key": from_fname}
 
-            self.s3_resource.meta.client.copy(copy_source, to_bucket_name, to_file_name)
+            self.s3_resource.meta.client.copy(copy_source, to_bucket, to_file_name)
 
             self.log_writer.log(
                 log_file,
-                f"Copied data from bucket {from_bucket_name} to bucket {to_bucket_name}",
+                f"Copied data from bucket {from_bucket_name} to bucket {to_bucket}",
             )
 
             self.log_writer.start_log(
@@ -561,7 +538,7 @@ class S3_Operation:
             )
 
     def move_data(
-        self, from_file_name, from_bucket_name, to_file_name, to_bucket_name, log_file
+        self, from_fname, from_bucket_name, to_file_name, to_bucket, log_file
     ):
         """
         Method Name :   move_data
@@ -581,19 +558,16 @@ class S3_Operation:
 
         try:
             self.copy_data(
-                from_bucket_name=from_bucket_name,
-                from_file_name=from_file_name,
-                to_bucket_name=to_bucket_name,
-                to_file_name=to_file_name,
+                from_bucket_name, from_fname, to_bucket, to_file_name,
             )
 
             self.delete_file(
-                from_bucket_name, file=from_file_name,
+                from_bucket_name, file=from_fname,
             )
 
             self.log_writer.log(
                 log_file,
-                f"Moved {from_file_name} from bucket {from_bucket_name} to {to_bucket_name}",
+                f"Moved {from_fname} from bucket {from_bucket_name} to {to_bucket}",
             )
 
             self.log_writer.start_log(
@@ -623,9 +597,7 @@ class S3_Operation:
         )
 
         try:
-            lst = self.get_file_object(
-                folder_name, bucket, log_file
-            )
+            lst = self.get_file_object(folder_name, bucket, log_file)
 
             list_of_files = [object.key for object in lst]
 
@@ -715,9 +687,7 @@ class S3_Operation:
                 log_file == log_file, log_file, f"Got {model_file} as model file",
             )
 
-            f_obj = self.get_file_object(
-                model_name, bucket, log_file
-            )
+            f_obj = self.get_file_object(model_name, bucket, log_file)
 
             model_obj = self.read_object(f_obj, decode=False)
 
@@ -780,9 +750,7 @@ class S3_Operation:
             )
 
             self.upload_file(
-                from_file_name=model_file,
-                to_file_name=bucket_model_path,
-                model_bucket_name,
+                model_file, bucket_model_path, model_bucket_name,
             )
 
             self.log_writer.log(
@@ -802,9 +770,7 @@ class S3_Operation:
                 e, self.class_name, method_name,
             )
 
-    def upload_df_as_csv(
-        self, data_frame, local_fname, bucket_fname, bucket, log_file
-    ):
+    def upload_df_as_csv(self, data_frame, local_fname, bucket_fname, bucket, log_file):
         """
         Method Name :   upload_df_as_csv
         Description :   This method uploades a dataframe as csv file to s3 bucket
@@ -825,14 +791,11 @@ class S3_Operation:
             data_frame.to_csv(local_fname, index=None, header=True)
 
             self.log_writer.log(
-                log_file,
-                f"Created a local copy of dataframe with name {local_fname}",
+                log_file, f"Created a local copy of dataframe with name {local_fname}",
             )
 
             self.upload_file(
-                from_file_name=local_fname,
-                to_file_name=bucket_fname,
-                bucket,
+                local_fname, bucket_fname, bucket,
             )
 
             self.log_writer.start_log(

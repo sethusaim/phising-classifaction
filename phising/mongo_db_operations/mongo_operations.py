@@ -116,7 +116,7 @@ class MongoDB_Operation:
         )
 
         try:
-            database = self.get_database(db_name=db_name, log_file)
+            database = self.get_database(db_name, log_file)
 
             collection = database.get_collection(name=collection_name)
 

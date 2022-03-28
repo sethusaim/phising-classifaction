@@ -1,12 +1,10 @@
-import mlflow
 from phising.data_ingestion.data_loader_train import Data_Getter_Train
 from phising.data_preprocessing.clustering import KMeans_Clustering
 from phising.data_preprocessing.preprocessing import Preprocessor
 from phising.mlflow_utils.mlflow_operations import MLFlow_Operation
-from phising.model_finder.tuner import Model_Finder
 from phising.s3_bucket_operations.s3_operations import S3_Operation
-from sklearn.model_selection import train_test_split
 from utils.logger import App_Logger
+from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 
 
@@ -25,23 +23,9 @@ class Train_Model:
 
         self.config = read_params()
 
-        self.model_train_log = self.config["train_db_log"]["model_training"]
+        self.model_train_log = self.config["train_db_log"]["train_model"]
 
-        self.model_bucket_name = self.config["s3_bucket"]["phising_model"]
-
-        self.test_size = self.config["base"]["test_size"]
-
-        self.target_col = self.config["base"]["target_col"]
-
-        self.random_state = self.config["base"]["random_state"]
-
-        self.remote_server_uri = self.config["mlflow_config"]["remote_server_uri"]
-
-        self.experiment_name = self.config["mlflow_config"]["experiment_name"]
-
-        self.run_name = self.config["mlflow_config"]["run_name"]
-
-        self.train_model_dir = self.config["models_dir"]["trained"]
+        self.target_col = self.config["target_col"]
 
         self.class_name = self.__class__.__name__
 
@@ -53,7 +37,7 @@ class Train_Model:
 
         self.kmeans_op = KMeans_Clustering(self.model_train_log)
 
-        self.model_finder = Model_Finder(self.model_train_log)
+        self.model_utils = Model_Utils()
 
         self.s3 = S3_Operation()
 
@@ -73,10 +57,7 @@ class Train_Model:
         method_name = self.training_model.__name__
 
         self.log_writer.start_log(
-            "start",
-            self.class_name,
-            method_name,
-            self.model_train_log,
+            "start", self.class_name, method_name, self.model_train_log,
         )
 
         try:
@@ -112,110 +93,32 @@ class Train_Model:
 
                 self.log_writer.log(
                     self.model_train_log,
-                    log_file,"Seprated cluster features and cluster label for the cluster data",
+                    "Seprated cluster features and cluster label for the cluster data",
                 )
 
-                x_train, x_test, y_train, y_test = train_test_split(
+                self.model_utils.train_and_log_models(
                     cluster_features,
                     cluster_label,
-                    test_size=self.test_size,
-                    random_state=self.random_state,
-                )
-
-                self.log_writer.log(
                     self.model_train_log,
-                    log_file,f"Performed train test split with test size as {self.test_size} and random state as {self.random_state}",
-                )
-
-                (
-                    xgb_model,
-                    xgb_model_score,
-                    rf_model,
-                    rf_model_score,
-                ) = self.model_finder.get_trained_models(
-                    x_train, y_train, x_test, y_test
-                )
-
-                self.s3.save_model(
-                    xgb_model,
                     idx=i,
-                    model_dir=self.train_model_dir,
-                    model_bucket_name=self.model_bucket_name,
-                    self.model_train_log,
+                    kmeans=kmeans_model,
                 )
-
-                self.s3.save_model(
-                    rf_model,
-                    idx=i,
-                    model_dir=self.train_model_dir,
-                    model_bucket_name=self.model_bucket_name,
-                    self.model_train_log,
-                )
-
-                try:
-                    self.mlflow_op.set_mlflow_tracking_uri()
-
-                    self.mlflow_op.set_mlflow_experiment(
-                        experiment_name=self.experiment_name
-                    )
-
-                    with mlflow.start_run(run_name=self.run_name):
-                        self.mlflow_op.log_all_for_model(
-                            idx=None,
-                            kmeans_model,
-                            model_param_name=None,
-                            model_score=None,
-                        )
-
-                        self.mlflow_op.log_all_for_model(
-                            idx=i,
-                            xgb_model,
-                            model_param_name="xgb_model",
-                            model_score=xgb_model_score,
-                        )
-
-                        self.mlflow_op.log_all_for_model(
-                            idx=i,
-                            rf_model,
-                            model_param_name="rf_model",
-                            model_score=rf_model_score,
-                        )
-
-                except Exception as e:
-                    self.log_writer.log(
-                        self.model_train_log,
-                        log_file,"Mlflow logging of params,metrics and models failed",
-                    )
-
-                    self.log_writer.exception_log(
-                        e,
-                        self.class_name,
-                        method_name,
-                        self.model_train_log,
-                    )
 
             self.log_writer.log(
-                self.model_train_log, log_file,"Successful End of Training",
+                self.model_train_log, "Successful End of Training",
             )
 
             self.log_writer.start_log(
-                "exit",
-                self.class_name,
-                method_name,
-                self.model_train_log,
+                "exit", self.class_name, method_name, self.model_train_log,
             )
 
             return number_of_clusters
 
         except Exception as e:
             self.log_writer.log(
-                self.model_train_log,
-                log_file,"Unsuccessful End of Training",
+                self.model_train_log, "Unsuccessful End of Training",
             )
 
             self.log_writer.exception_log(
-                e,
-                self.class_name,
-                method_name,
-                self.model_train_log,
+                e, self.class_name, method_name, self.model_train_log,
             )
