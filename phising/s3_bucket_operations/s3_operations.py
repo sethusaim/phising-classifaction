@@ -466,9 +466,7 @@ class S3_Operation:
                 e, self.class_name, method_name,
             )
 
-    def copy_data(
-        self, from_fname, from_bucket, to_file_name, to_bucket, log_file
-    ):
+    def copy_data(self, from_fname, from_bucket, to_file_name, to_bucket, log_file):
         """
         Method Name :   copy_data
         Description :   This method copies the data from one bucket to another bucket
@@ -537,9 +535,7 @@ class S3_Operation:
                 e, self.class_name, method_name,
             )
 
-    def move_data(
-        self, from_fname, from_bucket, to_file_name, to_bucket, log_file
-    ):
+    def move_data(self, from_fname, from_bucket, to_file_name, to_bucket, log_file):
         """
         Method Name :   move_data
         Description :   This method moves the data from one bucket to other bucket

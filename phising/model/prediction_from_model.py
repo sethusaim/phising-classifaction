@@ -160,9 +160,7 @@ class Prediction:
             if is_null_present:
                 data = self.preprocessor.impute_missing_values(data)
 
-            kmeans = self.s3.load_model(
-                "KMeans", self.model_bucket, self.pred_log,
-            )
+            kmeans = self.s3.load_model("KMeans", self.model_bucket, self.pred_log,)
 
             clusters = kmeans.predict(data.drop(["clusters"], axis=1))
 

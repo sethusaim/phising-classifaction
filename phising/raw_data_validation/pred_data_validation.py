@@ -205,9 +205,7 @@ class Raw_Pred_Data_Validation:
             self.create_dirs_for_good_bad_data(self.pred_name_valid_log)
 
             onlyfiles = self.s3.get_files_from_folder(
-                self.raw_data_bucket,
-                self.raw_pred_data_dir,
-                self.pred_name_valid_log,
+                self.raw_data_bucket, self.raw_pred_data_dir, self.pred_name_valid_log,
             )
 
             pred_batch_files = [f.split("/")[1] for f in onlyfiles]
