@@ -69,8 +69,8 @@ class Data_Transform_Train:
                             df[column] = df[column].replace("?", "'?'")
 
                     self.log_writer.log(
-                        self.train_data_transform_log,
                         f"Quotes added for the file {file}",
+                        self.train_data_transform_log,
                     )
 
                     self.s3.upload_df_as_csv(
