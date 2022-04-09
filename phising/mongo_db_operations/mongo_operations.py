@@ -1,7 +1,7 @@
-import json
-import os
+from json import loads
+from os import environ
 
-import pandas as pd
+from pandas import DataFrame
 from pymongo import MongoClient
 from utils.logger import App_Logger
 from utils.read_params import read_params
@@ -21,7 +21,7 @@ class MongoDB_Operation:
 
         self.class_name = self.__class__.__name__
 
-        self.DB_URL = os.environ["MONGODB_URL"]
+        self.DB_URL = environ["MONGODB_URL"]
 
         self.client = MongoClient(self.DB_URL)
 
@@ -45,9 +45,7 @@ class MongoDB_Operation:
         try:
             db = self.client[db_name]
 
-            self.log_writer.log(
-                log_file, f"Created {db_name} database in MongoDB",
-            )
+            self.log_writer.log(f"Created {db_name} database in MongoDB", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
@@ -75,7 +73,7 @@ class MongoDB_Operation:
             collection = database[collection_name]
 
             self.log_writer.log(
-                log_file, f"Created {collection_name} collection in mongodb",
+                f"Created {collection_name} collection in mongodb", log_file
             )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
@@ -106,14 +104,12 @@ class MongoDB_Operation:
 
             collection = database.get_collection(name=collection_name)
 
-            df = pd.DataFrame(list(collection.find()))
+            df = DataFrame(list(collection.find()))
 
             if "_id" in df.columns.to_list():
                 df = df.drop(columns=["_id"], axis=1)
 
-            self.log_writer.log(
-                log_file, "Converted collection to dataframe",
-            )
+            self.log_writer.log("Converted collection to dataframe", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
@@ -140,21 +136,19 @@ class MongoDB_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            records = json.loads(data_frame.T.to_json()).values()
+            records = loads(data_frame.T.to_json()).values()
 
-            self.log_writer.log(
-                log_file, f"Converted dataframe to json records",
-            )
+            self.log_writer.log(f"Converted dataframe to json records", log_file)
 
             database = self.get_database(db_name, log_file)
 
             collection = database.get_collection(collection_name)
 
-            self.log_writer.log(log_file, "Inserting records to MongoDB")
+            self.log_writer.log("Inserting records to MongoDB", log_file)
 
             collection.insert_many(records)
 
-            self.log_writer.log(log_file, "Inserted records to MongoDB")
+            self.log_writer.log("Inserted records to MongoDB", log_file)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
