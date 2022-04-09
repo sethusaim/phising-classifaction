@@ -17,7 +17,7 @@ class Data_Getter_Pred:
 
         self.log_file = log_file
 
-        self.prediction_file = self.config["export_csv_file"]["pred"]
+        self.pred_file = self.config["export_csv_file"]["pred"]
 
         self.input_files_bucket = self.config["s3_bucket"]["input_files"]
 
@@ -41,20 +41,20 @@ class Data_Getter_Pred:
         """
         method_name = self.get_data.__name__
 
-        self.log_writer.start_log("start", self.log_file, self.class_name, method_name)
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             df = self.s3.read_csv(
-                self.prediction_file, self.input_files_bucket, self.log_file
+                self.pred_file, self.input_files_bucket, self.log_file
             )
 
             self.log_writer.start_log(
-                "exit", self.log_file, self.class_name, method_name
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return df
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.log_file, self.class_name, method_name
+                e, self.class_name, method_name, self.log_file
             )

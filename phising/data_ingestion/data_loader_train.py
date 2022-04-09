@@ -42,7 +42,7 @@ class Data_Getter_Train:
         """
         method_name = self.get_data.__name__
 
-        self.log_writer.start_log("start", self.log_file, self.class_name, method_name)
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             df = self.s3.read_csv(

@@ -48,7 +48,7 @@ class Preprocessor:
         """
         method_name = self.separate_label_feature.__name__
 
-        self.log_writer.start_log("start", self.log_file, self.class_name, method_name)
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             self.X = data.drop(labels=label_column_name, axis=1)
@@ -84,7 +84,7 @@ class Preprocessor:
         """
         method_name = self.replace_invalid_values.__name__
 
-        self.log_writer.start_log("start", self.log_file, self.class_name, method_name)
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             data.replace(to_replace="'na'", value=np.nan, inplace=True)
@@ -116,7 +116,7 @@ class Preprocessor:
         """
         method_name = self.is_null_present.__name__
 
-        self.log_writer.start_log("start", self.log_file, self.class_name, method_name)
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             null_present = False
@@ -196,7 +196,7 @@ class Preprocessor:
         """
         method_name = self.impute_missing_values.__name__
 
-        self.log_writer.start_log("start", self.log_file, self.class_name, method_name)
+        self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             data = data[data.columns[data.isnull().mean() < 0.6]]
