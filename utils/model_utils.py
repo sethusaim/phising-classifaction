@@ -1,4 +1,4 @@
-import mlflow
+from mlflow import start_run
 from phising.mlflow_utils.mlflow_operations import MLFlow_Operation
 from phising.model_finder.tuner import Model_Finder
 from phising.s3_bucket_operations.s3_operations import S3_Operation
@@ -16,7 +16,6 @@ class Model_Utils:
     Version     :   1.2
     Revisions   :   Moved to setup to cloud 
     """
-
     def __init__(self):
         self.log_writer = App_Logger()
 
@@ -166,7 +165,7 @@ class Model_Utils:
 
                 self.mlflow_op.set_mlflow_experiment(self.exp_name)
 
-                with mlflow.start_run(run_name=self.run_name):
+                with start_run(run_name=self.run_name):
                     self.mlflow_op.log_all_for_model(idx, tm[0], tm[1])
 
                     if kmeans is not None:

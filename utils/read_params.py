@@ -1,4 +1,4 @@
-import yaml
+from yaml import safe_load
 
 
 def read_params(config_path="params.yaml"):
@@ -16,7 +16,7 @@ def read_params(config_path="params.yaml"):
 
     try:
         with open(config_path) as f:
-            config = yaml.safe_load(f)
+            config = safe_load(f)
 
         return config
 

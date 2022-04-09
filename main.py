@@ -1,10 +1,10 @@
-import json
+from json import loads
 
-import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from fastapi.templating import Jinja2Templates
+from uvicorn import run
 
 from phising.model.load_production_model import Load_Prod_Model
 from phising.model.prediction_from_model import Prediction
@@ -17,6 +17,8 @@ from utils.read_params import read_params
 app = FastAPI()
 
 config = read_params()
+
+bucket = config["s3_bucket"]
 
 templates = Jinja2Templates(directory=config["templates"]["dir"])
 
@@ -41,7 +43,7 @@ async def index(request: Request):
 @app.get("/train")
 async def trainRouteClient():
     try:
-        raw_data_train_bucket = config["s3_bucket"]["phising_raw_data"]
+        raw_data_train_bucket = bucket["phising_raw_data"]
 
         train_val = Train_Validation(raw_data_train_bucket)
 
@@ -55,7 +57,7 @@ async def trainRouteClient():
 
         load_prod_model.load_production_model()
 
-        upload_logs("logs", bucket=config["s3_bucket"]["inputs_files"])
+        upload_logs("logs", config["s3_bucket"]["inputs_files"])
 
     except Exception as e:
         return Response(f"Error Occurred : {e}")
@@ -66,7 +68,7 @@ async def trainRouteClient():
 @app.get("/predict")
 async def predictRouteClient():
     try:
-        raw_data_pred_bucket = config["s3_bucket"]["phising_raw_data"]
+        raw_data_pred_bucket = bucket["phising_raw_data"]
 
         pred_val = Pred_Validation(raw_data_pred_bucket)
 
@@ -76,8 +78,10 @@ async def predictRouteClient():
 
         bucket, fname, json_predictions = pred.predict_from_model()
 
+        upload_logs("logs", bucket["inputs_files"])
+
         return Response(
-            f"Prediction file created in {bucket} bucket with fname as {fname}, and few of the predictions are {str(json.loads(json_predictions))}"
+            f"Prediction file created in {bucket} bucket with fname as {fname}, and few of the predictions are {str(loads(json_predictions))}"
         )
 
     except Exception as e:
@@ -89,4 +93,4 @@ if __name__ == "__main__":
 
     port = config["app"]["port"]
 
-    uvicorn.run(app, host=host, port=port)
+    run(app, host=host, port=port)
