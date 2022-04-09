@@ -1,5 +1,5 @@
-import pandas as pd
 from botocore.exceptions import ClientError
+from pandas import DataFrame
 from phising.data_ingestion.data_loader_prediction import Data_Getter_Pred
 from phising.data_preprocessing.preprocessing import Preprocessor
 from phising.s3_bucket_operations.s3_operations import S3_Operation
@@ -53,9 +53,7 @@ class Prediction:
         """
         method_name = self.delete_pred_file.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             self.s3.load_object(
@@ -63,25 +61,21 @@ class Prediction:
             )
 
             self.log_writer.log(
-                log_file, f"Found existing Prediction batch file. Deleting it.",
+                f"Found existing Prediction batch file. Deleting it.", log_file
             )
 
             self.s3.delete_file(
                 self.pred_output_file, self.input_files_bucket,
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except ClientError as e:
             if e.response["Error"]["Code"] == "404":
                 pass
 
             else:
-                self.log_writer.exception_log(
-                    e, self.class_name, method_name,
-                )
+                self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def find_correct_model_file(self, cluster_number, bucket, log_file):
         """
@@ -97,12 +91,12 @@ class Prediction:
         """
         method_name = self.find_correct_model_file.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
-            list_of_files = self.s3.get_files_from_folder(bucket, self.prod_model_dir,)
+            list_of_files = self.s3.get_files_from_folder(
+                self.prod_model_dir, bucket, log_file
+            )
 
             for file in list_of_files:
                 try:
@@ -115,20 +109,16 @@ class Prediction:
             model_name = model_name.split(".")[0]
 
             self.log_writer.log(
-                log_file,
                 f"Got {model_name} from {self.prod_model_dir} folder in {bucket} bucket",
+                log_file,
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
             return model_name
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def predict_from_model(self):
         """
@@ -181,18 +171,20 @@ class Prediction:
                     i, self.model_bucket, self.pred_log,
                 )
 
-                model = self.s3.load_model(crt_model_name)
+                model = self.s3.load_model(
+                    crt_model_name, self.prod_model_dir, self.pred_log
+                )
 
                 result = list(model.predict(cluster_data))
 
-                result = pd.DataFrame(
+                result = DataFrame(
                     list(zip(phising_names, result)), columns=["phising", "prediction"]
                 )
 
                 self.s3.upload_df_as_csv(
                     result,
                     self.pred_output_file,
-                    self.input_files_bucket,
+                    self.pred_output_file,
                     self.input_files_bucket,
                     self.pred_log,
                 )

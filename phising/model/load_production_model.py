@@ -86,9 +86,9 @@ class Load_Prod_Model:
 
             self.mlflow_op.set_mlflow_tracking_uri()
 
-            exp = self.mlflow_op.get_experiment_from_mlflow(exp_name=self.exp_name)
+            exp = self.mlflow_op.get_experiment_from_mlflow(self.exp_name)
 
-            runs = self.mlflow_op.get_runs_from_mlflow(exp_id=exp.experiment_id)
+            runs = self.mlflow_op.get_runs_from_mlflow(exp.experiment_id)
 
             """
             Code Explaination: 
@@ -115,12 +115,12 @@ class Load_Prod_Model:
             runs_cols = runs[cols].max().sort_values(ascending=False)
 
             self.log_writer.log(
-                self.load_prod_model_log, "Sorted the runs cols in descending order"
+                "Sorted the runs cols in descending order", self.load_prod_model_log
             )
 
             metrics_dict = runs_cols.to_dict()
 
-            self.log_writer.log(self.load_prod_model_log, "Converted runs cols to dict")
+            self.log_writer.log("Converted runs cols to dict", self.load_prod_model_log)
 
             """ 
             Eg-output: For 3 clusters, 
@@ -159,8 +159,8 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
             ]
 
             self.log_writer.log(
-                self.load_prod_model_log,
                 f"Got top model names based on the metrics of clusters",
+                self.load_prod_model_log,
             )
 
             ## best_metrics will store the value of metrics, but we want the names of the models,
@@ -172,9 +172,9 @@ run_number  metrics.XGBoost0-best_score metrics.RandomForest1-best_score metrics
 
             top_mn_lst = [mn.split(".")[1].split("-")[0] for mn in best_metrics_names]
 
-            self.log_writer.log(self.load_prod_model_log, f"Got the top model names")
+            self.log_writer.log(f"Got the top model names", self.load_prod_model_log)
 
-            results = self.mlflow_op.search_mlflow_models(order="DESC")
+            results = self.mlflow_op.search_mlflow_models("DESC")
 
             ## results - This will store all the registered models in mlflow
             ## Here we are iterating through all the registered model and for every latest registered model

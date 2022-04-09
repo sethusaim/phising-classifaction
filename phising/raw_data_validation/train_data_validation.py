@@ -160,9 +160,7 @@ class Raw_Train_Data_Validation:
         """
         method_name = self.create_dirs_for_good_bad_data.__name__
 
-        self.log_writer.start_log(
-            "start", self.class_name, method_name,
-        )
+        self.log_writer.start_log("start", self.class_name, method_name, log_file)
 
         try:
             self.s3.create_folder(
@@ -173,14 +171,10 @@ class Raw_Train_Data_Validation:
                 self.bad_train_data_dir, self.train_data_bucket,
             )
 
-            self.log_writer.start_log(
-                "exit", self.class_name, method_name,
-            )
+            self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
         except Exception as e:
-            self.log_writer.exception_log(
-                e, self.class_name, method_name,
-            )
+            self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def validate_raw_file_name(
         self, regex, LengthOfDateStampInFile, LengthOfTimeStampInFile

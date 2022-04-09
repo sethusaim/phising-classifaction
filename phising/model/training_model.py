@@ -92,8 +92,8 @@ class Train_Model:
                 cluster_label = cluster_data["Labels"]
 
                 self.log_writer.log(
-                    self.model_train_log,
                     "Seprated cluster features and cluster label for the cluster data",
+                    self.model_train_log,
                 )
 
                 self.model_utils.train_and_log_models(
@@ -104,9 +104,7 @@ class Train_Model:
                     kmeans=kmeans_model,
                 )
 
-            self.log_writer.log(
-                self.model_train_log, "Successful End of Training",
-            )
+            self.log_writer.log("Successful End of Training", self.model_train_log)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.model_train_log,
@@ -115,9 +113,7 @@ class Train_Model:
             return number_of_clusters
 
         except Exception as e:
-            self.log_writer.log(
-                self.model_train_log, "Unsuccessful End of Training",
-            )
+            self.log_writer.log("Unsuccessful End of Training", self.model_train_log)
 
             self.log_writer.exception_log(
                 e, self.class_name, method_name, self.model_train_log,
