@@ -56,7 +56,9 @@ class DB_Operation_Train:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.good_data_train_dir, self.train_data_bucket, self.train_db_insert_log,
+                self.good_data_train_dir,
+                self.train_data_bucket,
+                self.train_db_insert_log,
             )
 
             for idx, f in enumerate(lst):

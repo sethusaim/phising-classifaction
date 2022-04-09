@@ -1,10 +1,17 @@
-import os
+from os import environ
 
-import mlflow
+from mlflow import (
+    get_experiment_by_name,
+    log_metric,
+    log_param,
+    search_runs,
+    set_experiment,
+    set_tracking_uri,
+)
+from mlflow.sklearn import log_model
 from mlflow.tracking import MlflowClient
 from phising.s3_bucket_operations.s3_operations import S3_Operation
 from utils.logger import App_Logger
-from utils.model_utils import Model_Utils
 from utils.read_params import read_params
 
 
@@ -23,8 +30,6 @@ class MLFlow_Operation:
 
         self.log_writer = App_Logger()
 
-        self.model_utils = Model_Utils()
-
         self.s3 = S3_Operation()
 
         self.log_file = log_file
@@ -38,6 +43,8 @@ class MLFlow_Operation:
         self.prod_models_dir = self.config["models_dir"]["prod"]
 
         self.model_save_format = self.config["model_utils"]["save_format"]
+
+        self.remote_server_uri = environ["MLFLOW_TRACKING_URI"]
 
     def get_experiment_from_mlflow(self, exp_name):
         """
@@ -56,11 +63,9 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            exp = mlflow.get_experiment_by_name(name=exp_name)
+            exp = get_experiment_by_name(exp_name)
 
-            self.log_writer.log(
-                self.log_file, f"Got {exp_name} experiment from mlflow",
-            )
+            self.log_writer.log(f"Got {exp_name} experiment from mlflow", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -90,11 +95,11 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            runs = mlflow.search_runs(experiment_ids=exp_id)
+            runs = search_runs(experiment_ids=exp_id)
 
             self.log_writer.log(
-                self.log_file,
                 f"Completed searching for runs in mlflow with experiment ids as {exp_id}",
+                self.log_file,
             )
 
             self.log_writer.start_log(
@@ -125,10 +130,10 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            mlflow.set_experiment(experiment_name=experiment_name)
+            set_experiment(experiment_name)
 
             self.log_writer.log(
-                self.log_file, f"Set mlflow experiment with name as {experiment_name}",
+                f"Set mlflow experiment with name as {experiment_name}", self.log_file
             )
 
             self.log_writer.start_log(
@@ -140,7 +145,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_mlflow_client(self, server_uri):
+    def get_mlflow_client(self):
         """
         Method Name :   get_mlflow_client
         Description :   This method gets mlflow client for the particular server uri
@@ -157,11 +162,9 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            client = MlflowClient(tracking_uri=server_uri)
+            client = MlflowClient(self.remote_server_uri)
 
-            self.log_writer.log(
-                self.log_file, "Got mlflow client with tracking uri",
-            )
+            self.log_writer.log("Got mlflow client with tracking uri", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -191,13 +194,9 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            server_uri = os.environ["MLFLOW_TRACKING_URI"]
+            set_tracking_uri(self.remote_server_uri)
 
-            mlflow.set_tracking_uri(server_uri)
-
-            self.log_writer.log(
-                self.log_file, "Set mlflow tracking uri",
-            )
+            self.log_writer.log(self.log_file, "Set mlflow tracking uri")
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -225,15 +224,11 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            remote_server_uri = os.environ["MLFLOW_TRACKING_URI"]
-
-            client = self.get_mlflow_client(server_uri=remote_server_uri)
+            client = self.get_mlflow_client()
 
             reg_model_names = [rm.name for rm in client.list_registered_models()]
 
-            self.log_writer.log(
-                self.log_file, "Got registered models from mlflow",
-            )
+            self.log_writer.log("Got registered models from mlflow", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -263,14 +258,12 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            remote_server_uri = os.environ["MLFLOW_TRACKING_URI"]
-
-            client = self.get_mlflow_client(server_uri=remote_server_uri)
+            client = self.get_mlflow_client()
 
             results = client.search_registered_models(order_by=[f"name {order}"])
 
             self.log_writer.log(
-                self.log_file, f"Got registered models in mlflow in {order} order",
+                f"Got registered models in mlflow in {order} order", self.log_file
             )
 
             self.log_writer.start_log(
@@ -284,9 +277,9 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_model(self, model, model_name):
+    def log_sklearn_model(self, model, model_name):
         """
-        Method Name :   log_model
+        Method Name :   log_sklearn_model
         Description :   This method logs the model to mlflow server
 
         Output      :   A model is logged to the mlflow server
@@ -296,21 +289,19 @@ class MLFlow_Operation:
         
         Revisions   :   moved setup to cloud
         """
-        method_name = self.log_model.__name__
+        method_name = self.log_sklearn_model.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            mlflow.sklearn.log_model(
+            log_model(
                 sk_model=model,
                 serialization_format=self.mlflow_save_format,
                 registered_model_name=model_name,
                 artifact_path=model_name,
             )
 
-            self.log_writer.log(
-                self.log_file, f"Logged {model_name} model in mlflow",
-            )
+            self.log_writer.log(f"Logged {model_name} model in mlflow", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -321,9 +312,9 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_metric(self, model_name, metric):
+    def log_model_metric(self, model_name, metric):
         """
-        Method Name :   log_metric
+        Method Name :   log_model_metric
         Description :   This method logs the model metric to mlflow server
 
         Output      :   A model metric is logged to mlflow server
@@ -333,14 +324,14 @@ class MLFlow_Operation:
         
         Revisions   :   moved setup to cloud
         """
-        method_name = self.log_metric.__name__
+        method_name = self.log_model_metric.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             model_score_name = f"{model_name}-best_score"
 
-            mlflow.log_metric(model_score_name, value=metric)
+            log_metric(model_score_name, metric)
 
             self.log_writer.log(
                 self.log_file, f"{model_score_name} logged in mlflow",
@@ -355,9 +346,9 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_param(self, idx, model, model_name, param):
+    def log_model_param(self, idx, model, model_name, param):
         """
-        Method Name :   log_param
+        Method Name :   log_model_param
         Description :   This method logs the model param to mlflow server
 
         Output      :   A model param is logged to mlflow server
@@ -367,18 +358,16 @@ class MLFlow_Operation:
         
         Revisions   :   moved setup to cloud
         """
-        method_name = self.log_param.__name__
+        method_name = self.log_model_param.__name__
 
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
             model_param_name = model_name + str(idx) + f"-{param}"
 
-            mlflow.log_param(model_param_name, value=model.__dict__[param])
+            log_param(model_param_name, model.__dict__[param])
 
-            self.log_writer.log(
-                self.log_file, f"{model_param_name} logged in mlflow",
-            )
+            self.log_writer.log(f"{model_param_name} logged in mlflow", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -408,10 +397,10 @@ class MLFlow_Operation:
                 "start", self.class_name, method_name, self.log_file,
             )
 
-            base_model_name = self.model_utils.get_model_name(model, self.log_file)
+            base_model_name = model.__class__.__name__
 
             if base_model_name is "KMeans":
-                self.log_model(model, base_model_name)
+                self.log_sklearn_model(model, base_model_name)
 
             else:
                 model_name = base_model_name + str(idx)
@@ -427,11 +416,11 @@ class MLFlow_Operation:
                 )
 
                 for param in model_params_list:
-                    self.log_param(idx, model, model_name, param=param)
+                    self.log_model_param(idx, model, model_name, param=param)
 
-                self.log_model(model, model_name)
+                self.log_sklearn_model(model, model_name)
 
-                self.log_metric(model_name, metric=float(model_score))
+                self.log_model_metric(model_name, metric=float(model_score))
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file
@@ -461,15 +450,13 @@ class MLFlow_Operation:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            remote_server_uri = os.environ["MLFLOW_TRACKING_URI"]
-
             current_version = model_version
 
             self.log_writer.log(
                 self.log_file, f"Got {current_version} as the current model version",
             )
 
-            client = self.get_mlflow_client(server_uri=remote_server_uri)
+            client = self.get_mlflow_client()
 
             trained_model_file = (
                 self.trained_models_dir + "/" + model_name + self.model_save_format
