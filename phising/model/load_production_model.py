@@ -12,7 +12,7 @@ class Load_Prod_Model:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, num_clusters):
+    def __init__(self, num_clusters: str):
         self.log_writer = App_Logger()
 
         self.config = read_params()
@@ -35,7 +35,7 @@ class Load_Prod_Model:
 
         self.mlflow_op = MLFlow_Operation(self.load_prod_model_log)
 
-    def create_folders_for_prod_and_stag(self, bucket, log_file):
+    def create_folders_for_prod_and_stag(self, bucket: str, log_file):
         """
         Method Name :   create_folders_for_prod_and_stag
         Description :   This method creates folders for production and staging bucket

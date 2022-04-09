@@ -57,16 +57,14 @@ class Prediction:
 
         try:
             self.s3.load_object(
-                self.pred_output_file, self.input_files_bucket,
+                self.pred_output_file, self.input_files_bucket, log_file
             )
 
             self.log_writer.log(
                 f"Found existing Prediction batch file. Deleting it.", log_file
             )
 
-            self.s3.delete_file(
-                self.pred_output_file, self.input_files_bucket,
-            )
+            self.s3.delete_file(self.pred_output_file, self.input_files_bucket)
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
 
@@ -77,7 +75,7 @@ class Prediction:
             else:
                 self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def find_correct_model_file(self, cluster_number, bucket, log_file):
+    def find_correct_model_file(self, cluster_number: str, bucket: str, log_file):
         """
         Method Name :   find_correct_model_file
         Description :   This method gets correct model file based on cluster number during prediction

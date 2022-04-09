@@ -35,7 +35,7 @@ class Preprocessor:
 
         self.s3 = S3_Operation()
 
-    def separate_label_feature(self, data, label_column_name):
+    def separate_label_feature(self, data, label_col_name: str):
         """
         Method Name :   separate_label_feature
         Description :   This method separates the features and a Label Coulmns.
@@ -52,12 +52,12 @@ class Preprocessor:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            self.X = data.drop(labels=label_column_name, axis=1)
+            self.X = data.drop(labels=label_col_name, axis=1)
 
-            self.Y = data[label_column_name]
+            self.Y = data[label_col_name]
 
             self.log_writer.log(
-                f"Separated {label_column_name} from {data}", self.log_file
+                f"Separated {label_col_name} from {data}", self.log_file
             )
 
             self.log_writer.start_log(

@@ -106,7 +106,7 @@ class KMeans_Clustering:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def create_clusters(self, data, num_clusters):
+    def create_clusters(self, data, num_clusters: int):
         """
         Method Name :   create_clusters
         Description :   Create a new dataframe consisting of the cluster information.

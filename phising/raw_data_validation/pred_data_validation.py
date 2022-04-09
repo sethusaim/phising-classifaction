@@ -175,7 +175,7 @@ class Raw_Pred_Data_Validation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def validate_raw_file_name(
-        self, regex, LengthOfDateStampInFile, LengthOfTimeStampInFile
+        self, regex: str, LengthOfDateStampInFile: str, LengthOfTimeStampInFile: str
     ):
         """
         Method Name :   validate_raw_file_name
@@ -267,7 +267,7 @@ class Raw_Pred_Data_Validation:
                 e, self.class_name, method_name, self.pred_name_valid_log,
             )
 
-    def validate_col_length(self, NumberofColumns):
+    def validate_col_length(self, NumberofColumns: int):
         """
         Method Name :   validate_col_length
         Description :   This method validates the column length based on number of columns as mentioned in schema values

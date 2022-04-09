@@ -71,7 +71,7 @@ class Train_Model:
                 data = self.preprocessor.impute_missing_values(X)
 
             X, Y = self.preprocessor.separate_label_feature(
-                data, label_column_name=self.target_col
+                data, label_col_name=self.target_col
             )
 
             number_of_clusters = self.kmeans_op.elbow_plot(X)

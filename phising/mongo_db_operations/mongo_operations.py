@@ -27,7 +27,7 @@ class MongoDB_Operation:
 
         self.log_writer = App_Logger()
 
-    def get_database(self, db_name, log_file):
+    def get_database(self, db_name: str, log_file):
         """
         Method Name :   get_database
         Description :   This method gets database from MongoDB from the db_name
@@ -54,7 +54,7 @@ class MongoDB_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_collection(self, database, collection_name, log_file):
+    def get_collection(self, database: str, collection_name: str, log_file):
         """
         Method Name :   get_collection
         Description :   This method gets collection from the particular database and collection name
@@ -83,7 +83,7 @@ class MongoDB_Operation:
         except Exception as e:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
-    def get_collection_as_dataframe(self, db_name, collection_name, log_file):
+    def get_collection_as_dataframe(self, db_name: str, collection_name: str, log_file):
         """
         Method Name :   get_collection_as_dataframe
         Description :   This method is used for converting the selected collection to dataframe
@@ -119,7 +119,7 @@ class MongoDB_Operation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def insert_dataframe_as_record(
-        self, data_frame, db_name, collection_name, log_file
+        self, data_frame, db_name: str, collection_name: str, log_file
     ):
         """
         Method Name :   insert_dataframe_as_record

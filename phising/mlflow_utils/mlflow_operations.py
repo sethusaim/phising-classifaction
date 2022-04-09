@@ -46,7 +46,7 @@ class MLFlow_Operation:
 
         self.remote_server_uri = environ["MLFLOW_TRACKING_URI"]
 
-    def get_experiment_from_mlflow(self, exp_name):
+    def get_experiment_from_mlflow(self, exp_name: str):
         """
         Method Name :   get_experiment_from_mlflow
         Description :   This method gets the experiment from mlflow server using the experiment name
@@ -78,7 +78,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def get_runs_from_mlflow(self, exp_id):
+    def get_runs_from_mlflow(self, exp_id: int):
         """
         Method Name :   get_runs_from_mlflow
         Description :   This method gets the runs from the mlflow server for a particular experiment id
@@ -113,7 +113,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def set_mlflow_experiment(self, experiment_name):
+    def set_mlflow_experiment(self, experiment_name: str):
         """
         Method Name :   set_mlflow_experiment
         Description :   This method sets the mlflow experiment with the particular experiment name
@@ -241,7 +241,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def search_mlflow_models(self, order):
+    def search_mlflow_models(self, order: str):
         """
         Method Name :   search_mlflow_models
         Description :   This method searches for registered models and returns them in the mentioned order
@@ -277,7 +277,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_sklearn_model(self, model, model_name):
+    def log_sklearn_model(self, model, model_name: str):
         """
         Method Name :   log_sklearn_model
         Description :   This method logs the model to mlflow server
@@ -312,7 +312,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_model_metric(self, model_name, metric):
+    def log_model_metric(self, model_name: str, metric: float):
         """
         Method Name :   log_model_metric
         Description :   This method logs the model metric to mlflow server
@@ -346,7 +346,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_model_param(self, idx, model, model_name, param):
+    def log_model_param(self, idx: int, model, model_name: str, param: str):
         """
         Method Name :   log_model_param
         Description :   This method logs the model param to mlflow server
@@ -378,7 +378,7 @@ class MLFlow_Operation:
                 e, self.class_name, method_name, self.log_file
             )
 
-    def log_all_for_model(self, model, model_score, idx=None):
+    def log_all_for_model(self, model, model_score: float, idx: int = None):
         """
         Method Name :   log_all_for_model
         Description :   This method logs model,model params and model score to mlflow server
@@ -432,7 +432,12 @@ class MLFlow_Operation:
             )
 
     def transition_mlflow_model(
-        self, model_version, stage, model_name, from_bucket, to_bucket
+        self,
+        model_version: int,
+        stage: str,
+        model_name: str,
+        from_bucket: str,
+        to_bucket: str,
     ):
         """
         Method Name :   transition_mlflow_model
@@ -453,7 +458,7 @@ class MLFlow_Operation:
             current_version = model_version
 
             self.log_writer.log(
-                self.log_file, f"Got {current_version} as the current model version",
+                f"Got {current_version} as the current model version", self.log_file
             )
 
             client = self.get_mlflow_client()
@@ -471,12 +476,12 @@ class MLFlow_Operation:
             )
 
             self.log_writer.log(
-                self.log_file, "Created trained,stag and prod model files",
+                "Created trained,stag and prod model files", self.log_file
             )
 
             if stage == "Production":
                 self.log_writer.log(
-                    self.log_file, f"{stage} is selected for transition",
+                    f"{stage} is selected for transition", self.log_file
                 )
 
                 client.transition_model_version_stage(
@@ -484,7 +489,7 @@ class MLFlow_Operation:
                 )
 
                 self.log_writer.log(
-                    self.log_file, f"Transitioned {model_name} to {stage} in mlflow",
+                    f"Transitioned {model_name} to {stage} in mlflow", self.log_file
                 )
 
                 self.s3.copy_data(
@@ -497,15 +502,15 @@ class MLFlow_Operation:
 
             elif stage == "Staging":
                 self.log_writer.log(
-                    self.log_file, f"{stage} is selected for transition",
+                    f"{stage} is selected for transition", self.log_file
                 )
 
                 client.transition_model_version_stage(
-                    name=model_name, version=current_version, stage=stage
+                    model_name, current_version, stage
                 )
 
                 self.log_writer.log(
-                    self.log_file, f"Transitioned {model_name} to {stage} in mlflow",
+                    f"Transitioned {model_name} to {stage} in mlflow", self.log_file
                 )
 
                 self.s3.copy_data(
@@ -518,7 +523,7 @@ class MLFlow_Operation:
 
             else:
                 self.log_writer.log(
-                    self.log_file, "Please select stage for model transition",
+                    "Please select stage for model transition", self.log_file
                 )
 
             self.log_writer.start_log(

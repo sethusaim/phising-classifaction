@@ -5,7 +5,7 @@ from utils.logger import App_Logger
 from utils.read_params import read_params
 
 
-class Raw_train_Data_Validation:
+class Raw_Train_Data_Validation:
     """
     Description :   This method is used for validating the raw training data
     Written by  :   iNeuron Intelligence
@@ -14,7 +14,7 @@ class Raw_train_Data_Validation:
     Revisions   :   Moved to setup to cloud 
     """
 
-    def __init__(self, raw_data_bucket):
+    def __init__(self, raw_data_bucket: str):
         self.config = read_params()
 
         self.raw_data_bucket = raw_data_bucket
@@ -175,7 +175,7 @@ class Raw_train_Data_Validation:
             self.log_writer.exception_log(e, self.class_name, method_name, log_file)
 
     def validate_raw_file_name(
-        self, regex, LengthOfDateStampInFile, LengthOfTimeStampInFile
+        self, regex: str, LengthOfDateStampInFile: int, LengthOfTimeStampInFile: int
     ):
         """
         Method Name :   validate_raw_file_name
@@ -197,7 +197,9 @@ class Raw_train_Data_Validation:
             self.create_dirs_for_good_bad_data(self.train_name_valid_log)
 
             onlyfiles = self.s3.get_files_from_folder(
-                self.raw_data_bucket, self.raw_train_data_dir, self.train_name_valid_log,
+                self.raw_data_bucket,
+                self.raw_train_data_dir,
+                self.train_name_valid_log,
             )
 
             train_batch_files = [f.split("/")[1] for f in onlyfiles]
@@ -267,7 +269,7 @@ class Raw_train_Data_Validation:
                 e, self.class_name, method_name, self.train_name_valid_log,
             )
 
-    def validate_col_length(self, NumberofColumns):
+    def validate_col_length(self, NumberofColumns: int):
         """
         Method Name :   validate_col_length
         Description :   This method validates the column length based on number of columns as mentioned in schema values
@@ -286,7 +288,9 @@ class Raw_train_Data_Validation:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.good_train_data_dir, self.train_data_bucket, self.train_col_valid_log,
+                self.good_train_data_dir,
+                self.train_data_bucket,
+                self.train_col_valid_log,
             )
 
             for idx, f in enumerate(lst):

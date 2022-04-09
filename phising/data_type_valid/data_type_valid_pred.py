@@ -36,7 +36,9 @@ class DB_Operation_Pred:
 
         self.log_writer = App_Logger()
 
-    def insert_good_data_as_record(self, good_data_db_name, good_data_collection_name):
+    def insert_good_data_as_record(
+        self, good_data_db_name: str, good_data_collection_name: str
+    ):
         """
         Method Name :   insert_good_data_as_record
         Description :   This method inserts the good data in MongoDB as collection
@@ -89,12 +91,14 @@ class DB_Operation_Pred:
                 e, self.class_name, method_name, self.pred_db_insert_log,
             )
 
-    def export_collection_to_csv(self, good_data_db_name, good_data_collection_name):
+    def export_collection_to_csv(
+        self, good_data_db_name: str, good_data_collection_name: str
+    ):
         """
         Method Name :   insert_good_data_as_record
         Description :   This method inserts the good data in MongoDB as collection
 
-        Output      :   A csv file stored in input files bucket, containing good data which was stored in MongoDB
+        Output      :   A csv file stored in input files bucket:str, containing good data which was stored in MongoDB
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
