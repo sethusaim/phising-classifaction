@@ -126,6 +126,10 @@ class DB_Operation_Train:
                 self.train_export_csv_log,
             )
 
+            self.log_writer.log(
+                "Exported collection as csv file", self.train_export_csv_log
+            )
+
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.train_export_csv_log,
             )

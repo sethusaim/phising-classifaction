@@ -124,6 +124,10 @@ class DB_Operation_Pred:
                 self.pred_export_csv_log,
             )
 
+            self.log_writer.log(
+                "Exported collection as csv file", self.pred_export_csv_log
+            )
+
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.pred_export_csv_log,
             )

@@ -138,7 +138,7 @@ class Preprocessor:
 
                     cols_with_missing_values.append(cols[i])
 
-            self.log_writer.log("created cols with missing values", self.log_file)
+            self.log_writer.log("Created cols with missing values", self.log_file)
 
             if null_present is True:
                 self.log_writer.log(
@@ -198,7 +198,15 @@ class Preprocessor:
         try:
             data = data[data.columns[data.isnull().mean() < 0.6]]
 
+            self.log_writer.log(
+                "Got the data whose mena is less than 0.6", self.log_file
+            )
+
             data = data.apply(to_numeric())
+
+            self.log_writer.log(
+                "Applied to_numeric function on dataframe", self.log_file
+            )
 
             for col in data.columns:
                 data[col] = data[col].replace(NaN, data[col].mean())
