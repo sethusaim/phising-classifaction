@@ -1,5 +1,6 @@
 import numpy as np
-import pandas as pd
+from numpy import NaN, nan
+from pandas import DataFrame, to_numeric
 from phising.s3_bucket_operations.s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.model_utils import Model_Utils
@@ -73,9 +74,9 @@ class Preprocessor:
     def replace_invalid_values(self, data):
         """
         Method Name :   replace_invalid_values
-        Description :   This method replaces invalid values i.e. 'na' with np.nan
+        Description :   This method replaces invalid values i.e. 'na' with nan
 
-        Output      :   Replaces the invalid values like "'na'" with np.nan, so that imputation can be done
+        Output      :   Replaces the invalid values like "'na'" with nan, so that imputation can be done
         On Failure  :   Write an exception log and then raise an exception
 
         Version     :   1.2
@@ -87,9 +88,9 @@ class Preprocessor:
         self.log_writer.start_log("start", self.class_name, method_name, self.log_file)
 
         try:
-            data.replace(to_replace="'na'", value=np.nan, inplace=True)
+            data.replace(to_replace="'na'", value=nan, inplace=True)
 
-            self.log_writer.log(self.log_file, "Replaced " "na" " with np.nan")
+            self.log_writer.log(self.log_file, "Replaced " "na" " with nan")
 
             self.log_writer.start_log(
                 "exit", self.log_file, self.class_name, method_name
@@ -147,9 +148,11 @@ class Preprocessor:
                     "null values were found the columns...preparing dataframe with null values",
                 )
 
-                self.null_df = pd.DataFrame()
+                self.null_df = DataFrame()
 
                 self.null_df["columns"] = data.columns
+
+                self.null_df["missing values count"] = np.asarray(data.isna().sum())
 
                 self.null_df["missing values count"] = np.asarray(data.isna().sum())
 
@@ -201,10 +204,10 @@ class Preprocessor:
         try:
             data = data[data.columns[data.isnull().mean() < 0.6]]
 
-            data = data.apply(pd.to_numeric())
+            data = data.apply(to_numeric())
 
             for col in data.columns:
-                data[col] = data[col].replace(np.NaN, data[col].mean())
+                data[col] = data[col].replace(NaN, data[col].mean())
 
             self.log_writer.start_log(
                 "exit", self.log_file, self.class_name, method_name

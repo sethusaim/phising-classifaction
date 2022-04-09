@@ -1,5 +1,5 @@
 from kneed import KneeLocator
-from matplotlib import pyplot as plt
+from matplotlib.pyplot import plot, savefig, title, xlabel, ylabel
 from phising.s3_bucket_operations.s3_operations import S3_Operation
 from sklearn.cluster import KMeans
 from utils.logger import App_Logger
@@ -68,18 +68,18 @@ class KMeans_Clustering:
 
                 wcss.append(kmeans.inertia_)
 
-            plt.plot(range(1, self.max_clusters), wcss)
+            plot(range(1, self.max_clusters), wcss)
 
-            plt.title("The Elbow Method")
+            title("The Elbow Method")
 
-            plt.xlabel("Number of clusters")
+            xlabel("Number of clusters")
 
-            plt.ylabel("WCSS")
+            ylabel("WCSS")
 
-            plt.savefig(self.elbow_plot)
+            savefig(self.elbow_plot)
 
             self.log_writer.log(
-                self.log_file, "Saved draw_elbow_plot fig and local copy is created",
+                "Saved elbow plot fig and local copy is created", self.log_file
             )
 
             self.s3.upload_file(
@@ -92,8 +92,7 @@ class KMeans_Clustering:
             self.kn = KneeLocator(range(1, self.max_clusters), wcss, **self.knee_params)
 
             self.log_writer.log(
-                self.log_file,
-                f"The optimum number of clusters is {str(self.kn.knee)}.",
+                f"The optimum number of clusters is {str(self.kn.knee)}", self.log_file
             )
 
             self.log_writer.start_log(
@@ -128,13 +127,13 @@ class KMeans_Clustering:
             self.y_kmeans = self.kmeans.fit_predict(data)
 
             self.s3.save_model(
-                self.kmeans, self.trained_model_dir, self.model_bucket, self.log_file,
+                self.kmeans, self.trained_model_dir, self.model_bucket, self.log_file
             )
 
             data["Cluster"] = self.y_kmeans
 
             self.log_writer.log(
-                self.log_file, f"Successfully created {str(self.kn.knee)} clusters",
+                f"Successfully created {str(self.kn.knee)} clusters", self.log_file
             )
 
             self.log_writer.start_log(
