@@ -1,11 +1,11 @@
-import re
+from re import match, split
 
+from phising.s3_bucket_operations.s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
-from phising.s3_bucket_operations.s3_operations import S3_Operation
 
 
-class Raw_Train_Data_Validation:
+class Raw_train_Data_Validation:
     """
     Description :   This method is used for validating the raw training data
     Written by  :   iNeuron Intelligence
@@ -132,9 +132,7 @@ class Raw_Train_Data_Validation:
                 self.regex_file, self.input_files_bucket, self.train_gen_log,
             )
 
-            self.log_writer.log(
-                self.train_gen_log, f"Got {regex} pattern",
-            )
+            self.log_writer.log(f"Got {regex} pattern", self.train_gen_log)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.train_gen_log,
@@ -164,11 +162,11 @@ class Raw_Train_Data_Validation:
 
         try:
             self.s3.create_folder(
-                self.good_train_data_dir, self.train_data_bucket,
+                self.good_train_data_dir, self.train_data_bucket, log_file
             )
 
             self.s3.create_folder(
-                self.bad_train_data_dir, self.train_data_bucket,
+                self.bad_train_data_dir, self.train_data_bucket, log_file
             )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
@@ -199,15 +197,13 @@ class Raw_Train_Data_Validation:
             self.create_dirs_for_good_bad_data(self.train_name_valid_log)
 
             onlyfiles = self.s3.get_files_from_folder(
-                self.raw_data_bucket,
-                self.raw_train_data_dir,
-                self.train_name_valid_log,
+                self.raw_data_bucket, self.raw_train_data_dir, self.train_name_valid_log,
             )
 
             train_batch_files = [f.split("/")[1] for f in onlyfiles]
 
             self.log_writer.log(
-                self.train_name_valid_log, "Got training files with absolute file name",
+                "Got training files with absolute file name", self.train_name_valid_log
             )
 
             for fname in train_batch_files:
@@ -218,14 +214,13 @@ class Raw_Train_Data_Validation:
                 bad_data_train_file_name = self.bad_train_data_dir + "/" + fname
 
                 self.log_writer.log(
-                    self.train_name_valid_log,
-                    "Created raw,good and bad data file name",
+                    "Created raw,good and bad data file name", self.train_name_valid_log
                 )
 
-                if re.match(regex, fname):
-                    splitAtDot = re.split(".csv", fname)
+                if match(regex, fname):
+                    splitAtDot = split(".csv", fname)
 
-                    splitAtDot = re.split("_", splitAtDot[0])
+                    splitAtDot = split("_", splitAtDot[0])
 
                     if len(splitAtDot[1]) == LengthOfDateStampInFile:
                         if len(splitAtDot[2]) == LengthOfTimeStampInFile:
@@ -291,9 +286,7 @@ class Raw_Train_Data_Validation:
 
         try:
             lst = self.s3.read_csv_from_folder(
-                self.good_train_data_dir,
-                self.train_data_bucket,
-                self.train_col_valid_log,
+                self.good_train_data_dir, self.train_data_bucket, self.train_col_valid_log,
             )
 
             for idx, f in enumerate(lst):

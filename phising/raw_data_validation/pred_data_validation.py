@@ -1,8 +1,8 @@
-import re
+from re import match, split
 
+from phising.s3_bucket_operations.s3_operations import S3_Operation
 from utils.logger import App_Logger
 from utils.read_params import read_params
-from phising.s3_bucket_operations.s3_operations import S3_Operation
 
 
 class Raw_Pred_Data_Validation:
@@ -132,9 +132,7 @@ class Raw_Pred_Data_Validation:
                 self.regex_file, self.input_files_bucket, self.pred_gen_log,
             )
 
-            self.log_writer.log(
-                self.pred_gen_log, f"Got {regex} pattern",
-            )
+            self.log_writer.log(f"Got {regex} pattern", self.pred_gen_log)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.pred_gen_log,
@@ -164,11 +162,11 @@ class Raw_Pred_Data_Validation:
 
         try:
             self.s3.create_folder(
-                self.good_pred_data_dir, self.pred_data_bucket,
+                self.good_pred_data_dir, self.pred_data_bucket, log_file
             )
 
             self.s3.create_folder(
-                self.bad_pred_data_dir, self.pred_data_bucket,
+                self.bad_pred_data_dir, self.pred_data_bucket, log_file
             )
 
             self.log_writer.start_log("exit", self.class_name, method_name, log_file)
@@ -205,8 +203,7 @@ class Raw_Pred_Data_Validation:
             pred_batch_files = [f.split("/")[1] for f in onlyfiles]
 
             self.log_writer.log(
-                self.pred_name_valid_log,
-                "Got Prediction files with absolute file name",
+                "Got Prediction files with absolute file name", self.pred_name_valid_log
             )
 
             for fname in pred_batch_files:
@@ -217,13 +214,13 @@ class Raw_Pred_Data_Validation:
                 bad_data_pred_file_name = self.bad_pred_data_dir + "/" + fname
 
                 self.log_writer.log(
-                    self.pred_name_valid_log, "Created raw,good and bad data file name",
+                    "Created raw,good and bad data file name", self.pred_name_valid_log
                 )
 
-                if re.match(regex, fname):
-                    splitAtDot = re.split(".csv", fname)
+                if match(regex, fname):
+                    splitAtDot = split(".csv", fname)
 
-                    splitAtDot = re.split("_", splitAtDot[0])
+                    splitAtDot = split("_", splitAtDot[0])
 
                     if len(splitAtDot[1]) == LengthOfDateStampInFile:
                         if len(splitAtDot[2]) == LengthOfTimeStampInFile:
