@@ -57,18 +57,18 @@ class Preprocessor:
             self.Y = data[label_column_name]
 
             self.log_writer.log(
-                self.log_file, f"Separated {label_column_name} from {data}",
+                f"Separated {label_column_name} from {data}", self.log_file
             )
 
             self.log_writer.start_log(
-                "exit", self.log_file, self.class_name, method_name
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return self.X, self.Y
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.log_file, self.class_name, method_name
+                e, self.class_name, method_name, self.log_file
             )
 
     def replace_invalid_values(self, data):
@@ -90,17 +90,17 @@ class Preprocessor:
         try:
             data.replace(to_replace="'na'", value=nan, inplace=True)
 
-            self.log_writer.log(self.log_file, "Replaced " "na" " with nan")
+            self.log_writer.log("Replaced " "na" " with nan", self.log_file)
 
             self.log_writer.start_log(
-                "exit", self.log_file, self.class_name, method_name
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return data
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.log_file, self.class_name, method_name
+                e, self.class_name, method_name, self.log_file
             )
 
     def is_null_present(self, data):
@@ -129,7 +129,7 @@ class Preprocessor:
             self.null_counts = data.isna().sum()
 
             self.log_writer.log(
-                self.log_file, f"Null values count is : {self.null_counts}",
+                f"Null values count is : {self.null_counts}", self.log_file
             )
 
             for i in range(len(self.null_counts)):
@@ -138,14 +138,12 @@ class Preprocessor:
 
                     cols_with_missing_values.append(cols[i])
 
-            self.log_writer.log(
-                self.log_file, "created cols with missing values",
-            )
+            self.log_writer.log("created cols with missing values", self.log_file)
 
             if null_present is True:
                 self.log_writer.log(
+                    "Null values were found the columns...preparing dataframe with null values",
                     self.log_file,
-                    "null values were found the columns...preparing dataframe with null values",
                 )
 
                 self.null_df = DataFrame()
@@ -154,11 +152,7 @@ class Preprocessor:
 
                 self.null_df["missing values count"] = np.asarray(data.isna().sum())
 
-                self.null_df["missing values count"] = np.asarray(data.isna().sum())
-
-                self.log_writer.log(
-                    self.log_file, "Created dataframe with null values",
-                )
+                self.log_writer.log("Created dataframe with null values", self.log_file)
 
                 self.s3.upload_df_as_csv(
                     self.null_df,
@@ -170,19 +164,19 @@ class Preprocessor:
 
             else:
                 self.log_writer.log(
-                    self.log_file,
                     "No null values are present in cols. Skipped the creation of dataframe",
+                    self.log_file,
                 )
 
             self.log_writer.start_log(
-                "exit", self.log_file, self.class_name, method_name
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return null_present
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.log_file, self.class_name, method_name
+                e, self.class_name, method_name, self.log_file
             )
 
     def impute_missing_values(self, data):
@@ -210,12 +204,12 @@ class Preprocessor:
                 data[col] = data[col].replace(NaN, data[col].mean())
 
             self.log_writer.start_log(
-                "exit", self.log_file, self.class_name, method_name
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return data
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.log_file, self.class_name, method_name
+                e, self.class_name, method_name, self.log_file
             )

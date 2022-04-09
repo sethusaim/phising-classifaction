@@ -50,12 +50,12 @@ class Data_Getter_Train:
             )
 
             self.log_writer.start_log(
-                "exit", self.log_file, self.class_name, method_name
+                "exit", self.class_name, method_name, self.log_file
             )
 
             return df
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.log_file, self.class_name, method_name
+                e, self.class_name, method_name, self.log_file
             )
