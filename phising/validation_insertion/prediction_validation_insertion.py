@@ -50,7 +50,7 @@ class Pred_Validation:
 
         try:
             self.log_writer.start_log(
-                "start", self.class_name, method_name, self.pred_main_log,
+                "start", self.class_name, method_name,
             )
 
             (
@@ -70,39 +70,31 @@ class Pred_Validation:
 
             self.raw_data.validate_missing_values_in_col()
 
-            self.log_writer.log(
-                self.pred_main_log, "Raw Data Validation Completed !!",
-            )
+            self.log_writer.log("Raw Data Validation Completed !!", self.pred_main_log)
 
-            self.log_writer.log(
-                self.pred_main_log, "Starting Data Transformation",
-            )
+            self.log_writer.log("Starting Data Transformation", self.pred_main_log)
 
             self.data_transform.add_quotes_to_string()
 
-            self.log_writer.log(
-                self.pred_main_log, "Data Transformation completed !!",
-            )
+            self.log_writer.log("Data Transformation completed !!", self.pred_main_log)
 
             self.db_operation.insert_good_data_as_record(
-                db_name=self.good_data_db_name,
-                collection_name=self.good_data_collection_name,
+                self.good_data_db_name, self.good_data_collection_name
             )
 
             self.log_writer.log(
-                self.pred_main_log, "Data type validation Operation completed !!",
+                "Data type validation Operation completed !!", self.pred_main_log
             )
 
             self.db_operation.export_collection_to_csv(
-                db_name=self.good_data_db_name,
-                collection_name=self.good_data_collection_name,
+                self.good_data_db_name, self.good_data_collection_name
             )
 
             self.log_writer.start_log(
-                "exit", self.class_name, method_name, self.pred_main_log,
+                "exit", self.class_name, method_name, self.pred_main_log
             )
 
         except Exception as e:
             self.log_writer.exception_log(
-                e, self.class_name, method_name, self.pred_main_log,
+                e, self.class_name, method_name, self.pred_main_log
             )

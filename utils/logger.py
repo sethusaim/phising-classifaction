@@ -14,11 +14,11 @@ class App_Logger:
     def __init__(self):
         self.class_name = self.__class__.__name__
 
-        makedirs("app_logs", exist_ok=True)
+        makedirs("logs", exist_ok=True)
 
     def log(self, log_info: str, log_file):
         try:
-            log_file_path = join("app_logs", log_file)
+            log_file_path = join("logs", log_file)
 
             basicConfig(
                 filename=log_file_path,
@@ -76,7 +76,7 @@ class App_Logger:
 
         exception_msg = f"Exception occured in Class : {class_name}, Method : {method_name}, Error : {str(exception)}"
 
-        log_file_path = join("app_logs", log_file)
+        log_file_path = join("logs", log_file)
 
         basicConfig(
             filename=log_file_path,

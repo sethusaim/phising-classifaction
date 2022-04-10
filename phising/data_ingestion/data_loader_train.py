@@ -19,7 +19,7 @@ class Data_Getter_Train:
 
         self.train_csv_file = self.config["export_csv_file"]["train"]
 
-        self.input_files_bucket = self.config["s3_bucket"]["input_files"]
+        self.bucket = self.config["s3_bucket"]
 
         self.s3 = S3_Operation()
 
@@ -46,8 +46,10 @@ class Data_Getter_Train:
 
         try:
             df = self.s3.read_csv(
-                self.train_csv_file, self.input_files_bucket, self.log_file
+                self.train_csv_file, self.bucket["input_files"], self.log_file
             )
+
+            self.log_writer.log("Data loaded for training", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file

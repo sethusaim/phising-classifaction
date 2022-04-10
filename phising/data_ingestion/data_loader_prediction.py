@@ -19,7 +19,7 @@ class Data_Getter_Pred:
 
         self.pred_file = self.config["export_csv_file"]["pred"]
 
-        self.input_files_bucket = self.config["s3_bucket"]["input_files"]
+        self.bucket = self.config["s3_bucket"]
 
         self.s3 = S3_Operation()
 
@@ -45,8 +45,10 @@ class Data_Getter_Pred:
 
         try:
             df = self.s3.read_csv(
-                self.pred_file, self.input_files_bucket, self.log_file
+                self.pred_file, self.bucket["input_files"], self.log_file
             )
+
+            self.log_writer.log("Data loaded for prediction", self.log_file)
 
             self.log_writer.start_log(
                 "exit", self.class_name, method_name, self.log_file

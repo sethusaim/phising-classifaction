@@ -70,32 +70,24 @@ class Train_Validation:
 
             self.raw_data.validate_missing_values_in_col()
 
-            self.log_writer.log(
-                self.train_main_log, "Raw Data Validation Completed !!",
-            )
+            self.log_writer.log("Raw Data Validation Completed !!", self.train_main_log)
 
-            self.log_writer.log(
-                self.train_main_log, "Starting Data Transformation",
-            )
+            self.log_writer.log("Starting Data Transformation", self.train_main_log)
 
             self.data_transform.add_quotes_to_string()
 
-            self.log_writer.log(
-                self.train_main_log, "Data Transformation completed !!",
-            )
+            self.log_writer.log("Data Transformation completed !!", self.train_main_log)
 
             self.db_operation.insert_good_data_as_record(
-                db_name=self.good_data_db_name,
-                collection_name=self.good_data_collection_name,
+                self.good_data_db_name, self.good_data_collection_name
             )
 
             self.log_writer.log(
-                self.train_main_log, "Data type validation Operation completed !!",
+                "Data type validation Operation completed !!", self.train_main_log
             )
 
             self.db_operation.export_collection_to_csv(
-                db_name=self.good_data_db_name,
-                collection_name=self.good_data_collection_name,
+                self.good_data_db_name, self.good_data_collection_name
             )
 
             self.log_writer.start_log(
