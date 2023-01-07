@@ -4,10 +4,10 @@ from mlflow.pyfunc import PythonModel
 from pandas import DataFrame
 from sklearn.pipeline import Pipeline
 
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 
 
-class NetworkModel(PythonModel):
+class phisingModel(PythonModel):
     def __init__(self, preprocessing_object: Pipeline, trained_model_object: object):
         self.preprocessing_object = preprocessing_object
 
@@ -22,7 +22,7 @@ class NetworkModel(PythonModel):
             return preds
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def __repr__(self):
         return f"{type(self.trained_model_object).__name__}()"

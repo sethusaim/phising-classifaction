@@ -7,10 +7,10 @@ from typing import Dict, List, Tuple
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from phising.data_access.network_data import NetworkData
+from phising.data_access.phising_data import PhisingData
 from phising.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact
 from phising.entity.config_entity import DataValidationConfig
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 from phising.logger import logging
 from phising.utils.main_utils import read_text, read_yaml
 
@@ -25,7 +25,7 @@ class DataValidation:
 
         self.data_validation_config = data_validation_config
 
-        self.network_data = NetworkData()
+        self.phising_data = PhisingData()
 
     def values_from_schema(self) -> Tuple[int, int, str, int]:
         """
@@ -77,7 +77,7 @@ class DataValidation:
             )
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def validate_raw_fname(
         self, LengthOfDateStampInFile: int, LengthOfTimeStampInFile: int
@@ -175,7 +175,7 @@ class DataValidation:
             logging.info("Exited validate_raw_fname method of DataValidation class")
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def validate_col_length(self, NumberofColumns: int) -> None:
         """
@@ -191,7 +191,7 @@ class DataValidation:
         logging.info("Entered validate_col_length method of DataValidation class")
 
         try:
-            lst: Tuple[pd.DataFrame, str, str] = self.network_data.read_csv_from_folder(
+            lst: Tuple[pd.DataFrame, str, str] = self.phising_data.read_csv_from_folder(
                 folder_name=self.data_validation_config.data_validation_valid_data_dir
             )
 
@@ -220,7 +220,7 @@ class DataValidation:
             logging.info("Exited validate_col_length method of DataValidation class")
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def validate_missing_values_in_col(self) -> None:
         """
@@ -238,7 +238,7 @@ class DataValidation:
         )
 
         try:
-            lst: Tuple[pd.DataFrame, str, str] = self.network_data.read_csv_from_folder(
+            lst: Tuple[pd.DataFrame, str, str] = self.phising_data.read_csv_from_folder(
                 folder_name=self.data_validation_config.data_validation_valid_data_dir
             )
 
@@ -273,7 +273,7 @@ class DataValidation:
             )
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def check_validation_status(self) -> bool:
         logging.info("Entered check_validation_status method of DataValidation class")
@@ -300,7 +300,7 @@ class DataValidation:
             return status
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     @staticmethod
     def merge_batch_data(
@@ -326,7 +326,7 @@ class DataValidation:
             return new_df
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def split_data_as_train_test(
         self, dataframe: pd.DataFrame
@@ -358,7 +358,7 @@ class DataValidation:
             return train_set, test_set
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def initiate_data_validation(self) -> DataValidationArtifact:
         """
@@ -431,4 +431,4 @@ class DataValidation:
             return data_validation_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)

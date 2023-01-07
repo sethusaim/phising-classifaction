@@ -1,6 +1,6 @@
 import os
 import sys
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 
 
 class S3Sync:
@@ -15,7 +15,7 @@ class S3Sync:
             os.system(command)
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def sync_folder_from_s3(
         self, folder: str, bucket_name: str, bucket_folder_name: str
@@ -28,4 +28,4 @@ class S3Sync:
             os.system(command)
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)

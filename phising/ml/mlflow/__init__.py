@@ -7,9 +7,9 @@ from phising.configuration.mlflow_connection import MLFlowClient
 from phising.constant import training_pipeline
 from phising.entity.artifact_entity import ClassificationMetricArtifact
 from phising.entity.config_entity import MLFlowModelInfo
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 from phising.logger import logging
-from phising.ml.model.estimator import NetworkModel
+from phising.ml.model.estimator import phisingModel
 
 
 class MLFLowOperation:
@@ -22,7 +22,7 @@ class MLFLowOperation:
 
     def log_all_for_model(
         self,
-        model: NetworkModel,
+        model: phisingModel,
         model_parameters: Dict,
         model_score: ClassificationMetricArtifact,
     ) -> None:
@@ -57,7 +57,7 @@ class MLFLowOperation:
             logging.info("Exited log_all_for_model method of MLFLowOperation class")
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def get_model_info(self, best_model_name: str) -> MLFlowModelInfo:
         logging.info("Entered get_model_info method of MLFLowOperation class")
@@ -93,7 +93,7 @@ class MLFLowOperation:
             return model_info
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def get_prod_model_info(self) -> Union[MLFlowModelInfo, None]:
         logging.info("Entered get_prod_model_info method of MLFLowOperation class")
@@ -130,4 +130,4 @@ class MLFLowOperation:
                 return prod_model_info
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)

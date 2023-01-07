@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "artifacts_bucket_name" {
   type    = string
-  default = "network-artifacts"
+  default = "phising-artifacts"
 }
 
 variable "aws_account_id" {

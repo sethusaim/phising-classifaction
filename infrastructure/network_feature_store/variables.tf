@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "feature_store_bucket_name" {
   type    = string
-  default = "network-feature-store"
+  default = "phising-feature-store"
 }
 
 variable "aws_account_id" {

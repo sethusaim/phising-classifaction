@@ -4,10 +4,10 @@ from typing import List, Tuple
 
 import pandas as pd
 
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 
 
-class NetworkData:
+class PhisingData:
     def __init__(self):
         pass
 
@@ -27,4 +27,4 @@ class NetworkData:
             return lst
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)

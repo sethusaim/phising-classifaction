@@ -3,7 +3,7 @@ import sys
 from phising.configuration.mlflow_connection import MLFlowClient
 from phising.entity.artifact_entity import ModelEvaluationArtifact, ModelPusherArtifact
 from phising.entity.config_entity import ModelPusherConfig
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 from phising.logger import logging
 from phising.utils.main_utils import build_and_push_bento_image
 
@@ -78,4 +78,4 @@ class ModelPusher:
             logging.info("Exited initiate_model_pusher method of ModelPusher class")
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)

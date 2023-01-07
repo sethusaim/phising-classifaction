@@ -24,7 +24,7 @@ from phising.entity.config_entity import (
     ModelTrainerConfig,
     TrainingPipelineConfig,
 )
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 
 
 class TrainPipeline:
@@ -50,7 +50,7 @@ class TrainPipeline:
             return data_ingestion_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def start_data_validation(
         self, data_ingestion_artifact: DataIngestionArtifact
@@ -72,7 +72,7 @@ class TrainPipeline:
             return data_validation_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def start_data_transformation(
         self, data_validation_artifact: DataValidationArtifact
@@ -96,7 +96,7 @@ class TrainPipeline:
             return data_transformation_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def start_model_trainer(
         self, data_transformation_artifact: DataTransformationArtifact
@@ -116,7 +116,7 @@ class TrainPipeline:
             return model_trainer_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def start_model_evaluation(
         self,
@@ -137,7 +137,7 @@ class TrainPipeline:
             return model_evaluation_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def start_model_pusher(self, model_evaluation_artifact: ModelEvaluationArtifact):
         try:
@@ -153,7 +153,7 @@ class TrainPipeline:
             return model_pusher_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def run_pipeline(self):
         try:
@@ -189,4 +189,4 @@ class TrainPipeline:
             )
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)

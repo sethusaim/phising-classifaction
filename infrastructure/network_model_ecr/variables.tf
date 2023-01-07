@@ -1,5 +1,5 @@
-variable "network_model_ecr_name" {
-  default = "network_model"
+variable "phising_model_ecr_name" {
+  default = "phising_model"
   type    = string
 }
 

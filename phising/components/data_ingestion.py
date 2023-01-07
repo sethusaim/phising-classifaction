@@ -3,7 +3,7 @@ import sys
 from phising.cloud_storage.aws_operations import S3Sync
 from phising.entity.artifact_entity import DataIngestionArtifact
 from phising.entity.config_entity import DataIngestionConfig
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 from phising.logger import logging
 
 
@@ -41,7 +41,7 @@ class DataIngestion:
             )
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def initiate_data_ingestion(self) -> DataIngestionArtifact:
         logging.info("Entered initiate_data_ingestion method of DataIngestion class")
@@ -64,4 +64,4 @@ class DataIngestion:
             return data_ingestion_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)

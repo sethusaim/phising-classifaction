@@ -9,7 +9,7 @@ import yaml
 
 from phising.cloud_storage.aws_operations import S3Sync
 from phising.constant import training_pipeline
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 from phising.logger import logging
 
 
@@ -27,7 +27,7 @@ def read_yaml(file_name: str) -> Dict:
         return dic
 
     except Exception as e:
-        raise NetworkException(e, sys)
+        raise PhisingException(e, sys)
 
 
 def read_text(file_name: str) -> str:
@@ -44,7 +44,7 @@ def read_text(file_name: str) -> str:
         return txt
 
     except Exception as e:
-        raise NetworkException(e, sys)
+        raise PhisingException(e, sys)
 
 
 def save_numpy_array_data(file_path: str, array: Union[np.array, np.ndarray]) -> None:
@@ -63,7 +63,7 @@ def save_numpy_array_data(file_path: str, array: Union[np.array, np.ndarray]) ->
         logging.info("Exited the save_numpy_array_data class of MainUtils class")
 
     except Exception as e:
-        raise NetworkException(e, sys)
+        raise PhisingException(e, sys)
 
 
 def load_numpy_array_data(file_path: str) -> Union[np.array, np.ndarray]:
@@ -80,7 +80,7 @@ def load_numpy_array_data(file_path: str) -> Union[np.array, np.ndarray]:
         return obj
 
     except Exception as e:
-        raise NetworkException(e, sys)
+        raise PhisingException(e, sys)
 
 
 def load_object(file_path: str) -> object:
@@ -97,7 +97,7 @@ def load_object(file_path: str) -> object:
         return obj
 
     except Exception as e:
-        raise NetworkException(e, sys)
+        raise PhisingException(e, sys)
 
 
 def save_object(file_path: str, obj: object) -> None:
@@ -112,7 +112,7 @@ def save_object(file_path: str, obj: object) -> None:
         logging.info("Exited the save_object method of MainUtils class")
 
     except Exception as e:
-        raise NetworkException(e, sys)
+        raise PhisingException(e, sys)
 
 
 def sync_app_artifacts() -> None:
@@ -136,7 +136,7 @@ def sync_app_artifacts() -> None:
         )
 
     except Exception as e:
-        raise NetworkException(e, sys)
+        raise PhisingException(e, sys)
 
 
 def build_and_push_bento_image(model_uri: str) -> None:
@@ -150,4 +150,4 @@ def build_and_push_bento_image(model_uri: str) -> None:
         )
 
     except Exception as e:
-        raise NetworkException(e, sys)
+        raise PhisingException(e, sys)

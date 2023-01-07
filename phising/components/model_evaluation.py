@@ -17,7 +17,7 @@ from phising.entity.config_entity import (
     MLFlowModelInfo,
     ModelEvaluationConfig,
 )
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 from phising.logger import logging
 from phising.ml.mlflow import MLFLowOperation
 
@@ -137,7 +137,7 @@ class ModelEvaluation:
                     return model_eval_result
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def initiate_model_evaluation(self) -> ModelEvaluationArtifact:
         logging.info(
@@ -167,4 +167,4 @@ class ModelEvaluation:
             return model_evaluation_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)

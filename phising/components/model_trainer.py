@@ -13,11 +13,11 @@ from phising.entity.artifact_entity import (
     ModelTrainerArtifact,
 )
 from phising.entity.config_entity import ModelTrainerConfig
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 from phising.logger import logging
 from phising.ml.metric import calculate_metric
 from phising.ml.mlflow import MLFLowOperation
-from phising.ml.model.estimator import NetworkModel
+from phising.ml.model.estimator import phisingModel
 from phising.utils.main_utils import load_numpy_array_data, load_object, save_object
 
 
@@ -68,7 +68,7 @@ class ModelTrainer:
                 file_path=self.data_transformation_artifact.transformed_object_file_path
             )
 
-            best_model = NetworkModel(
+            best_model = phisingModel(
                 preprocessing_object=preprocessing_obj,
                 trained_model_object=best_model_detail.best_model,
             )
@@ -95,7 +95,7 @@ class ModelTrainer:
 
                     model_parameters: Dict = model.best_parameters
 
-                    trained_model = NetworkModel(
+                    trained_model = phisingModel(
                         preprocessing_object=preprocessing_obj,
                         trained_model_object=model.best_model,
                     )
@@ -137,4 +137,4 @@ class ModelTrainer:
             return model_trainer_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)

@@ -9,7 +9,7 @@ variable "app_runner_service_port" {
 }
 
 variable "app_runner_service_image_url" {
-  default = "566373416292.dkr.ecr.us-east-1.amazonaws.com/network_model:latest"
+  default = "566373416292.dkr.ecr.us-east-1.amazonaws.com/phising_model:latest"
   type    = string
 }
 

@@ -5,7 +5,7 @@ import numpy as np
 
 TIMESTAMP: datetime = datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
 
-PIPELINE_NAME: str = "network"
+PIPELINE_NAME: str = "phising"
 
 EXP_NAME: str = f"{PIPELINE_NAME}-{TIMESTAMP}"
 
@@ -21,9 +21,9 @@ TEST_FILE_NAME: str = "test.csv"
 
 MODEL_FILE_NAME: str = "model.pkl"
 
-APP_ARTIFACTS_BUCKET: str = "12272network-artifacts"
+APP_ARTIFACTS_BUCKET: str = "12272phising-artifacts"
 
-SCHEMA_FILE_PATH: str = os.path.join("config", "network_schema_prediction.yaml")
+SCHEMA_FILE_PATH: str = os.path.join("config", "phising_schema_prediction.yaml")
 
 PREPROCSSING_OBJECT_FILE_NAME: str = "preprocessing.pkl"
 
@@ -36,7 +36,7 @@ DATA_INGESTION_FEATURE_STORE_DIR: str = "feature_store"
 
 DATA_INGESTION_INGESTED_DIR: str = "ingested"
 
-DATA_INGESTION_BUCKET_NAME: str = "36930network-feature-store"
+DATA_INGESTION_BUCKET_NAME: str = "36930phising-feature-store"
 
 DATA_INGESTION_BUCKET_FOLDER_NAME: str = "data/train_batch"
 
@@ -51,9 +51,9 @@ DATA_VALIDATION_INVALID_DIR: str = "invalid"
 
 DATA_VALIDATION_TEST_SIZE: float = 0.3
 
-DATA_VALIDATION_TRAIN_SCHEMA: str = "config/network_schema_training.yaml"
+DATA_VALIDATION_TRAIN_SCHEMA: str = "config/phising_schema_training.yaml"
 
-DATA_VALIDATION_REGEX: str = "config/network_regex.txt"
+DATA_VALIDATION_REGEX: str = "config/phising_regex.txt"
 
 DATA_VALIDATION_TRAIN_COMPRESSED_FILE_PATH: str = "train_input_file.csv"
 
@@ -116,10 +116,10 @@ MODEL_PUSHER_STAG_MODEL_STAGE: str = "Staging"
 
 MODEL_PUSHER_ARCHIVE_EXISTING_VERSIONS: bool = True
 
-MODEL_PUSHER_BENTOML_MODEL_NAME: str = "network-model"
+MODEL_PUSHER_BENTOML_MODEL_NAME: str = "phising-model"
 
-MODEL_PUSHER_BENTOML_SERVICE_NAME: str = "network_model_service"
+MODEL_PUSHER_BENTOML_SERVICE_NAME: str = "phising_model_service"
 
-MODEL_PUSHER_BENTOML_MODEL_IMAGE: str = "networkimage"
+MODEL_PUSHER_BENTOML_MODEL_IMAGE: str = "phisingimage"
 
 MODEL_PUSHER_MODEL_ECR_URI: str = ""

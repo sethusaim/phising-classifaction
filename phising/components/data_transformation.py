@@ -12,7 +12,7 @@ from phising.entity.artifact_entity import (
     DataValidationArtifact,
 )
 from phising.entity.config_entity import DataTransformationConfig
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 from phising.logger import logging
 from phising.utils.main_utils import save_numpy_array_data, save_object
 
@@ -33,7 +33,7 @@ class DataTransformation:
             self.data_transformation_config = data_transformation_config
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     @staticmethod
     def read_data(file_path: str) -> pd.DataFrame:
@@ -41,7 +41,7 @@ class DataTransformation:
             return pd.read_csv(file_path)
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def get_data_transformer_object(cls) -> Pipeline:
         logging.info(
@@ -66,7 +66,7 @@ class DataTransformation:
             return preprocessor
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)
 
     def initiate_data_transformation(self) -> DataTransformationArtifact:
         logging.info(
@@ -172,4 +172,4 @@ class DataTransformation:
             return data_transformation_artifact
 
         except Exception as e:
-            raise NetworkException(e, sys)
+            raise PhisingException(e, sys)

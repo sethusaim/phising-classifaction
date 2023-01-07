@@ -5,7 +5,7 @@ from sklearn.base import BaseEstimator
 from sklearn.metrics import roc_auc_score
 
 from phising.entity.artifact_entity import ClassificationMetricArtifact
-from phising.exception import NetworkException
+from phising.exception import PhisingException
 
 
 def calculate_metric(
@@ -19,4 +19,4 @@ def calculate_metric(
         return classification_metric
 
     except Exception as e:
-        raise NetworkException(e, sys)
+        raise PhisingException(e, sys)
