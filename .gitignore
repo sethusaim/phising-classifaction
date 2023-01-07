@@ -5,10 +5,15 @@ __pycache__/
 
 # C extensions
 *.so
-
+mlflow.db
+dev-venv/
 demotest.py
-
-git-push.sh
+demo.py
+.terraform
+.terraform.lock.hcl
+data
+logs
+artifacts
 
 # Distribution / packaging
 .Python
