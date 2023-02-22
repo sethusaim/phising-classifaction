@@ -1,6 +1,6 @@
 service: "phising.ml.model.model_service:svc"
 labels:
-    owner: ineuron-team
+    owner: sethusaim
     stage: dev
 include:
     - "phising/constant/training_pipeline/__init__.py"
